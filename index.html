@@ -2531,13 +2531,17 @@
             allPlayers.slice(0, 10).forEach((player, index) => {
                 const entryDiv = document.createElement('div');
                 entryDiv.className = `live-leaderboard-entry rank-${index + 1}`;
+                
+                // Ensure player name is a string, not an object
+                const playerName = typeof player.name === 'string' ? player.name : 'Player';
+                
                 entryDiv.innerHTML = `
                     <div class="live-rank-number">#${index + 1}</div>
                     <div class="live-player-info">
-                        <div class="live-player-name">${player.name}</div>
+                        <div class="live-player-name">${playerName}</div>
                         <div class="live-player-stats">Best Score</div>
                     </div>
-                    <div class="live-player-score">${player.bestScore}</div>
+                    <div class="live-player-score">${player.bestScore || 0}</div>
                 `;
                 liveList.appendChild(entryDiv);
             });
