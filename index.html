@@ -1631,6 +1631,66 @@
         const db = firebase.firestore();
         
         console.log('Firebase initialized:', firebase.app().name);
+        
+        // Collection
+        const scoresRef = db.collection('scores');
+
+        // Write a score when a run finishes
+        async function saveGameAttempt(name, score, timeSec, germsHit) {
+            await scoresRef.add({
+                name,
+                score,
+                timeSec,
+                germsHit,
+                ts: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+
+        // Subscribe to live updates (top 20 by score)
+        function subscribeLiveLeaderboard() {
+            return scoresRef
+                .orderBy('score','desc')
+                .orderBy('ts','asc')
+                .limit(20)
+                .onSnapshot(snap => {
+                    const list = document.getElementById('liveLeaderboardList');
+                    const mini = document.getElementById('leaderboardList'); // game over screen
+                    list.innerHTML = ''; mini.innerHTML = '';
+                    let rank = 1;
+                    snap.forEach(doc => {
+                        const {name, score, timeSec = '-', germsHit='-'} = doc.data();
+
+                        // Live panel
+                        const row = document.createElement('div');
+                        row.className = `live-leaderboard-entry rank-${rank}`;
+                        row.innerHTML = `
+                            <div class="live-rank-number">${rank}</div>
+                            <div class="live-player-info">
+                                <div class="live-player-name">${name}</div>
+                                <div class="live-player-stats">⏱ ${timeSec}s • 🦠 ${germsHit}</div>
+                            </div>
+                            <div class="live-player-score">${score}</div>`;
+                        list.appendChild(row);
+
+                        // Game-over mini list
+                        const r2 = document.createElement('div');
+                        r2.className = 'leaderboard-entry';
+                        r2.innerHTML = `<span>${rank}. ${name}</span><span>${score} pts</span>`;
+                        mini.appendChild(r2);
+
+                        rank++;
+                    });
+                    document.getElementById('totalPlayers').textContent = `Players: ${snap.size}`;
+                });
+        }
+
+        // Call once on load
+        let unsubscribe = subscribeLiveLeaderboard();
+
+        // Optional helper to show/hide the big overlay already in your HTML
+        function showLiveLeaderboard(){ document.getElementById('liveLeaderboard').style.display='flex'; }
+        function hideLiveLeaderboard(){ document.getElementById('liveLeaderboard').style.display='none'; }
+        function refreshLeaderboard(){ if (unsubscribe) {unsubscribe();} unsubscribe = subscribeLiveLeaderboard(); }
     </script>
 
     <script>
@@ -2067,7 +2127,7 @@
             const completionTime = Math.floor((Date.now() - gameStartTime) / 1000);
             const germsHit = Math.floor((100 - currentScore) / 5);
             
-            // Save the game attempt
+            // Save the game attempt to Firebase
             saveGameAttempt(playerName, currentScore, completionTime, germsHit);
             
             let winner = 'Tie!';
