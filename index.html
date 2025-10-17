@@ -5374,13 +5374,7 @@
                     // No points added for reaching target
                     gameComplete[controlledPlayer] = true;
                     
-                    // Show completion effect (only for Jamilah, Maitha gets Bravo celebration)
-                    if (controlledPlayer === 'player2') { // Only for Jamilah
-                        const characterName = 'Jamilah';
-                        const targetName = 'Hospital';
-                        const message = `⛏️ ${characterName} successfully reached ${targetName}! 🎉`;
-                        showCompletionEffect(player.x, player.y, message);
-                    }
+                    // No completion effect needed - both characters get Bravo celebrations
                     
                     // Play success sound
                     playSuccessSound();
@@ -6287,6 +6281,13 @@
 
         // Show Bravo celebration when Maitha reaches school
         function showBravoCelebration() {
+            // Prevent multiple celebrations
+            if (document.querySelector('.bravo-celebration')) {
+                console.log('Bravo celebration already exists, skipping...');
+                return;
+            }
+            
+            console.log('Creating Maitha Bravo celebration');
             // Create celebration container
             const celebrationEl = document.createElement('div');
             celebrationEl.className = 'bravo-celebration';
@@ -6306,6 +6307,13 @@
 
         // Show Bravo celebration when Jamilah reaches hospital
         function showJamilahBravoCelebration() {
+            // Prevent multiple celebrations
+            if (document.querySelector('.bravo-celebration')) {
+                console.log('Bravo celebration already exists, skipping...');
+                return;
+            }
+            
+            console.log('Creating Jamilah Bravo celebration');
             // Create celebration container
             const celebrationEl = document.createElement('div');
             celebrationEl.className = 'bravo-celebration';
