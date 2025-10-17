@@ -1463,7 +1463,7 @@
             <div class="game-guide">
                 <div class="guide-header">
                     <h1>🎮 The Mission</h1>
-                    <p>Guide Maitha to School and Jamilah to Hospital by manually controlling them with the arrow buttons!</p>
+                    <p>Guide Maitha to the School and Jamilah to the Hospital by manually controlling them with the arrow buttons!</p>
                 </div>
                 
                 <div class="guide-section">
@@ -1655,8 +1655,7 @@
         <div id="leaderboardPopup" style="display: none;">
             <div class="leaderboard-content">
                 <div class="leaderboard-header">
-                    <h2>🏆 Your Score & Leaderboard 🏆</h2>
-                    <p>Great job! Here's how you rank:</p>
+                    <h2>🎉 Your Score & Leaderboard 🏆</h2>
                 </div>
                 <div class="leaderboard-list" id="popupLeaderboardList">
                     <!-- Player entries will be populated here -->
@@ -2414,9 +2413,17 @@
             players.player2.y = canvas.height * 0.9; // Moved down 5cm (0.85 to 0.9)
             targets.school.y = canvas.height * 0.15; // At green line - top area
             targets.hospital.y = canvas.height * 0.15; // At green line - top area
-            initGerms();
-            initRain();
-            playRainSound();
+            
+            // Show the mission message first
+            const message = `Navigate Maitha to the hospital!`;
+            showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
+            
+            // Start germs and rain after a short delay
+            setTimeout(() => {
+                initGerms();
+                initRain();
+                playRainSound();
+            }, 2000); // 2 second delay after message
         }
         
         function updateCharacterDisplay() {
@@ -2543,7 +2550,7 @@
                 updateCharacterDisplay();
                 
                 // Show switch message
-                const message = `🎯 Now guide Jamilah to Hospital! 🏥`;
+                const message = `🎯 Now guide Jamilah to the Hospital! 🏥`;
                 showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
             }
         }
