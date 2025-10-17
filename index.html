@@ -2249,54 +2249,77 @@
             const popup = document.getElementById('leaderboardPopup');
             const popupList = document.getElementById('popupLeaderboardList');
             
-            // Populate the popup leaderboard
+            // Clear the popup
             popupList.innerHTML = '';
             
-            // Show current player's score prominently
-            const currentPlayerEntry = document.createElement('div');
-            currentPlayerEntry.className = 'leaderboard-entry rank-1';
-            
-            // Get player name safely - avoid object errors
-            let displayName = 'Player';
-            if (typeof playerName === 'string') {
-                displayName = playerName;
-            } else if (playerName && typeof playerName === 'object' && playerName.value) {
-                displayName = playerName.value;
-            } else {
-                // Try to get from input field directly
+            // Get current player name safely
+            let currentPlayerName = 'Player';
+            try {
                 const nameInput = document.getElementById('playerName');
-                if (nameInput && nameInput.value) {
-                    displayName = nameInput.value;
+                if (nameInput && nameInput.value && nameInput.value.trim() !== '') {
+                    currentPlayerName = nameInput.value.trim();
                 }
+            } catch (e) {
+                console.log('Could not get player name:', e);
             }
             
-            currentPlayerEntry.innerHTML = `
+            // Get all players sorted by best score
+            const allPlayers = getTopPlayers();
+            
+            // Create current player entry (always #1)
+            const currentEntry = document.createElement('div');
+            currentEntry.className = 'leaderboard-entry rank-1';
+            currentEntry.innerHTML = `
                 <div class="rank-number">#1</div>
                 <div class="player-info">
-                    <div class="player-name">${displayName} (You)</div>
-                    <div class="player-stats">Final Score</div>
+                    <div class="player-name">${currentPlayerName} (You)</div>
+                    <div class="player-stats">Current Score</div>
                 </div>
                 <div class="player-score">${currentScore}</div>
             `;
-            popupList.appendChild(currentPlayerEntry);
+            popupList.appendChild(currentEntry);
             
-            // Show top 3 from leaderboard
-            const sortedLeaderboard = [...leaderboard].sort((a, b) => b.score - a.score);
-            sortedLeaderboard.slice(0, 3).forEach((entry, index) => {
-                if (entry.name !== displayName) { // Don't show current player twice
+            // Show top 5 other players (excluding current player)
+            let rank = 2;
+            allPlayers.slice(0, 5).forEach((player) => {
+                if (player.name !== currentPlayerName) {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = `leaderboard-entry rank-${rank}`;
+                    entryDiv.innerHTML = `
+                        <div class="rank-number">#${rank}</div>
+                        <div class="player-info">
+                            <div class="player-name">${player.name}</div>
+                            <div class="player-stats">Best Score</div>
+                        </div>
+                        <div class="player-score">${player.bestScore}</div>
+                    `;
+                    popupList.appendChild(entryDiv);
+                    rank++;
+                }
+            });
+            
+            // If no other players, show some sample data
+            if (allPlayers.length === 0) {
+                const samplePlayers = [
+                    { name: 'Alex', bestScore: 85 },
+                    { name: 'Sarah', bestScore: 80 },
+                    { name: 'Mike', bestScore: 75 }
+                ];
+                
+                samplePlayers.forEach((player, index) => {
                     const entryDiv = document.createElement('div');
                     entryDiv.className = `leaderboard-entry rank-${index + 2}`;
                     entryDiv.innerHTML = `
                         <div class="rank-number">#${index + 2}</div>
                         <div class="player-info">
-                            <div class="player-name">${entry.name || 'Player'}</div>
-                            <div class="player-stats">Previous Score</div>
+                            <div class="player-name">${player.name}</div>
+                            <div class="player-stats">Best Score</div>
                         </div>
-                        <div class="player-score">${entry.score || 0}</div>
+                        <div class="player-score">${player.bestScore}</div>
                     `;
                     popupList.appendChild(entryDiv);
-                }
-            });
+                });
+            }
             
             popup.style.display = 'flex';
         }
@@ -2305,8 +2328,9 @@
             document.getElementById('leaderboardPopup').style.display = 'none';
         }
 
-        // Enhanced history tracking
+        // New comprehensive history tracking system
         let gameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
+        let playerScores = JSON.parse(localStorage.getItem('playerScores') || '[]');
 
         function saveGameAttempt(playerName, score, completionTime, germsHit) {
             const attempt = {
@@ -2320,27 +2344,37 @@
                 time: new Date().toLocaleTimeString()
             };
             
+            // Save to history
             gameHistory.push(attempt);
             
-            // Keep only last 100 attempts to prevent storage bloat
-            if (gameHistory.length > 100) {
-                gameHistory = gameHistory.slice(-100);
+            // Update player's best score
+            const existingPlayer = playerScores.find(p => p.name === playerName);
+            if (existingPlayer) {
+                if (score > existingPlayer.bestScore) {
+                    existingPlayer.bestScore = score;
+                    existingPlayer.lastPlayed = new Date().toISOString();
+                }
+            } else {
+                playerScores.push({
+                    name: playerName,
+                    bestScore: score,
+                    totalGames: 1,
+                    lastPlayed: new Date().toISOString()
+                });
             }
             
+            // Keep only last 200 attempts to prevent storage bloat
+            if (gameHistory.length > 200) {
+                gameHistory = gameHistory.slice(-200);
+            }
+            
+            // Save to localStorage
             localStorage.setItem('gameHistory', JSON.stringify(gameHistory));
-            
-            // Also add to leaderboard
-            leaderboard.push({
-                name: playerName,
-                score: score,
-                date: new Date().toLocaleDateString(),
-                timestamp: new Date().toISOString()
-            });
-            
-            // Sort and limit leaderboard
-            leaderboard.sort((a, b) => b.score - a.score);
-            leaderboard = leaderboard.slice(0, 20);
-            localStorage.setItem('schoolHospitalLeaderboard', JSON.stringify(leaderboard));
+            localStorage.setItem('playerScores', JSON.stringify(playerScores));
+        }
+
+        function getTopPlayers() {
+            return playerScores.sort((a, b) => b.bestScore - a.bestScore).slice(0, 10);
         }
 
         function downloadGameHistory() {
@@ -2368,7 +2402,7 @@
         }
 
         function getClassWinners() {
-            if (gameHistory.length === 0) return 'No games played yet!';
+            if (playerScores.length === 0) return 'No games played yet!';
             
             // Get today's games
             const today = new Date().toLocaleDateString();
@@ -2381,18 +2415,25 @@
                 current.score > best.score ? current : best
             );
             
-            return `Today's Winner: ${bestToday.playerName} with ${bestToday.score} points!`;
+            // Get overall best player
+            const topPlayer = getTopPlayers()[0];
+            
+            return `Today's Winner: ${bestToday.playerName} (${bestToday.score} pts)\nOverall Best: ${topPlayer.name} (${topPlayer.bestScore} pts)`;
         }
 
         function clearLeaderboard() {
             if (confirm('Are you sure you want to clear the leaderboard?')) {
                 leaderboard = [];
                 playerLog = [];
+                gameHistory = [];
+                playerScores = [];
                 localStorage.removeItem('schoolHospitalLeaderboard');
                 localStorage.removeItem('schoolHospitalPlayerLog');
+                localStorage.removeItem('gameHistory');
+                localStorage.removeItem('playerScores');
                 updateLeaderboard();
                 updateAdminPanel();
-                alert('Leaderboard cleared!');
+                alert('All leaderboard data cleared!');
             }
         }
 
