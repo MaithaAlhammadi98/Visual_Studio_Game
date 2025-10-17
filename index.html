@@ -1729,10 +1729,56 @@
 
         .maitha-portrait .portrait-sprite {
             background: #FF6B6B;
+            position: relative;
+        }
+
+        .maitha-portrait .portrait-sprite::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .maitha-portrait .portrait-sprite::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
         }
 
         .jamilah-portrait .portrait-sprite {
             background: #4ECDC4;
+            position: relative;
+        }
+
+        .jamilah-portrait .portrait-sprite::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .jamilah-portrait .portrait-sprite::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
         }
 
         .portrait-text {
@@ -1807,6 +1853,29 @@
             height: 60px;
             background: #FF6B6B;
             border: 3px solid white;
+            border-radius: 0;
+            position: relative;
+        }
+
+        .demo-sprite::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 10px;
+            height: 10px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .demo-sprite::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background: #000;
             border-radius: 0;
         }
 
@@ -1884,14 +1953,59 @@
             border: 3px solid white;
             border-radius: 0;
             animation: pathMove 3s ease-in-out infinite;
+            position: relative;
         }
 
         .maitha-race {
             background: #FF6B6B;
         }
 
+        .maitha-race::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .maitha-race::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
+        }
+
         .jamilah-race {
             background: #4ECDC4;
+        }
+
+        .jamilah-race::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .jamilah-race::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 0;
         }
 
         .path-destination {
@@ -2852,45 +2966,6 @@
                 </div>
             </div>
             
-            <div class="intro-scene" id="scene8" style="display: none;">
-                <div class="intro-background leaderboard-intro-bg">
-                    <div class="clouds-pan-up"></div>
-                    <div id="leaderboardContainer" class="leaderboard-intro">
-                        <h2>🏆 CLASS LEADERBOARD</h2>
-                        <div class="leaderboard-divider"></div>
-                        <div id="leaderboardList">
-                            <div class="leaderRow top">
-                                <span class="rank">1.</span>
-                                <span class="player-name">Kitten</span>
-                                <span class="score">125</span>
-                                <span class="score-icon">🟩</span>
-                            </div>
-                            <div class="leaderRow">
-                                <span class="rank">2.</span>
-                                <span class="player-name">Jich</span>
-                                <span class="score">110</span>
-                                <span class="score-icon">🟩</span>
-                            </div>
-                            <div class="leaderRow">
-                                <span class="rank">3.</span>
-                                <span class="player-name">Maitha</span>
-                                <span class="score">95</span>
-                                <span class="score-icon">🟩</span>
-                            </div>
-                        </div>
-                        <div class="leaderboard-divider"></div>
-                        <p class="current-top">👑 Current Top: <b>Kitten</b></p>
-                        <div class="leaderboard-buttons">
-                            <button class="pixelBtn" onclick="refreshLeaderboard()">⟳ Refresh</button>
-                            <button class="pixelBtn" onclick="startMissionFromLeaderboard()">⛏️ Start Mission</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="intro-text-container">
-                    <div class="intro-text leaderboard-narration">Your scores will rise here, in the halls of the pixel gods.</div>
-                    <div class="intro-text leaderboard-narration">Will you reach the top… or get lost among the blocks?</div>
-                </div>
-            </div>
         </div>
 
         <!-- Introduction Screen -->
@@ -3457,13 +3532,13 @@
             document.getElementById('cinematicIntro').style.display = 'flex';
             document.getElementById('introScreen').style.display = 'none';
             
-            // Scene 1: Dawn over Block City (2s)
+            // Scene 1: Dawn over Block City (4s - extended)
             setTimeout(() => {
                 console.log('Scene 1: Dawn over Block City');
                 document.getElementById('scene1').style.display = 'flex';
             }, 100);
             
-            // Scene 2: The Call (after 2s)
+            // Scene 2: The Call (after 4s)
             setTimeout(() => {
                 console.log('Scene 2: The Call');
                 document.getElementById('scene1').style.display = 'none';
@@ -3471,7 +3546,7 @@
                 
                 // Play soft chime sound
                 playSoftChime();
-            }, 2000);
+            }, 4000);
             
             // Scene 3: The Threat (after 4s more)
             setTimeout(() => {
@@ -3514,7 +3589,7 @@
                 playTriumphantMelody();
             }, 22000);
             
-            // Scene 7: Title (after 6s more)
+            // Scene 7: Title (after 6s more - extended to 8s)
             setTimeout(() => {
                 console.log('Scene 7: Title');
                 document.getElementById('scene6').style.display = 'none';
@@ -3523,19 +3598,6 @@
                 // Play title music
                 playTitleMusic();
             }, 28000);
-            
-            // Scene 8: Leaderboard (after 3s more)
-            setTimeout(() => {
-                console.log('Scene 8: Leaderboard');
-                document.getElementById('scene7').style.display = 'none';
-                document.getElementById('scene8').style.display = 'flex';
-                
-                // Load real leaderboard data
-                loadLeaderboardData();
-                
-                // Play leaderboard sound
-                playLeaderboardSound();
-            }, 31000);
             
             // End intro and show login screen (after 8s more)
             setTimeout(() => {
@@ -3559,7 +3621,7 @@
                         playBackgroundMusic();
                     }, 1000);
                 }
-            }, 39000); // Total intro time: 39 seconds
+            }, 36000); // Total intro time: 36 seconds
         }
 
         // Sound effects for intro
@@ -3742,108 +3804,6 @@
             }
         }
 
-        function playLeaderboardSound() {
-            if (!soundEnabled || !audioContext) return;
-            
-            try {
-                // Magical leaderboard sound
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.setValueAtTime(784, audioContext.currentTime); // G5
-                oscillator.frequency.setValueAtTime(1047, audioContext.currentTime + 0.3); // C6
-                oscillator.frequency.setValueAtTime(1319, audioContext.currentTime + 0.6); // E6
-                
-                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 1);
-            } catch (e) {
-                console.log('Could not play leaderboard sound');
-            }
-        }
-
-        // Leaderboard functions
-        function loadLeaderboardData() {
-            // Load real data from Firebase or localStorage
-            if (window.scoresRef) {
-                // Use Firebase data
-                window.scoresRef.orderBy('score', 'desc').limit(3).get().then(snapshot => {
-                    const leaderboardList = document.getElementById('leaderboardList');
-                    if (leaderboardList && snapshot.docs.length > 0) {
-                        leaderboardList.innerHTML = '';
-                        snapshot.docs.forEach((doc, index) => {
-                            const data = doc.data();
-                            const row = document.createElement('div');
-                            row.className = `leaderRow ${index === 0 ? 'top' : ''}`;
-                            row.innerHTML = `
-                                <span class="rank">${index + 1}.</span>
-                                <span class="player-name">${data.name || 'Player'}</span>
-                                <span class="score">${data.score || 0}</span>
-                                <span class="score-icon">🟩</span>
-                            `;
-                            leaderboardList.appendChild(row);
-                        });
-                        
-                        // Update current top player
-                        const currentTop = document.querySelector('.current-top b');
-                        if (currentTop && snapshot.docs[0]) {
-                            currentTop.textContent = snapshot.docs[0].data().name || 'Player';
-                        }
-                    }
-                }).catch(e => {
-                    console.log('Could not load Firebase leaderboard:', e);
-                    loadFallbackLeaderboard();
-                });
-            } else {
-                loadFallbackLeaderboard();
-            }
-        }
-
-        function loadFallbackLeaderboard() {
-            // Fallback to localStorage or demo data
-            const leaderboardList = document.getElementById('leaderboardList');
-            if (leaderboardList) {
-                leaderboardList.innerHTML = `
-                    <div class="leaderRow top">
-                        <span class="rank">1.</span>
-                        <span class="player-name">Kitten</span>
-                        <span class="score">125</span>
-                        <span class="score-icon">🟩</span>
-                    </div>
-                    <div class="leaderRow">
-                        <span class="rank">2.</span>
-                        <span class="player-name">Jich</span>
-                        <span class="score">110</span>
-                        <span class="score-icon">🟩</span>
-                    </div>
-                    <div class="leaderRow">
-                        <span class="rank">3.</span>
-                        <span class="player-name">Maitha</span>
-                        <span class="score">95</span>
-                        <span class="score-icon">🟩</span>
-                    </div>
-                `;
-            }
-        }
-
-        function startMissionFromLeaderboard() {
-            // Skip to login screen
-            document.getElementById('cinematicIntro').style.display = 'none';
-            document.getElementById('introScreen').style.display = 'flex';
-            
-            // Load and start background music
-            if (DEVELOPER_BACKGROUND_MUSIC) {
-                loadCustomMusic(DEVELOPER_BACKGROUND_MUSIC);
-                setTimeout(() => { playBackgroundMusic(); }, 1000);
-            } else {
-                setTimeout(() => { playBackgroundMusic(); }, 1000);
-            }
-        }
 
         // Initialize sounds
         function initSounds() {
