@@ -4970,6 +4970,8 @@
         }
 
         // Play rain sound
+        let currentRainSource = null; // Track current rain sound source
+        
         function playRainSound() {
             if (!soundEnabled || !rainSound) return;
             
@@ -4979,9 +4981,23 @@
                 source.loop = true;
                 source.connect(audioContext.destination);
                 source.start();
+                currentRainSource = source; // Store reference to stop later
                 return source;
             } catch (e) {
                 console.log('Could not play rain sound');
+            }
+        }
+        
+        // Stop rain sound
+        function stopRainSound() {
+            if (currentRainSource) {
+                try {
+                    currentRainSource.stop();
+                    currentRainSource = null;
+                    console.log('Rain sound stopped');
+                } catch (e) {
+                    console.log('Could not stop rain sound');
+                }
             }
         }
 
@@ -5461,6 +5477,8 @@
         // End game
         function endGame() {
             console.log('endGame() called - showing Jamilah Bravo celebration');
+            // Stop rain sound when game ends
+            stopRainSound();
             // Show Bravo celebration for Jamilah first
             showJamilahBravoCelebration();
             
