@@ -22,21 +22,11 @@
             width: 100vw;
             height: 100vh;
             max-width: 500px;
-            max-height: 100vh;
+            max-height: 800px;
             border: 3px solid #333;
             border-radius: 15px;
             overflow: hidden;
             background: #f0f8ff;
-        }
-        
-        @media (max-width: 768px) {
-            #gameContainer {
-                width: 100vw;
-                height: 100vh;
-                max-width: none;
-                border-radius: 0;
-                border: none;
-            }
         }
         
         canvas {
@@ -312,7 +302,7 @@
             Help Maitha reach school and Jamilah reach the hospital<br>
             while avoiding the bouncing germs in the storm! 🌧️🦠</p>
             
-            <input type="text" class="nameInput" id="playerName" placeholder="Enter your name for leaderboard" maxlength="20">
+            <input type="text" class="nameInput" id="playerName" placeholder="Enter your name" maxlength="20">
             
             <button id="startBtn">Start Game!</button>
             
@@ -619,14 +609,11 @@
             const isPlayer1 = activePlayers.length % 2 === 1;
             const targetPlayer = isPlayer1 ? 'player1' : 'player2';
             
-            // Keep character names fixed (Maitha & Jamilah)
-            playerNames.player1 = 'Maitha';
-            playerNames.player2 = 'Jamilah';
-            players.player1.name = 'Maitha';
-            players.player2.name = 'Jamilah';
+            playerNames[targetPlayer] = playerName;
+            players[targetPlayer].name = playerName;
             
-            player1Display.textContent = `Maitha: `;
-            player2Display.textContent = `Jamilah: `;
+            player1Display.textContent = `${playerNames.player1}: `;
+            player2Display.textContent = `${playerNames.player2}: `;
             
             introScreen.style.display = 'none';
             gameUI.style.display = 'flex';
@@ -806,7 +793,18 @@
                     if (checkCollision(player, germ)) {
                         scores[playerKey] -= 10;
                         scores[playerKey] = Math.max(0, scores[playerKey]);
-                        // No auto-push - let players get hit!
+                        
+                        // Push player away from germ
+                        const dx = player.x - germ.x;
+                        const dy = player.y - germ.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        const pushForce = 30;
+                        player.x += (dx / distance) * pushForce;
+                        player.y += (dy / distance) * pushForce;
+                        
+                        // Keep player in bounds
+                        player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
+                        player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
                     }
                 });
                 
