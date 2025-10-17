@@ -297,10 +297,10 @@
     <div id="gameContainer">
         <!-- Introduction Screen -->
         <div id="introScreen">
-            <h1>🎮 School & Hospital Adventure 🎮</h1>
-            <p>Welcome to our interactive game!<br>
+            <h1>🌧️ Sick Day Adventure 🌧️</h1>
+            <p>It's a rainy day and both Maitha 🤒 and Jamilah 🤕 are sick!<br>
             Help Maitha reach school and Jamilah reach the hospital<br>
-            while avoiding the bouncing germs!</p>
+            while avoiding the bouncing germs in the storm! 🌧️🦠</p>
             
             <input type="text" class="nameInput" id="playerName" placeholder="Enter your name" maxlength="20">
             
@@ -455,7 +455,7 @@
                 color: '#FF6B6B',
                 name: 'Maitha',
                 target: 'school',
-                emoji: '👩‍🎓'
+                emoji: '🤒' // Sick Maitha
             },
             player2: {
                 x: canvas.width - 50,
@@ -464,7 +464,7 @@
                 color: '#4ECDC4',
                 name: 'Jamilah',
                 target: 'hospital',
-                emoji: '👩‍⚕️'
+                emoji: '🤕' // Sick Jamilah
             }
         };
 
@@ -487,6 +487,15 @@
         // Germs
         const germs = [];
         const germCount = 5;
+        
+        // Rain effects
+        const raindrops = [];
+        const rainCount = 50;
+        
+        // Audio elements
+        let rainSound;
+        let gameMusic;
+        let soundEnabled = true;
 
         // Initialize germs
         function initGerms() {
@@ -500,6 +509,63 @@
                     vy: (Math.random() - 0.5) * 4,
                     emoji: '🦠'
                 });
+            }
+        }
+
+        // Initialize rain
+        function initRain() {
+            raindrops.length = 0;
+            for (let i = 0; i < rainCount; i++) {
+                raindrops.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    speed: Math.random() * 3 + 2,
+                    length: Math.random() * 20 + 10,
+                    opacity: Math.random() * 0.5 + 0.3
+                });
+            }
+        }
+
+        // Initialize sounds
+        function initSounds() {
+            // Create rain sound using Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Rain sound effect
+                function createRainSound() {
+                    const bufferSize = audioContext.sampleRate * 2; // 2 seconds
+                    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = (Math.random() * 2 - 1) * 0.1;
+                    }
+                    
+                    return buffer;
+                }
+                
+                rainSound = createRainSound();
+            } catch (e) {
+                console.log('Audio not supported');
+                soundEnabled = false;
+            }
+        }
+
+        // Play rain sound
+        function playRainSound() {
+            if (!soundEnabled || !rainSound) return;
+            
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createBufferSource();
+                source.buffer = rainSound;
+                source.loop = true;
+                source.connect(audioContext.destination);
+                source.start();
+                return source;
+            } catch (e) {
+                console.log('Could not play rain sound');
             }
         }
 
@@ -563,6 +629,8 @@
             targets.school.y = 50;
             targets.hospital.y = 50;
             initGerms();
+            initRain();
+            playRainSound();
         }
 
         canvas.addEventListener('touchstart', (e) => {
@@ -689,6 +757,15 @@
         function update() {
             if (gameState !== 'playing') return;
             
+            // Update rain
+            raindrops.forEach(drop => {
+                drop.y += drop.speed;
+                if (drop.y > canvas.height) {
+                    drop.y = -drop.length;
+                    drop.x = Math.random() * canvas.width;
+                }
+            });
+            
             // Update germs
             germs.forEach(germ => {
                 germ.x += germ.vx;
@@ -748,34 +825,58 @@
 
         // Render game
         function render() {
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Clear canvas with dark rainy background
+            ctx.fillStyle = '#2C3E50';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Draw targets
+            // Draw rain
+            ctx.strokeStyle = 'rgba(135, 206, 235, 0.6)';
+            ctx.lineWidth = 1;
+            raindrops.forEach(drop => {
+                ctx.globalAlpha = drop.opacity;
+                ctx.beginPath();
+                ctx.moveTo(drop.x, drop.y);
+                ctx.lineTo(drop.x, drop.y + drop.length);
+                ctx.stroke();
+            });
+            ctx.globalAlpha = 1;
+            
+            // Draw targets with glow effect
             Object.values(targets).forEach(target => {
+                // Glow effect
+                ctx.shadowColor = '#FFD700';
+                ctx.shadowBlur = 20;
                 ctx.font = `${target.size}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.fillText(target.emoji, target.x, target.y + target.size/3);
+                ctx.shadowBlur = 0;
             });
             
-            // Draw germs
+            // Draw germs with sick glow
             germs.forEach(germ => {
+                ctx.shadowColor = '#FF0000';
+                ctx.shadowBlur = 10;
                 ctx.font = `${germ.size}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.fillText(germ.emoji, germ.x, germ.y + germ.size/3);
+                ctx.shadowBlur = 0;
             });
             
-            // Draw players
+            // Draw players with sick glow
             Object.values(players).forEach(player => {
+                ctx.shadowColor = player.color;
+                ctx.shadowBlur = 15;
                 ctx.font = `${player.size}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.fillText(player.emoji, player.x, player.y + player.size/3);
+                ctx.shadowBlur = 0;
                 
-                // Draw player name
+                // Draw player name with background
                 ctx.font = '12px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(player.x - 30, player.y - player.size - 20, 60, 15);
                 ctx.fillStyle = player.color;
-                ctx.fillText(player.name, player.x, player.y - player.size - 5);
-                ctx.fillStyle = '#000';
+                ctx.fillText(player.name, player.x, player.y - player.size - 8);
             });
             
             // Update score display
@@ -990,6 +1091,7 @@
         // Initialize displays
         updateLeaderboard();
         updateAdminPanel();
+        initSounds();
 
         // Game loop
         function gameLoop() {
