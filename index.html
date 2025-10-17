@@ -2519,7 +2519,7 @@
         // DEVELOPER: Set your music link here (for everyone)
         // NOTE: YouTube URLs don't work due to browser security
         // Use direct audio file links instead (MP3, WAV, etc.)
-        const DEVELOPER_BACKGROUND_MUSIC = null; // Set to null to use generated music, or paste direct audio file URL
+        const DEVELOPER_BACKGROUND_MUSIC = 'https://drive.google.com/uc?export=download&id=1mBLznJBmXeiBWDt-RAnC7b2P8UQonbbv'; // Converted Google Drive link to direct download
 
         // Initialize germs
         function initGerms() {
@@ -2686,12 +2686,31 @@
             try {
                 console.log('Loading custom music from:', musicUrl);
                 
-                // For YouTube URLs, we need to use a different approach
-                // YouTube doesn't allow direct audio access due to CORS
-                console.log('YouTube URL detected - using fallback to generated music');
-                console.log('Note: YouTube URLs cannot be used directly due to browser security');
-                customBackgroundMusic = null; // Force fallback to generated music
-                return;
+                // Check if it's a YouTube URL (won't work)
+                if (musicUrl.includes('youtube.com') || musicUrl.includes('youtu.be')) {
+                    console.log('YouTube URL detected - using fallback to generated music');
+                    console.log('Note: YouTube URLs cannot be used directly due to browser security');
+                    customBackgroundMusic = null; // Force fallback to generated music
+                    return;
+                }
+                
+                // Create audio element for loading direct audio files
+                const audio = new Audio();
+                audio.crossOrigin = 'anonymous';
+                audio.src = musicUrl;
+                
+                audio.addEventListener('canplaythrough', () => {
+                    console.log('Custom music loaded successfully');
+                    customBackgroundMusic = audio;
+                });
+                
+                audio.addEventListener('error', (e) => {
+                    console.log('Error loading custom music:', e);
+                    console.log('Falling back to generated music');
+                    customBackgroundMusic = null;
+                });
+                
+                audio.load();
                 
             } catch (e) {
                 console.log('Could not load custom music:', e);
