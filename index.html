@@ -6553,8 +6553,15 @@
 
         function hideLeaderboard() {
             document.getElementById('leaderboardPopup').style.display = 'none';
-            // Show Minecraft heart with "made by Maitha" message
-            showMinecraftHeart();
+            // Show Minecraft heart with "made by Maitha" message after 5 seconds
+            setTimeout(() => {
+                showMinecraftHeart();
+                // After Maitha credit, show leaderboard again
+                setTimeout(() => {
+                    document.getElementById('minecraftHeartModal').style.display = 'none';
+                    document.getElementById('leaderboardPopup').style.display = 'flex';
+                }, 3000); // Show leaderboard again after 3 seconds
+            }, 5000); // Wait 5 seconds before showing Maitha credit
         }
 
         // Show cute ending message
@@ -6664,6 +6671,8 @@
             const heartModal = document.getElementById('minecraftHeartModal');
             if (heartModal) {
                 heartModal.style.display = 'none';
+                // Show final "apple a day" message
+                showCuteEnding();
             }
         }
 
@@ -7079,7 +7088,7 @@
     <div id="soundGate" style="display:none; position:fixed; bottom:30px; left:50%; transform:translateX(-50%); z-index:3000;">
         <button id="soundGateBtn" class="minecraft-sound-gate-btn">
             <div class="sound-gate-header">
-                <div class="sound-gate-icon">🎵</div>
+                <div class="sound-gate-icon">⛏️</div>
                 <div class="sound-gate-sparkles">✨</div>
             </div>
             <div class="sound-gate-text">Hello Minecrafter!</div>
