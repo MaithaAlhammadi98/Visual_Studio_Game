@@ -341,6 +341,125 @@
             display: none;
         }
         
+        /* Hit feedback effects */
+        .hit-effect {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #ff0000;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: hitPulse 0.5s ease-out;
+        }
+        
+        @keyframes hitPulse {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        /* Target completion effects */
+        .completion-effect {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 5px solid #00ff00;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: completionPulse 1s ease-out;
+        }
+        
+        @keyframes completionPulse {
+            0% {
+                transform: scale(0.3);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Score display enhancement */
+        #scoreDisplay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 15;
+            display: none;
+            border: 2px solid #4CAF50;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .score-positive {
+            border-color: #4CAF50;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .score-negative {
+            border-color: #ff4444;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+            animation: scoreShake 0.3s ease-in-out;
+        }
+        
+        @keyframes scoreShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Achievement messages */
+        .achievement-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 25;
+            animation: achievementPop 2s ease-out forwards;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes achievementPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            80% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0;
+            }
+        }
+        
         .admin-control {
             margin: 10px 0;
             padding: 8px;
@@ -616,6 +735,11 @@
             Playing as: <span id="selectedCharName">Maitha</span>
         </div>
         
+        <!-- Enhanced Score Display -->
+        <div id="scoreDisplay">
+            Score: <span id="currentScore">100</span>
+        </div>
+        
         <!-- Arrow Controls -->
         <div id="arrowControls">
             <div class="arrow-row">
@@ -696,6 +820,7 @@
         let gameComplete = { player1: false, player2: false };
         let playerNames = { player1: 'Maitha', player2: 'Jamilah' };
         let currentPlayer = null;
+        let currentScore = 100; // Start with 100 points
         
         // Leaderboard (stored in localStorage)
         let leaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
@@ -915,27 +1040,41 @@
                 germ.y = Math.max(germ.size/2, Math.min(canvas.height - germ.size/2, germ.y));
             });
             
-            // Check collisions
-            Object.keys(players).forEach(playerKey => {
-                const player = players[playerKey];
+            // Check collisions - only for the controlled player
+            if (controlledPlayer && players[controlledPlayer]) {
+                const player = players[controlledPlayer];
                 
                 // Check germ collisions
                 germs.forEach((germ, index) => {
                     if (checkCollision(player, germ)) {
-                        scores[playerKey] -= 10;
-                        scores[playerKey] = Math.max(0, scores[playerKey]);
-                        // No auto-push - let players get hit!
+                        currentScore -= 10;
+                        currentScore = Math.max(0, currentScore);
+                        
+                        // Show hit effect
+                        showHitEffect(player.x, player.y);
+                        
+                        // Update score display with visual feedback
+                        updateScoreDisplay();
                     }
                 });
                 
-                // Check target collisions
+                // Check target collision
                 const targetKey = player.target;
                 const target = targets[targetKey];
-                if (checkCollision(player, target) && !gameComplete[playerKey]) {
-                    scores[playerKey] += 50;
-                    gameComplete[playerKey] = true;
+                if (checkCollision(player, target) && !gameComplete[controlledPlayer]) {
+                    currentScore += 50;
+                    gameComplete[controlledPlayer] = true;
+                    
+                    // Show completion effect
+                    const characterName = controlledPlayer === 'player1' ? 'Maitha' : 'Jamilah';
+                    const targetName = targetKey === 'school' ? 'School' : 'Hospital';
+                    const message = `🎉 ${characterName} reached ${targetName}! +50 points! 🎉`;
+                    showCompletionEffect(player.x, player.y, message);
+                    
+                    // Update score display
+                    updateScoreDisplay();
                 }
-            });
+            }
             
             // Check win condition
             if (gameComplete.player1 && gameComplete.player2) {
@@ -1123,12 +1262,15 @@
             characterSelection.style.display = 'none';
             gameUI.style.display = 'flex';
             document.getElementById('selectedCharacter').style.display = 'block';
+            document.getElementById('scoreDisplay').style.display = 'block';
             document.getElementById('arrowControls').style.display = 'flex';
             gameState = 'playing';
             
             // Reset game
+            currentScore = 100; // Reset to 100 points
             scores = { player1: 0, player2: 0 };
             gameComplete = { player1: false, player2: false };
+            updateScoreDisplay();
             players.player1.x = 50;
             players.player1.y = canvas.height / 2;
             players.player2.x = canvas.width - 50;
@@ -1160,6 +1302,59 @@
                 case 'right':
                     player.x = Math.min(canvas.width - player.size, player.x + moveDistance);
                     break;
+            }
+        }
+        
+        // Visual effect functions
+        function showHitEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'hit-effect';
+            effect.style.left = (x - 50) + 'px';
+            effect.style.top = (y - 50) + 'px';
+            document.getElementById('gameContainer').appendChild(effect);
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 500);
+        }
+        
+        function showCompletionEffect(x, y, message) {
+            // Show completion pulse effect
+            const effect = document.createElement('div');
+            effect.className = 'completion-effect';
+            effect.style.left = (x - 100) + 'px';
+            effect.style.top = (y - 100) + 'px';
+            document.getElementById('gameContainer').appendChild(effect);
+            
+            // Show achievement message
+            const messageEl = document.createElement('div');
+            messageEl.className = 'achievement-message';
+            messageEl.textContent = message;
+            document.getElementById('gameContainer').appendChild(messageEl);
+            
+            setTimeout(() => {
+                effect.remove();
+                messageEl.remove();
+            }, 2000);
+        }
+        
+        function updateScoreDisplay() {
+            const scoreEl = document.getElementById('currentScore');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            
+            scoreEl.textContent = currentScore;
+            
+            // Add visual feedback based on score change
+            if (currentScore < 100) {
+                scoreDisplay.classList.remove('score-positive');
+                scoreDisplay.classList.add('score-negative');
+                setTimeout(() => {
+                    scoreDisplay.classList.remove('score-negative');
+                    scoreDisplay.classList.add('score-positive');
+                }, 300);
+            } else {
+                scoreDisplay.classList.remove('score-negative');
+                scoreDisplay.classList.add('score-positive');
             }
         }
 
@@ -1258,6 +1453,7 @@
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
             document.getElementById('selectedCharacter').style.display = 'none';
+            document.getElementById('scoreDisplay').style.display = 'none';
             document.getElementById('arrowControls').style.display = 'none';
             
             // Clear name input and character selection
