@@ -314,9 +314,9 @@
             
             <input type="text" class="nameInput" id="playerName" placeholder="Enter your name for leaderboard" maxlength="20">
             
-            <button id="startBtn">Start Game!</button>
+            <button id="startBtn">Play Game!</button>
             
-            <button id="adminLoginBtn" style="margin-top: 20px; background: #666; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">👑 Admin Login</button>
+            <button id="adminLoginBtn" style="margin-top: 20px; background: #666; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">👑 Admin Panel</button>
         </div>
         
         <!-- Admin Login Modal -->
@@ -583,11 +583,11 @@
         let touches = {};
         let isDragging = false;
 
-        // Start game function
+        // Start game function - SIMPLIFIED VERSION
         function startGame() {
             const playerName = playerNameInput.value.trim() || 'Player';
             
-            // Add player to active players list
+            // Add to leaderboard for later
             const playerId = Date.now() + Math.random();
             const newPlayer = {
                 id: playerId,
@@ -609,22 +609,7 @@
             currentPlayer = newPlayer;
             updateAdminPanel();
             
-            // Check if admin has started the game
-            if (adminGameState !== 'active') {
-                alert('Waiting for admin to start the game...');
-                return;
-            }
-            
-            console.log('Starting game - adminGameState:', adminGameState, 'activePlayers:', activePlayers.length);
-            
-            // Start the game for this player
-            startGameForPlayer();
-            
-            // Assign player to either Maitha or Jamilah based on current players
-            const isPlayer1 = activePlayers.length % 2 === 1;
-            const targetPlayer = isPlayer1 ? 'player1' : 'player2';
-            
-            // Keep character names fixed (Maitha & Jamilah)
+            // SIMPLE: Just start the game immediately!
             playerNames.player1 = 'Maitha';
             playerNames.player2 = 'Jamilah';
             players.player1.name = 'Maitha';
@@ -968,7 +953,7 @@
         function adminStartGame() {
             adminGameState = 'active';
             gameStatus.textContent = 'Active';
-            alert('Game started! Players can now join and play.');
+            alert('Game is now active! Players can join anytime.');
             updateAdminPanel();
         }
 
