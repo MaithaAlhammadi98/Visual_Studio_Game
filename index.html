@@ -4393,6 +4393,7 @@
         let currentPlayer = null;
         let currentScore = 100; // Start with 100 points
         let gameStartTime = Date.now();
+        let isCountdownActive = false; // Track if countdown is running
         
         // Leaderboard (stored in localStorage)
         let leaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
@@ -5623,6 +5624,7 @@
 
         // Start game countdown (3..2..1..GO)
         function startGameCountdown() {
+            isCountdownActive = true; // Disable arrow controls
             let countdown = 3;
             const countdownEl = document.createElement('div');
             countdownEl.className = 'game-countdown';
@@ -5640,6 +5642,7 @@
                     // Start the game after "GO!"
                     setTimeout(() => {
                         countdownEl.remove();
+                        isCountdownActive = false; // Enable arrow controls
                         initGerms();
                         initRain();
                         playRainSound();
@@ -6183,7 +6186,7 @@
         
         // Arrow control functions
         function moveCharacter(direction) {
-            if (!controlledPlayer || gameState !== 'playing') return;
+            if (!controlledPlayer || gameState !== 'playing' || isCountdownActive) return;
             
             // Check if the controlled player has completed their goal
             if (gameComplete[controlledPlayer]) {
@@ -6459,11 +6462,6 @@
                     // Show the popup
                     console.log('Showing leaderboard popup');
                     popup.style.display = 'flex';
-                    
-                    // Add Minecraft heart after a short delay
-                    setTimeout(() => {
-                        showMinecraftHeart();
-                    }, 2000); // 2 seconds after leaderboard appears
                 })
                 .catch((error) => {
                     console.error('Error fetching Firebase data for popup:', error);
