@@ -2055,6 +2055,7 @@
                 
                 <div class="game-start-section">
                     <input type="text" class="nameInput minecraft-input" id="playerName" placeholder="Enter your Minecraft name (required)" maxlength="20" required>
+                    <input type="url" class="nameInput minecraft-input" id="musicUrl" placeholder="🎵 Paste your music link here (optional)" style="margin-top: 10px;">
                     <button id="startBtn" class="minecraft-btn">⛏️ Start Minecraft Adventure!</button>
                     <button id="adminLoginBtn" class="minecraft-btn admin">👑 Admin Panel</button>
                     <button id="musicBtn" class="minecraft-btn music">🎵 Play Music</button>
@@ -2512,6 +2513,8 @@
         let gameMusic;
         let soundEnabled = true;
         let audioContext;
+        let customBackgroundMusic = null;
+        let backgroundMusicSource = null;
 
         // Initialize germs
         function initGerms() {
@@ -2668,15 +2671,83 @@
             }
         }
 
-        // Play cute calm feminine background music for login screen
-        function playBackgroundMusic() {
+        // Load custom background music from URL
+        function loadCustomMusic(musicUrl) {
             if (!soundEnabled || !audioContext) {
                 console.log('Sound disabled or no audio context');
                 return;
             }
             
             try {
-                console.log('Playing background music...');
+                console.log('Loading custom music from:', musicUrl);
+                
+                // Create audio element for loading
+                const audio = new Audio();
+                audio.crossOrigin = 'anonymous';
+                audio.src = musicUrl;
+                
+                audio.addEventListener('canplaythrough', () => {
+                    console.log('Custom music loaded successfully');
+                    customBackgroundMusic = audio;
+                });
+                
+                audio.addEventListener('error', (e) => {
+                    console.log('Error loading custom music:', e);
+                    // Fall back to generated music
+                    customBackgroundMusic = null;
+                });
+                
+                audio.load();
+            } catch (e) {
+                console.log('Could not load custom music:', e);
+                customBackgroundMusic = null;
+            }
+        }
+
+        // Play background music (custom or generated)
+        function playBackgroundMusic() {
+            if (!soundEnabled || !audioContext) {
+                console.log('Sound disabled or no audio context');
+                return;
+            }
+            
+            // Stop any existing background music
+            if (backgroundMusicSource) {
+                backgroundMusicSource.stop();
+                backgroundMusicSource = null;
+            }
+            
+            // If we have custom music, play it
+            if (customBackgroundMusic) {
+                try {
+                    console.log('Playing custom background music...');
+                    
+                    // Create audio source from custom music
+                    const source = audioContext.createMediaElementSource(customBackgroundMusic);
+                    const gainNode = audioContext.createGain();
+                    
+                    source.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    // Set volume to 0.3 (30%)
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    
+                    // Play the custom music
+                    customBackgroundMusic.currentTime = 0;
+                    customBackgroundMusic.loop = true;
+                    customBackgroundMusic.play();
+                    
+                    backgroundMusicSource = source;
+                    console.log('Custom music started');
+                    return;
+                } catch (e) {
+                    console.log('Could not play custom music:', e);
+                }
+            }
+            
+            // Fall back to generated music if custom music fails
+            try {
+                console.log('Playing generated background music...');
                 
                 // Create a gentle, feminine melody
                 const melody = [
@@ -2702,14 +2773,14 @@
                     oscillator.frequency.setValueAtTime(note.freq, startTime + note.time);
                     oscillator.type = 'sine'; // Soft, gentle sound
                     
-                    gainNode.gain.setValueAtTime(0.2, startTime + note.time); // Louder for testing
+                    gainNode.gain.setValueAtTime(0.2, startTime + note.time);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + note.time + 0.8);
                     
                     oscillator.start(startTime + note.time);
                     oscillator.stop(startTime + note.time + 0.8);
                 });
                 
-                console.log('Background music notes scheduled');
+                console.log('Generated background music notes scheduled');
                 
                 // Repeat the melody every 5 seconds
                 setTimeout(() => {
@@ -4201,7 +4272,21 @@
         // Music button event listener
         document.getElementById('musicBtn').addEventListener('click', () => {
             console.log('Music button clicked');
-            playBackgroundMusic();
+            
+            // Check if user provided a custom music URL
+            const musicUrl = document.getElementById('musicUrl').value.trim();
+            if (musicUrl) {
+                console.log('Loading custom music from URL:', musicUrl);
+                loadCustomMusic(musicUrl);
+                
+                // Wait a moment for the music to load, then play
+                setTimeout(() => {
+                    playBackgroundMusic();
+                }, 1000);
+            } else {
+                console.log('No custom music URL, playing generated music');
+                playBackgroundMusic();
+            }
         });
 
         // Admin event listeners
