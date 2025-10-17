@@ -189,7 +189,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: none;
             justify-content: center;
             align-items: center;
@@ -197,41 +197,123 @@
         }
         
         #loginForm {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #loginForm::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
         }
         
         #loginForm h2 {
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 30px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        #loginForm h2::before {
+            content: '👑';
+            font-size: 24px;
+        }
+        
+        .input-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .input-group label {
+            color: #e0e0e0;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
         }
         
         #loginForm input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 15px 20px;
+            margin: 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
         
-        #loginForm button {
-            background: #4CAF50;
+        #loginForm input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        #loginForm input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .login-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        #loginBtn {
+            flex: 1;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
             color: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
+            padding: 15px 25px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
-            margin: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
         
-        #loginForm button:hover {
-            background: #45a049;
+        #loginBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        #cancelLoginBtn {
+            flex: 1;
+            background: linear-gradient(45deg, #f44336, #da190b);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+        
+        #cancelLoginBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
         }
         
         #logoutBtn {
@@ -679,11 +761,22 @@
         <!-- Admin Login Modal -->
         <div id="loginModal">
             <div id="loginForm">
-                <h2>🔐 Admin Login</h2>
-                <input type="email" id="adminEmail" placeholder="Enter admin email" required>
-                <input type="password" id="adminPassword" placeholder="Enter admin password" required>
-                <button id="loginBtn">Login</button>
-                <button id="cancelLoginBtn">Cancel</button>
+                <h2>Admin Access</h2>
+                
+                <div class="input-group">
+                    <label for="adminEmail">Email Address</label>
+                    <input type="email" id="adminEmail" placeholder="Enter your admin email" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="login-buttons">
+                    <button id="loginBtn">Login</button>
+                    <button id="cancelLoginBtn">Cancel</button>
+                </div>
             </div>
         </div>
 
