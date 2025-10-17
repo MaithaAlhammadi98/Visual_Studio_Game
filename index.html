@@ -3600,7 +3600,10 @@
                     <button class="btn" id="startBtn">⛏️ Start Minecraft Adventure!</button>
                     <div class="actions" style="margin-top:12px;">
                         <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
-                        <button class="btn btn--secondary" id="musicBtn">🎵 Play Music</button>
+                        <button class="btn btn--secondary" id="musicBtn" style="display:none;">🎵 Play Music</button>
+                        <button id="musicToggle" class="btn btn--secondary" style="display:none;">
+                            🔊 Mute
+                        </button>
                     </div>
                 </div>
             </div>
@@ -6410,6 +6413,119 @@
             // Show the cinematic on first load
             startCinematicIntro();
         });
+    </script>
+
+    <!-- Background music (loops) -->
+    <audio id="bgm" preload="auto" loop>
+        <!-- Fallback to generated music if external source fails -->
+        <source src="" type="audio/mpeg">
+    </audio>
+
+
+    <!-- One-time prompt if autoplay is blocked -->
+    <div id="soundGate" style="
+        display:none; position:fixed; inset:auto 16px 16px 16px;
+        background:rgba(0,0,0,.75); color:#fff; padding:12px 14px;
+        border:2px solid #00ff80; border-radius:12px; z-index:3000;
+        font-family:'VT323', monospace; text-align:center;">
+        ▶️ Tap anywhere (or press any key) to enable sound
+    </div>
+
+    <script>
+    (function () {
+        const bgm = document.getElementById('bgm');
+        const toggle = document.getElementById('musicToggle');
+        const gate  = document.getElementById('soundGate');
+
+        if (!bgm) return;
+
+        // Restore previous preference (default: sound ON)
+        let mutedPref = localStorage.getItem('bgmMuted');
+        let isMuted = mutedPref === 'true';
+
+        // Set the music source from the existing DEVELOPER_BACKGROUND_MUSIC
+        const DEVELOPER_BACKGROUND_MUSIC = 'https://drive.google.com/uc?export=download&id=1YQjqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJ';
+        if (DEVELOPER_BACKGROUND_MUSIC) {
+            bgm.src = DEVELOPER_BACKGROUND_MUSIC;
+        }
+
+        function updateToggleLabel() {
+            if (toggle) {
+                toggle.textContent = (bgm.muted || bgm.paused) ? '🔇 Unmute' : '🔊 Mute';
+            }
+        }
+
+        async function tryPlay() {
+            try {
+                // Apply mute preference before playing
+                bgm.muted = isMuted;
+                if (!isMuted) await bgm.play();
+                // If user prefers muted, keep it paused (or play muted if you want visualizers)
+                if (isMuted) bgm.pause();
+                if (toggle) toggle.style.display = 'inline-flex';
+                updateToggleLabel();
+                return true;
+            } catch (e) {
+                console.log('Autoplay blocked, showing sound gate');
+                // Autoplay blocked: show gate and wait for a gesture
+                if (gate) gate.style.display = 'block';
+                const unlock = () => {
+                    if (gate) gate.style.display = 'none';
+                    document.removeEventListener('pointerdown', unlock);
+                    document.removeEventListener('keydown', unlock);
+                    bgm.muted = isMuted;
+                    if (!isMuted) bgm.play().catch(()=>{}); // safe retry
+                    if (toggle) toggle.style.display = 'inline-flex';
+                    updateToggleLabel();
+                };
+                document.addEventListener('pointerdown', unlock, { once: true });
+                document.addEventListener('keydown', unlock, { once: true });
+                return false;
+            }
+        }
+
+        // Toggle click: mute/unmute, remember choice
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                // If it was muted or paused, unmute & play; else mute & pause
+                if (bgm.muted || bgm.paused) {
+                    bgm.muted = false;
+                    bgm.play().catch(()=>{ /* in case user hasn't interacted yet */ });
+                    isMuted = false;
+                } else {
+                    bgm.muted = true;
+                    bgm.pause();
+                    isMuted = true;
+                }
+                localStorage.setItem('bgmMuted', String(isMuted));
+                updateToggleLabel();
+            });
+        }
+
+        // Auto pause/resume when tab visibility changes (nice polish)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (!bgm.paused) bgm.pause();
+            } else {
+                if (!isMuted) bgm.play().catch(()=>{ /* might still be blocked until user taps */ });
+            }
+        });
+
+        // Kick things off as soon as the DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', tryPlay, { once: true });
+        } else {
+            tryPlay();
+        }
+
+        // Make the new music system globally accessible
+        window.newMusicSystem = {
+            bgm: bgm,
+            toggle: toggle,
+            isMuted: () => isMuted,
+            tryPlay: tryPlay
+        };
+    })();
     </script>
 </body>
 </html>
