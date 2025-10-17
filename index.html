@@ -76,19 +76,61 @@
             touch-action: auto;
         }
         
-        /* New clean intro screen design */
+        /* New clean intro screen design with beautiful pink clouds */
         #introScreen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #87CEEB, #98FB98);
+            background: #f9c9cf;
             display: block;
             z-index: 30;
             overflow-y: scroll;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
+        }
+
+        /* Beautiful pink cloud background layers */
+        #introScreen::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 182, 193, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(255, 192, 203, 0.7) 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(255, 218, 185, 0.6) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 182, 193, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(255, 192, 203, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 25%, #FFB6C1 50%, #FFC0CB 75%, #FFB6C1 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #introScreen::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 60% 40%, rgba(255, 218, 185, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 30% 80%, rgba(255, 182, 193, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 70% 10%, rgba(255, 192, 203, 0.4) 0%, transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+            animation: cloudFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes cloudFloat {
+            0%, 100% { transform: translateX(0px) translateY(0px); }
+            25% { transform: translateX(-10px) translateY(-5px); }
+            50% { transform: translateX(10px) translateY(5px); }
+            75% { transform: translateX(-5px) translateY(10px); }
         }
 
         /* Page container */
