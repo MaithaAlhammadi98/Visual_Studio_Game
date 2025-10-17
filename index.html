@@ -617,6 +617,9 @@
             
             console.log('Starting game - adminGameState:', adminGameState, 'activePlayers:', activePlayers.length);
             
+            // Start the game for this player
+            startGameForPlayer();
+            
             // Assign player to either Maitha or Jamilah based on current players
             const isPlayer1 = activePlayers.length % 2 === 1;
             const targetPlayer = isPlayer1 ? 'player1' : 'player2';
@@ -965,18 +968,11 @@
         function adminStartGame() {
             adminGameState = 'active';
             gameStatus.textContent = 'Active';
-            
-            // Force start the game immediately for testing
-            if (gameState === 'intro') {
-                // Start game directly
-                startGameDirectly();
-            }
-            
             alert('Game started! Players can now join and play.');
             updateAdminPanel();
         }
 
-        function startGameDirectly() {
+        function startGameForPlayer() {
             // Keep character names fixed (Maitha & Jamilah)
             playerNames.player1 = 'Maitha';
             playerNames.player2 = 'Jamilah';
