@@ -3604,6 +3604,22 @@
                         <button id="musicToggle" class="btn btn--secondary" style="display:none;">
                             🔊 Mute
                         </button>
+                        <button class="btn btn--secondary" id="viewLeaderboardBtn">🏆 View Leaderboard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Leaderboard Modal -->
+        <div id="playerLeaderboardModal" style="display: none;">
+            <div class="minecraft-leaderboard-popup">
+                <div class="minecraft-leaderboard-header">
+                    <h2>🏆 Live Leaderboard</h2>
+                    <button onclick="closePlayerLeaderboard()" class="minecraft-btn close-btn">❌ Close</button>
+                </div>
+                <div class="minecraft-leaderboard-content">
+                    <div class="minecraft-leaderboard-list" id="playerLeaderboardList">
+                        <!-- Player entries will be populated here -->
                     </div>
                 </div>
             </div>
@@ -5991,6 +6007,68 @@
             }
         }
 
+        // Show player leaderboard modal
+        function showPlayerLeaderboard() {
+            const modal = document.getElementById('playerLeaderboardModal');
+            const list = document.getElementById('playerLeaderboardList');
+            
+            if (!modal || !list) return;
+            
+            modal.style.display = 'flex';
+            
+            // Fetch live leaderboard data from Firebase
+            if (window.scoresRef) {
+                window.scoresRef
+                    .orderBy('score', 'desc')
+                    .orderBy('timeSec', 'asc')
+                    .limit(10)
+                    .get()
+                    .then((snapshot) => {
+                        let html = '';
+                        let rank = 1;
+                        
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            const playerName = data.playerName || 'Anonymous';
+                            const score = data.score || 0;
+                            const timeSec = data.timeSec || 0;
+                            const germsHit = data.germsHit || 0;
+                            
+                            html += `
+                                <div class="leaderboard-entry">
+                                    <div class="rank">#${rank}</div>
+                                    <div class="player-info">
+                                        <div class="player-name">${playerName}</div>
+                                        <div class="player-stats">Score: ${score} | Time: ${timeSec}s | Germs: ${germsHit}</div>
+                                    </div>
+                                </div>
+                            `;
+                            rank++;
+                        });
+                        
+                        if (html === '') {
+                            html = '<div class="leaderboard-entry">No scores yet! Be the first to play!</div>';
+                        }
+                        
+                        list.innerHTML = html;
+                    })
+                    .catch((error) => {
+                        console.error('Error loading player leaderboard:', error);
+                        list.innerHTML = '<div class="leaderboard-entry">Error loading leaderboard</div>';
+                    });
+            } else {
+                list.innerHTML = '<div class="leaderboard-entry">Firebase not connected</div>';
+            }
+        }
+
+        // Close player leaderboard modal
+        function closePlayerLeaderboard() {
+            const modal = document.getElementById('playerLeaderboardModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
         // Show Minecraft heart with thank you message
         function showMinecraftHeart() {
             const heartModal = document.getElementById('minecraftHeartModal');
@@ -6356,6 +6434,7 @@
         loginBtn.addEventListener('click', loginAdmin);
         cancelLoginBtn.addEventListener('click', hideLoginModal);
         adminLoginBtn.addEventListener('click', showLoginModal);
+        document.getElementById('viewLeaderboardBtn').addEventListener('click', showPlayerLeaderboard);
         
         // Allow Enter key to login
         adminPassword.addEventListener('keypress', (e) => {
