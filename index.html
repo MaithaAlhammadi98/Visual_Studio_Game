@@ -1950,6 +1950,36 @@
                 transform: translate(-50%, -50%) scale(0.8) rotate(5deg); 
             }
         }
+
+        /* Game Countdown */
+        .game-countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 120px;
+            font-weight: bold;
+            color: #FFD700;
+            font-family: 'VT323', monospace;
+            text-shadow: 5px 5px 0px #B8860B, 0 0 30px rgba(255, 215, 0, 1);
+            z-index: 40;
+            animation: countdownPulse 0.8s ease-out;
+        }
+
+        @keyframes countdownPulse {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.3); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.3); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1); 
+            }
+        }
         
         @keyframes achievementPop {
             0% {
@@ -5341,12 +5371,17 @@
 
         // End game
         function endGame() {
-            gameState = 'gameOver';
+            // Show Bravo celebration for Jamilah first
+            showJamilahBravoCelebration();
             
-            // Calculate completion time and germs hit
-            const completionTime = Math.floor((Date.now() - gameStartTime) / 1000);
-            // Calculate germs hit based on score difference (since germs can be -5 or -10 points)
-            const germsHit = Math.floor((100 - currentScore) / 5); // Approximate calculation
+            // Then show leaderboard after celebration
+            setTimeout(() => {
+                gameState = 'gameOver';
+                
+                // Calculate completion time and germs hit
+                const completionTime = Math.floor((Date.now() - gameStartTime) / 1000);
+                // Calculate germs hit based on score difference (since germs can be -5 or -10 points)
+                const germsHit = Math.floor((100 - currentScore) / 5); // Approximate calculation
             
             // Get the actual player name value, not the input element
             let actualPlayerName = 'Player';
@@ -5381,6 +5416,7 @@
             
             // Show leaderboard popup instead of game over screen
             showLeaderboardPopup();
+            }, 2500); // Wait 2.5 seconds for Jamilah's Bravo celebration
         }
 
         // Update leaderboard display
@@ -5488,15 +5524,40 @@
             const message = `⛏️ Navigate Maitha to the School! 🏫`;
             showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
             
-            // Start germs and rain after a short delay
+            // Start countdown after mission message
             setTimeout(() => {
-                initGerms();
-                initRain();
-                playRainSound();
-                playStartBell(); // Play bell when game starts
+                startGameCountdown();
             }, 2000); // 2 second delay after message
         }
-        
+
+        // Start game countdown (3..2..1..GO)
+        function startGameCountdown() {
+            let countdown = 3;
+            const countdownEl = document.createElement('div');
+            countdownEl.className = 'game-countdown';
+            countdownEl.textContent = countdown;
+            document.getElementById('gameContainer').appendChild(countdownEl);
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    countdownEl.textContent = countdown;
+                } else {
+                    countdownEl.textContent = 'GO!';
+                    clearInterval(countdownInterval);
+                    
+                    // Start the game after "GO!"
+                    setTimeout(() => {
+                        countdownEl.remove();
+                        initGerms();
+                        initRain();
+                        playRainSound();
+                        playStartBell(); // Play bell when game starts
+                    }, 800); // Short delay to show "GO!"
+                }
+            }, 1000); // 1 second between each number
+        }
+
         function updateCharacterDisplay() {
             const characterName = gamePhase === 'maitha' ? 'Maitha 🤒' : 'Jamilah 🤕';
             document.getElementById('selectedCharName').textContent = characterName;
@@ -6145,7 +6206,26 @@
                 celebrationEl.remove();
             }, 2500);
         }
-        
+
+        // Show Bravo celebration when Jamilah reaches hospital
+        function showJamilahBravoCelebration() {
+            // Create celebration container
+            const celebrationEl = document.createElement('div');
+            celebrationEl.className = 'bravo-celebration';
+            celebrationEl.innerHTML = `
+                <div class="bravo-cup">🏆</div>
+                <div class="bravo-text">BRAVO!</div>
+                <div class="bravo-subtext">Jamilah made it to Hospital!</div>
+            `;
+            
+            document.getElementById('gameContainer').appendChild(celebrationEl);
+            
+            // Remove after animation
+            setTimeout(() => {
+                celebrationEl.remove();
+            }, 2500);
+        }
+
         function updateScoreDisplay() {
             const scoreEl = document.getElementById('currentScore');
             const scoreDisplay = document.getElementById('scoreDisplay');
