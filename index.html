@@ -1002,11 +1002,18 @@
         }
         
         .admin-btn.danger {
-            background: #f44336;
+            background: #d63031;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
         }
         
         .admin-btn.danger:hover {
-            background: #da190b;
+            background: #e74c3c;
         }
         
         /* Game Guide Styles */
@@ -1769,17 +1776,25 @@
 
         // Clear all leaderboard data (for admin before class)
         async function clearGameScores() {
-            if (!confirm("Are you sure you want to clear all leaderboard data?")) return;
+            if (!confirm("⚠️ Are you sure you want to clear all leaderboard data?")) return;
 
-            const snapshot = await window.db.collection('scores').get();
-            const batch = window.db.batch();
-            snapshot.forEach((doc) => {
-                batch.delete(doc.ref);
-            });
+            try {
+                const snapshot = await window.db.collection('scores').get();
+                const batch = window.db.batch();
+                snapshot.forEach((doc) => batch.delete(doc.ref));
+                await batch.commit();
 
-            await batch.commit();
-            alert("Leaderboard has been cleared!");
-            console.log("All scores deleted from Firestore");
+                alert("✅ Leaderboard has been cleared!");
+                console.log("All scores deleted from Firestore");
+
+                // Optional: refresh the leaderboard if it's visible
+                if (typeof fetchLeaderboardOnce === 'function') {
+                    await fetchLeaderboardOnce();
+                }
+            } catch (error) {
+                console.error("Error clearing leaderboard:", error);
+                alert("❌ Failed to clear leaderboard. Check console for details.");
+            }
         }
     </script>
 
