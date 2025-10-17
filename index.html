@@ -1606,13 +1606,13 @@
                 const targetKey = player.target;
                 const target = targets[targetKey];
                 if (checkCollision(player, target) && !gameComplete[controlledPlayer]) {
-                    currentScore += 50;
+                    // No points added for reaching target
                     gameComplete[controlledPlayer] = true;
                     
                     // Show completion effect
                     const characterName = controlledPlayer === 'player1' ? 'Maitha' : 'Jamilah';
                     const targetName = targetKey === 'school' ? 'School' : 'Hospital';
-                    const message = `🎉 ${characterName} reached ${targetName}! +50 points! 🎉`;
+                    const message = `🎉 ${characterName} reached ${targetName}! 🎉`;
                     showCompletionEffect(player.x, player.y, message);
                     
                     // Update score display
@@ -1658,6 +1658,13 @@
                 ctx.textAlign = 'center';
                 ctx.fillText(target.emoji, target.x, target.y + target.size/3);
                 ctx.shadowBlur = 0;
+                
+                // Draw target title
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                const title = target.emoji === '🏫' ? 'School' : 'Hospital';
+                ctx.fillText(title, target.x, target.y + target.size/3 + 25);
             });
             
             // Draw germs with sick glow
@@ -1897,9 +1904,22 @@
             ctx.fillStyle = '#ffd93d';
             ctx.fillText('🏫', width * 0.1, height * 0.15);
             
+            // School title
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('School', width * 0.1, height * 0.15 + 25);
+            
             // Hospital (at green line - top area)
+            ctx.font = '30px Arial';
             ctx.fillStyle = '#6bcf7f';
             ctx.fillText('🏥', width * 0.9, height * 0.15);
+            
+            // Hospital title
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('Hospital', width * 0.9, height * 0.15 + 25);
             
             // Draw germs (scattered around, frozen)
             ctx.font = '25px Arial';
