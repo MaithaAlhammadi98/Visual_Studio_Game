@@ -3678,7 +3678,7 @@
             <div class="container">
                 <div class="card center">
                     <h1>⛏️ The Minecraft Mission</h1>
-                    <p>Guide <b>Maitha</b> to School and <b>Jamilah</b> to Hospital. Dodge germs. Beat the class!</p>
+                    <p>⛏️ Guide <b>Maitha</b> to School 🏫 and <b>Jamilah</b> to Hospital 🏥. Dodge germs 🦠. Beat the class! 🏆</p>
                 </div>
 
                 <div class="card center">
@@ -3724,7 +3724,7 @@
                         <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
                         <button class="btn btn--secondary" id="musicBtn" style="display:none;">🎵 Play Music</button>
                         <button id="musicToggle" class="btn btn--secondary" style="display:none;">
-                            🔊 Mute
+                            🔇 Mute
                         </button>
                         <button class="btn btn--secondary" id="viewLeaderboardBtn">🏆 View Leaderboard</button>
                     </div>
@@ -5113,7 +5113,7 @@
                     // Show completion effect
                     const characterName = controlledPlayer === 'player1' ? 'Maitha' : 'Jamilah';
                     const targetName = targetKey === 'school' ? 'School' : 'Hospital';
-                    const message = `🎉 ${characterName} reached ${targetName}! 🎉`;
+                    const message = `⛏️ ${characterName} successfully reached ${targetName}! 🎉`;
                     showCompletionEffect(player.x, player.y, message);
                     
                     // Play success sound
@@ -5341,7 +5341,7 @@
             targets.hospital.y = canvas.height * 0.15; // At green line - top area
             
             // Show the mission message first
-            const message = `Navigate Maitha to the School!`;
+            const message = `⛏️ Navigate Maitha to the School! 🏫`;
             showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
             
             // Start germs and rain after a short delay
@@ -5875,7 +5875,7 @@
                 updateCharacterDisplay();
                 
                 // Show switch message
-                const message = `🎯 Now guide Jamilah to the Hospital! 🏥`;
+                const message = `⛏️ Now guide Jamilah to the Hospital! 🏥`;
                 showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
             }
         }
