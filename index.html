@@ -501,6 +501,17 @@
             animation: scoreShake 0.3s ease-in-out;
         }
         
+        .score-frozen {
+            border-color: #4CAF50;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+            animation: scoreFreeze 1s ease-in-out;
+        }
+        
+        @keyframes scoreFreeze {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         @keyframes scoreShake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -1434,19 +1445,21 @@
             if (controlledPlayer && players[controlledPlayer]) {
                 const player = players[controlledPlayer];
                 
-                // Check germ collisions
-                germs.forEach((germ, index) => {
-                    if (checkCollision(player, germ)) {
-                        currentScore -= 5;
-                        currentScore = Math.max(0, currentScore);
-                        
-                        // Show hit effect
-                        showHitEffect(player.x, player.y);
-                        
-                        // Update score display with visual feedback
-                        updateScoreDisplay();
-                    }
-                });
+                // Check germ collisions - only if player hasn't completed their goal yet
+                if (!gameComplete[controlledPlayer]) {
+                    germs.forEach((germ, index) => {
+                        if (checkCollision(player, germ)) {
+                            currentScore -= 5;
+                            currentScore = Math.max(0, currentScore);
+                            
+                            // Show hit effect
+                            showHitEffect(player.x, player.y);
+                            
+                            // Update score display with visual feedback
+                            updateScoreDisplay();
+                        }
+                    });
+                }
                 
                 // Check target collision
                 const targetKey = player.target;
@@ -1458,11 +1471,18 @@
                     // Show completion effect
                     const characterName = controlledPlayer === 'player1' ? 'Maitha' : 'Jamilah';
                     const targetName = targetKey === 'school' ? 'School' : 'Hospital';
-                    const message = `🎉 ${characterName} reached ${targetName}! +50 points! 🎉`;
+                    const message = `🎉 ${characterName} reached ${targetName}! +50 points! Score frozen! 🎉`;
                     showCompletionEffect(player.x, player.y, message);
                     
-                    // Update score display
+                    // Update score display and show it's frozen
                     updateScoreDisplay();
+                    
+                    // Show score frozen indicator
+                    setTimeout(() => {
+                        const scoreDisplay = document.getElementById('scoreDisplay');
+                        scoreDisplay.innerHTML = `Score: <span id="currentScore">${currentScore}</span> <span style="color: #4CAF50;">🔒 FROZEN</span>`;
+                        scoreDisplay.classList.add('score-frozen');
+                    }, 2000);
                 }
             }
             
