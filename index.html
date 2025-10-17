@@ -63,6 +63,62 @@
             padding: 20px;
         }
         
+        #characterSelection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            z-index: 35;
+            padding: 20px;
+        }
+        
+        .character-option {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+        
+        .character-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .character-option.selected {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .character-emoji {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        
+        .character-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .character-goal {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
         #adminPanel {
             position: fixed;
             top: 10px;
@@ -155,6 +211,61 @@
         
         #logoutBtn:hover {
             background: #da190b;
+        }
+        
+        #arrowControls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 15;
+        }
+        
+        .arrow-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .arrow-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+        
+        .arrow-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .arrow-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+        
+        #selectedCharacter {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            z-index: 15;
+            display: none;
         }
         
         .admin-control {
@@ -319,6 +430,26 @@
             <button id="adminLoginBtn" style="margin-top: 20px; background: #666; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">👑 Admin Panel</button>
         </div>
         
+        <!-- Character Selection Screen -->
+        <div id="characterSelection">
+            <h1>🎮 Choose Your Character 🎮</h1>
+            <p>Select which character you want to control:</p>
+            
+            <div class="character-option" data-character="maitha">
+                <div class="character-emoji">🤒</div>
+                <div class="character-name">Maitha</div>
+                <div class="character-goal">Goal: Reach School 🏫</div>
+            </div>
+            
+            <div class="character-option" data-character="jamilah">
+                <div class="character-emoji">🤕</div>
+                <div class="character-name">Jamilah</div>
+                <div class="character-goal">Goal: Reach Hospital 🏥</div>
+            </div>
+            
+            <button id="confirmCharacter" style="margin-top: 20px; padding: 15px 30px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 10px; cursor: pointer; display: none;">Start Game!</button>
+        </div>
+        
         <!-- Admin Login Modal -->
         <div id="loginModal">
             <div id="loginForm">
@@ -369,8 +500,25 @@
         <canvas id="gameCanvas"></canvas>
         
         <div id="instructions">
-            Touch and drag to move your character!<br>
+            Use arrow buttons to move your character!<br>
             Avoid germs 🦠 (-10 pts) | Reach your goal (+50 pts)
+        </div>
+        
+        <!-- Selected Character Display -->
+        <div id="selectedCharacter">
+            Playing as: <span id="selectedCharName">Maitha</span>
+        </div>
+        
+        <!-- Arrow Controls -->
+        <div id="arrowControls">
+            <div class="arrow-row">
+                <div class="arrow-btn" id="upBtn">⬆️</div>
+            </div>
+            <div class="arrow-row">
+                <div class="arrow-btn" id="leftBtn">⬅️</div>
+                <div class="arrow-btn" id="downBtn">⬇️</div>
+                <div class="arrow-btn" id="rightBtn">➡️</div>
+            </div>
         </div>
         
         <!-- Game Over Screen with Leaderboard -->
@@ -455,6 +603,10 @@
         
         // Admin state
         let isAdminLoggedIn = false;
+        
+        // Character selection
+        let selectedCharacter = null;
+        let controlledPlayer = null;
 
         // Players
         const players = {
@@ -609,31 +761,9 @@
             currentPlayer = newPlayer;
             updateAdminPanel();
             
-            // SIMPLE: Just start the game immediately!
-            playerNames.player1 = 'Maitha';
-            playerNames.player2 = 'Jamilah';
-            players.player1.name = 'Maitha';
-            players.player2.name = 'Jamilah';
-            
-            player1Display.textContent = `Maitha: `;
-            player2Display.textContent = `Jamilah: `;
-            
+            // Show character selection instead of starting game immediately
             introScreen.style.display = 'none';
-            gameUI.style.display = 'flex';
-            gameState = 'playing';
-            
-            // Reset game
-            scores = { player1: 0, player2: 0 };
-            gameComplete = { player1: false, player2: false };
-            players.player1.x = 50;
-            players.player1.y = canvas.height / 2;
-            players.player2.x = canvas.width - 50;
-            players.player2.y = canvas.height / 2;
-            targets.school.y = 50;
-            targets.hospital.y = 50;
-            initGerms();
-            initRain();
-            playRainSound();
+            characterSelection.style.display = 'flex';
         }
 
         canvas.addEventListener('touchstart', (e) => {
@@ -957,7 +1087,28 @@
             updateAdminPanel();
         }
 
-        function startGameForPlayer() {
+        // Character selection functions
+        function selectCharacter(character) {
+            selectedCharacter = character;
+            
+            // Remove previous selection
+            document.querySelectorAll('.character-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection to clicked character
+            document.querySelector(`[data-character="${character}"]`).classList.add('selected');
+            
+            // Show confirm button
+            document.getElementById('confirmCharacter').style.display = 'block';
+        }
+        
+        function confirmCharacterSelection() {
+            if (!selectedCharacter) return;
+            
+            // Set controlled player
+            controlledPlayer = selectedCharacter === 'maitha' ? 'player1' : 'player2';
+            
             // Keep character names fixed (Maitha & Jamilah)
             playerNames.player1 = 'Maitha';
             playerNames.player2 = 'Jamilah';
@@ -967,8 +1118,14 @@
             player1Display.textContent = `Maitha: `;
             player2Display.textContent = `Jamilah: `;
             
-            introScreen.style.display = 'none';
+            // Show selected character
+            document.getElementById('selectedCharName').textContent = selectedCharacter === 'maitha' ? 'Maitha 🤒' : 'Jamilah 🤕';
+            
+            // Start the game
+            characterSelection.style.display = 'none';
             gameUI.style.display = 'flex';
+            document.getElementById('selectedCharacter').style.display = 'block';
+            document.getElementById('arrowControls').style.display = 'flex';
             gameState = 'playing';
             
             // Reset game
@@ -983,6 +1140,29 @@
             initGerms();
             initRain();
             playRainSound();
+        }
+        
+        // Arrow control functions
+        function moveCharacter(direction) {
+            if (!controlledPlayer || gameState !== 'playing') return;
+            
+            const player = players[controlledPlayer];
+            const moveDistance = 20;
+            
+            switch(direction) {
+                case 'up':
+                    player.y = Math.max(player.size, player.y - moveDistance);
+                    break;
+                case 'down':
+                    player.y = Math.min(canvas.height - player.size, player.y + moveDistance);
+                    break;
+                case 'left':
+                    player.x = Math.max(player.size, player.x - moveDistance);
+                    break;
+                case 'right':
+                    player.x = Math.min(canvas.width - player.size, player.x + moveDistance);
+                    break;
+            }
         }
 
         function adminStopGame() {
@@ -1061,6 +1241,8 @@
             gameState = 'intro';
             scores = { player1: 0, player2: 0 };
             gameComplete = { player1: false, player2: false };
+            selectedCharacter = null;
+            controlledPlayer = null;
             
             // Reset player positions
             players.player1.x = 50;
@@ -1074,11 +1256,18 @@
             
             // Show intro screen
             introScreen.style.display = 'flex';
+            characterSelection.style.display = 'none';
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
+            document.getElementById('selectedCharacter').style.display = 'none';
+            document.getElementById('arrowControls').style.display = 'none';
             
-            // Clear name input
+            // Clear name input and character selection
             playerNameInput.value = '';
+            document.querySelectorAll('.character-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('confirmCharacter').style.display = 'none';
         }
 
         // Event listeners
@@ -1107,6 +1296,21 @@
         playerNameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') startGame();
         });
+        
+        // Character selection event listeners
+        document.querySelectorAll('.character-option').forEach(option => {
+            option.addEventListener('click', () => {
+                selectCharacter(option.dataset.character);
+            });
+        });
+        
+        document.getElementById('confirmCharacter').addEventListener('click', confirmCharacterSelection);
+        
+        // Arrow control event listeners
+        document.getElementById('upBtn').addEventListener('click', () => moveCharacter('up'));
+        document.getElementById('downBtn').addEventListener('click', () => moveCharacter('down'));
+        document.getElementById('leftBtn').addEventListener('click', () => moveCharacter('left'));
+        document.getElementById('rightBtn').addEventListener('click', () => moveCharacter('right'));
 
         // Initialize displays
         updateLeaderboard();
