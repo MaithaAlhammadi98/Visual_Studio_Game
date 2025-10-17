@@ -1153,7 +1153,7 @@
                 </div>
                 
                 <div class="game-start-section">
-                    <input type="text" class="nameInput" id="playerName" placeholder="Enter your name for leaderboard" maxlength="20">
+                    <input type="text" class="nameInput" id="playerName" placeholder="Enter your name (required)" maxlength="20" required>
                     <button id="startBtn">🎮 Start Adventure!</button>
                     <button id="adminLoginBtn">👑 Admin Panel</button>
                 </div>
@@ -1477,7 +1477,20 @@
 
         // Start game function - SIMPLIFIED VERSION
         function startGame() {
-            const playerName = playerNameInput.value.trim() || 'Player';
+            const playerName = playerNameInput.value.trim();
+            
+            // Check if name is entered
+            if (!playerName) {
+                alert('Please enter your name to play!');
+                playerNameInput.focus();
+                playerNameInput.style.border = '2px solid #ff4444';
+                playerNameInput.style.boxShadow = '0 0 10px rgba(255, 68, 68, 0.5)';
+                setTimeout(() => {
+                    playerNameInput.style.border = '';
+                    playerNameInput.style.boxShadow = '';
+                }, 2000);
+                return;
+            }
             
             // Add to leaderboard for later
             const playerId = Date.now() + Math.random();
