@@ -251,7 +251,7 @@
         
         #arrowControls {
             position: absolute;
-            bottom: 20px;
+            bottom: 120px;
             right: 20px;
             display: none;
             flex-direction: column;
@@ -261,9 +261,30 @@
         
         @media (max-height: 2000px) {
             #arrowControls {
-                bottom: 15px;
+                bottom: 100px;
                 right: 15px;
                 gap: 6px;
+            }
+        }
+        
+        /* For screens with browser UI that covers bottom */
+        @media (max-height: 2200px) {
+            #arrowControls {
+                bottom: 150px;
+            }
+        }
+        
+        /* Alternative left-side positioning for better visibility */
+        @media (max-width: 1200px) and (max-height: 2200px) {
+            #arrowControls {
+                left: 20px;
+                right: auto;
+                bottom: 150px;
+            }
+            
+            #instructions {
+                right: 200px;
+                left: 200px;
             }
         }
         
@@ -428,15 +449,22 @@
         
         #instructions {
             position: absolute;
-            bottom: 10px;
+            bottom: 180px;
             left: 10px;
-            right: 10px;
+            right: 200px;
             text-align: center;
             color: #333;
             font-size: 14px;
             background: rgba(255, 255, 255, 0.8);
             padding: 10px;
             border-radius: 10px;
+        }
+        
+        @media (max-height: 2200px) {
+            #instructions {
+                bottom: 220px;
+                right: 220px;
+            }
         }
         
         #gameOverScreen {
