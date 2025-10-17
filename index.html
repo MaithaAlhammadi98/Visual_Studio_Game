@@ -571,27 +571,238 @@
             background: #da190b;
         }
         
-        #introScreen h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
+        /* Game Guide Styles */
+        .game-guide {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
-        #introScreen p {
-            font-size: 16px;
+        .guide-header {
+            text-align: center;
             margin-bottom: 30px;
+        }
+        
+        .guide-header h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .guide-header p {
+            color: white;
+            font-size: 16px;
             line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .guide-section {
+            margin-bottom: 25px;
+        }
+        
+        .guide-section h2 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .control-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .control-number {
+            font-size: 20px;
+        }
+        
+        .character-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .character-card {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 15px;
+            gap: 15px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .maitha-card {
+            background: linear-gradient(45deg, #8B5CF6, #7C3AED);
+        }
+        
+        .jamilah-card {
+            background: linear-gradient(45deg, #3B82F6, #2563EB);
+        }
+        
+        .character-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .character-dot.red {
+            background: #EF4444;
+        }
+        
+        .character-dot.purple {
+            background: #8B5CF6;
+        }
+        
+        .destination-icon {
+            margin-left: auto;
+            font-size: 24px;
+        }
+        
+        .warning-box {
+            background: linear-gradient(45deg, #059669, #047857);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+        
+        .germ-icon {
+            font-size: 32px;
+        }
+        
+        .warning-text {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .scoring-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .score-item.positive .score-value {
+            color: #10B981;
+            font-weight: bold;
+        }
+        
+        .score-item.negative .score-value {
+            color: #EF4444;
+            font-weight: bold;
+        }
+        
+        .score-item.info {
+            opacity: 0.8;
+        }
+        
+        .score-icon {
+            font-size: 18px;
+        }
+        
+        .game-start-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .game-start-section .nameInput {
+            margin-bottom: 20px;
+        }
+        
+        .game-start-section button {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        #startBtn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        #startBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        #adminLoginBtn {
+            background: linear-gradient(45deg, #6366F1, #4F46E5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        #adminLoginBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
         
         @media (max-height: 2000px) {
-            #introScreen h1 {
-                font-size: 24px;
-                margin-bottom: 8px;
+            .game-guide {
+                padding: 15px;
+                max-width: 500px;
             }
             
-            #introScreen p {
+            .guide-header h1 {
+                font-size: 28px;
+            }
+            
+            .guide-header p {
                 font-size: 14px;
-                margin-bottom: 20px;
-                line-height: 1.4;
+            }
+            
+            .guide-section h2 {
+                font-size: 18px;
+            }
+            
+            .control-item, .score-item {
+                font-size: 14px;
+            }
+            
+            .character-card {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+            
+            .warning-box {
+                padding: 15px;
+            }
+            
+            .warning-text {
+                font-size: 14px;
             }
         }
         
@@ -726,16 +937,81 @@
     <div id="gameContainer">
         <!-- Introduction Screen -->
         <div id="introScreen">
-            <h1>🌧️ Sick Day Adventure 🌧️</h1>
-            <p>It's a rainy day and both Maitha 🤒 and Jamilah 🤕 are sick!<br>
-            Help Maitha reach school and Jamilah reach the hospital<br>
-            while avoiding the bouncing germs in the storm! 🌧️🦠</p>
-            
-            <input type="text" class="nameInput" id="playerName" placeholder="Enter your name for leaderboard" maxlength="20">
-            
-            <button id="startBtn">Play Game!</button>
-            
-            <button id="adminLoginBtn" style="margin-top: 20px; background: #666; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">👑 Admin Panel</button>
+            <div class="game-guide">
+                <div class="guide-header">
+                    <h1>🎮 The Mission</h1>
+                    <p>Guide Maitha to School and Jamilah to Hospital by manually controlling them with the arrow buttons!</p>
+                </div>
+                
+                <div class="guide-section">
+                    <h2>🎮 Controls</h2>
+                    <div class="control-list">
+                        <div class="control-item">
+                            <span class="control-number">1️⃣</span>
+                            <span>Select which character to control</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-number">2️⃣</span>
+                            <span>Use arrow buttons to move them</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-number">3️⃣</span>
+                            <span>Hold the button to keep moving</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h2>👥 Characters & Destinations</h2>
+                    <div class="character-options">
+                        <div class="character-card maitha-card">
+                            <div class="character-dot red"></div>
+                            <span>Maitha → School</span>
+                            <div class="destination-icon">🏫</div>
+                        </div>
+                        <div class="character-card jamilah-card">
+                            <div class="character-dot purple"></div>
+                            <span>Jamilah → Hospital</span>
+                            <div class="destination-icon">🏥</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h2>⚠️ Avoid the Germs!</h2>
+                    <div class="warning-box">
+                        <div class="germ-icon">🦠</div>
+                        <div class="warning-text">
+                            <strong>Navigate carefully!</strong><br>
+                            Hitting a germ costs you 5 points. Plan your route wisely!
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h2>⭐ Scoring</h2>
+                    <div class="scoring-list">
+                        <div class="score-item positive">
+                            <span class="score-icon">✅</span>
+                            <span>Reach destination: <span class="score-value">+50 points</span></span>
+                        </div>
+                        <div class="score-item negative">
+                            <span class="score-icon">❌</span>
+                            <span>Hit a germ: <span class="score-value">-5 points</span></span>
+                        </div>
+                        <div class="score-item info">
+                            <span class="score-icon">💡</span>
+                            <span>Your score is saved to the leaderboard when you complete the game!</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-start-section">
+                    <input type="text" class="nameInput" id="playerName" placeholder="Enter your name for leaderboard" maxlength="20">
+                    <button id="startBtn">🎮 Start Adventure!</button>
+                    <button id="adminLoginBtn">👑 Admin Panel</button>
+                </div>
+            </div>
         </div>
         
         <!-- Character Selection Screen -->
