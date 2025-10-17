@@ -357,6 +357,68 @@
             margin-bottom: 25px;
             opacity: 0.9;
         }
+
+        /* Game Summary Styles */
+        .game-summary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 182, 193, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            font-family: 'VT323', monospace;
+        }
+
+        .game-summary h3 {
+            color: #FFB6C1;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: #FFF6D1;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        .summary-item.goal {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 182, 193, 0.3);
+            font-size: 20px;
+            color: #FFD700;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        .germ-icon, .mission-icon, .trophy-icon {
+            font-size: 24px;
+            margin-right: 12px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .germ-icon.red-germ {
+            filter: hue-rotate(0deg) saturate(1.5) brightness(0.8);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+        }
+
+        .germ-icon.green-germ {
+            filter: hue-rotate(120deg) saturate(1.5) brightness(1.2);
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+        }
+
+        .mission-icon {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .trophy-icon {
+            filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5));
+        }
         
         .preview-buttons {
             display: flex;
@@ -3931,6 +3993,31 @@
                     <div class="preview-content">
                         <h1>Ready to Play?</h1>
                         <p>Welcome <span id="playerNamePreview">Player</span>! Navigate both characters to their destinations!</p>
+                        
+                        <div class="game-summary">
+                            <h3>🎮 Game Summary:</h3>
+                            <div class="summary-item">
+                                <span class="germ-icon red-germ">🦠</span>
+                                <span>Red Germs: <strong>-10 points</strong></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="germ-icon green-germ">🦠</span>
+                                <span>Green Germs: <strong>-5 points</strong></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="mission-icon">⛏️</span>
+                                <span>Guide <strong>Maitha</strong> to School 🏫</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="mission-icon">⛏️</span>
+                                <span>Then guide <strong>Jamilah</strong> to Hospital 🏥</span>
+                            </div>
+                            <div class="summary-item goal">
+                                <span class="trophy-icon">🏆</span>
+                                <span><strong>Lead the Leaderboard!</strong></span>
+                            </div>
+                        </div>
+                        
                         <button id="confirmCharacter">🚀 Start Mission!</button>
                     </div>
                 </div>
