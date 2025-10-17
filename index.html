@@ -586,7 +586,7 @@
         /* Score display enhancement */
         #scoreDisplay {
             position: absolute;
-            top: 60px;
+            top: 110px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.9);
@@ -764,7 +764,7 @@
         /* Mobile score display adjustments */
         @media (max-width: 768px) {
             #scoreDisplay {
-                top: 80px;
+                top: 130px;
                 font-size: 16px;
                 padding: 6px 12px;
                 min-width: 70px;
@@ -773,7 +773,7 @@
 
         @media (max-height: 800px) {
             #scoreDisplay {
-                top: 70px;
+                top: 120px;
             }
         }
         
@@ -2006,9 +2006,9 @@
             gameStartTime = Date.now(); // Reset start time
             updateScoreDisplay();
             players.player1.x = 50;
-            players.player1.y = canvas.height * 0.85; // At orange line - bottom area
+            players.player1.y = canvas.height * 0.9; // Moved down 5cm (0.85 to 0.9)
             players.player2.x = canvas.width - 50;
-            players.player2.y = canvas.height * 0.85; // At orange line - bottom area
+            players.player2.y = canvas.height * 0.9; // Moved down 5cm (0.85 to 0.9)
             targets.school.y = canvas.height * 0.15; // At green line - top area
             targets.hospital.y = canvas.height * 0.15; // At green line - top area
             initGerms();
@@ -2057,13 +2057,13 @@
             ctx.font = '40px Arial';
             ctx.textAlign = 'center';
             
-            // Maitha (left side, at orange line - bottom area)
+            // Maitha (left side, moved down 5cm)
             ctx.fillStyle = '#ff6b6b';
-            ctx.fillText('🤒', width * 0.15, height * 0.85);
+            ctx.fillText('🤒', width * 0.15, height * 0.9);
             
-            // Jamilah (right side, at orange line - bottom area)
+            // Jamilah (right side, moved down 5cm)
             ctx.fillStyle = '#4ecdc4';
-            ctx.fillText('🤕', width * 0.85, height * 0.85);
+            ctx.fillText('🤕', width * 0.85, height * 0.9);
             
             // Draw targets
             ctx.font = '30px Arial';
@@ -2447,9 +2447,9 @@
             
             // Reset player positions
             players.player1.x = 50;
-            players.player1.y = canvas.height * 0.85; // At orange line - bottom area
+            players.player1.y = canvas.height * 0.9; // Moved down 5cm (0.85 to 0.9)
             players.player2.x = canvas.width - 50;
-            players.player2.y = canvas.height * 0.85; // At orange line - bottom area
+            players.player2.y = canvas.height * 0.9; // Moved down 5cm (0.85 to 0.9)
             
             // Reset targets positions
             targets.school.y = canvas.height * 0.15; // At green line - top area
