@@ -1623,7 +1623,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script>
-        // Your Firebase config
+        // --- Firebase setup ---
         const firebaseConfig = {
             apiKey: "AIzaSyB1_gkpoxhQXmn6mFPf8PFtyzugBagTN5U",
             authDomain: "school-hospital-game.firebaseapp.com",
@@ -1633,51 +1633,33 @@
             appId: "1:976651001981:web:8205c31633b1fac606d114"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        
-        console.log('Firebase initialized:', firebase.app().name);
-        
-        // Make Firestore + collection available everywhere
-        window.db = window.db || firebase.firestore();
-        window.scoresRef = window.scoresRef || window.db.collection('scores');
+        window.db = db;
+        window.scoresRef = db.collection('scores');
 
-        // Write a score when a run finishes
+        // --- Save each game result ---
         function saveGameAttemptToFirebase(name, score, timeSec, germsHit) {
             console.log('Saving to Firebase:', { name, score, timeSec, germsHit });
             return window.scoresRef.add({
-                name: String(name), 
-                score: Number(score), 
-                timeSec: Number(timeSec), 
+                name: String(name),
+                score: Number(score),
+                timeSec: Number(timeSec),
                 germsHit: Number(germsHit),
                 ts: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                console.log('Successfully saved to Firebase!');
-            }).catch((error) => {
-                console.error('Error saving to Firebase:', error);
-            });
+            }).then(() => console.log('Score saved!'))
+                .catch(err => console.error('Save error:', err));
         }
 
-        // Renders both the big overlay list and the mini list, if present
+        // --- Render leaderboard ---
         function renderLeaderboardFromSnapshot(snap) {
-            console.log('Rendering leaderboard with', snap.size, 'documents');
             const list = document.getElementById('liveLeaderboardList');
             const mini = document.getElementById('leaderboardList');
-            
-            if (!list) {
-                console.error('liveLeaderboardList element not found!');
-                return;
-            }
-            
             if (list) list.innerHTML = '';
             if (mini) mini.innerHTML = '';
-            
             let rank = 1;
             snap.forEach(doc => {
-                const data = doc.data();
-                const {name='Player', score=0, timeSec='-', germsHit='-'} = data;
-                console.log(`Rank ${rank}: ${name} - ${score} points`);
+                const { name='Player', score=0, timeSec='-', germsHit='-' } = doc.data();
 
                 if (list) {
                     const row = document.createElement('div');
@@ -1693,132 +1675,74 @@
                 }
 
                 if (mini) {
-                    const r2 = document.createElement('div');
-                    r2.className = 'leaderboard-entry';
-                    r2.innerHTML = `<span>${rank}. ${name}</span><span>${score} pts</span>`;
-                    mini.appendChild(r2);
+                    const miniRow = document.createElement('div');
+                    miniRow.className = 'leaderboard-entry';
+                    miniRow.innerHTML = `<span>${rank}. ${name}</span><span>${score} pts</span>`;
+                    mini.appendChild(miniRow);
                 }
-
                 rank++;
             });
+
             const total = document.getElementById('totalPlayers');
             if (total) total.textContent = `Players: ${snap.size}`;
-            console.log('Leaderboard rendered successfully');
         }
 
-        // Live subscription
+        // --- Live subscription ---
         function startLeaderboardListener() {
-            console.log('Starting leaderboard listener...');
-            if (window._lbUnsub) {
-                console.log('Cleaning up previous listener');
-                window._lbUnsub();
-            }
-            
-            // Make sure we have the collection reference
-            if (!window.scoresRef) {
-                console.error('scoresRef not found!');
-                return;
-            }
-            
-            console.log('Setting up new listener...');
+            if (window._lbUnsub) window._lbUnsub();
             window._lbUnsub = window.scoresRef
-                .orderBy('score','desc')
-                .orderBy('ts','asc')
+                .orderBy('score', 'desc')
+                .orderBy('ts', 'asc')
                 .limit(20)
                 .onSnapshot(
-                    (snap) => {
-                        console.log('Leaderboard update received:', snap.size, 'documents');
-                        renderLeaderboardFromSnapshot(snap);
-                    },
-                    (err) => {
-                        console.error('Leaderboard listen error:', err.code, err.message);
-                        alert('Leaderboard error: ' + err.message);
-                    }
+                    snap => renderLeaderboardFromSnapshot(snap),
+                    err => console.error('Leaderboard listen error:', err)
                 );
         }
 
-        // One-shot fetch (forces a manual refresh without changing listener)
+        // --- Manual refresh ---
         async function fetchLeaderboardOnce() {
             const snap = await window.scoresRef
-                .orderBy('score','desc')
-                .orderBy('ts','asc')
+                .orderBy('score', 'desc')
+                .orderBy('ts', 'asc')
                 .limit(20)
                 .get();
             renderLeaderboardFromSnapshot(snap);
         }
 
-        // Wire buttons
+        // --- Button helpers ---
         function wireLeaderboardButtons() {
-            const refreshBtn = document.getElementById('refreshLeaderboardBtn') 
-                            || document.querySelector('#liveLeaderboard button.refresh, #liveLeaderboard .refresh');
+            const refreshBtn = document.querySelector('#liveLeaderboard .refresh-btn');
             if (refreshBtn) {
-                refreshBtn.type = 'button'; // avoid form submit
                 refreshBtn.onclick = async () => {
-                    // Option A: re-subscribe entirely
-                    // startLeaderboardListener();
-
-                    // Option B (usually nicer): just fetch once
-                    refreshBtn.disabled = true; 
+                    refreshBtn.disabled = true;
                     refreshBtn.textContent = 'Refreshing...';
                     try { await fetchLeaderboardOnce(); }
                     finally {
                         refreshBtn.disabled = false;
-                        refreshBtn.textContent = 'Refresh';
+                        refreshBtn.textContent = '🔄 Refresh';
                     }
                 };
             }
         }
 
-        // Call when opening the modal
+        // --- Show/Hide modal ---
         function showLiveLeaderboard() {
-            console.log('Opening live leaderboard...');
             const el = document.getElementById('liveLeaderboard');
-            if (el) {
-                el.style.display = 'flex';
-                console.log('Leaderboard modal shown');
-            } else {
-                console.error('liveLeaderboard element not found!');
-                return;
-            }
-            
-            // Start the listener
+            if (el) el.style.display = 'flex';
             startLeaderboardListener();
             wireLeaderboardButtons();
-            
-            // Also try to fetch data immediately
-            console.log('Fetching leaderboard data immediately...');
-            fetchLeaderboardOnce().then(() => {
-                console.log('Initial data fetch completed');
-            }).catch((error) => {
-                console.error('Error fetching initial data:', error);
-            });
         }
 
-        // Optional close
         function hideLiveLeaderboard() {
             if (window._lbUnsub) window._lbUnsub();
             const el = document.getElementById('liveLeaderboard');
             if (el) el.style.display = 'none';
         }
 
-        // expose to buttons you already have
         window.showLiveLeaderboard = showLiveLeaderboard;
         window.hideLiveLeaderboard = hideLiveLeaderboard;
-        
-        // Add the missing refreshLeaderboard function for the HTML button
-        window.refreshLeaderboard = async function () {
-            const btn = document.querySelector('#liveLeaderboard .refresh-btn');
-            if (btn) { btn.disabled = true; btn.textContent = 'Refreshing...'; }
-            try {
-                // Option A: just pull latest once (keeps live listener)
-                await fetchLeaderboardOnce();
-
-                // Option B: full re-subscribe instead (uncomment if you prefer)
-                // startLeaderboardListener();
-            } finally {
-                if (btn) { btn.disabled = false; btn.textContent = '🔄 Refresh'; }
-            }
-        };
+        window.refreshLeaderboard = fetchLeaderboardOnce;
 
         // Clear all leaderboard data (for admin before class)
         async function clearGameScores() {
