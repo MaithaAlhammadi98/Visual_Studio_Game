@@ -1875,6 +1875,81 @@
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
             100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
+
+        /* Bravo Celebration */
+        .bravo-celebration {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 30;
+            animation: bravoCelebration 2.5s ease-out;
+        }
+
+        .bravo-cup {
+            font-size: 80px;
+            animation: cupBounce 2s ease-in-out infinite;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.5));
+        }
+
+        @keyframes cupBounce {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            50% { transform: translateY(-5px) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(-5deg); }
+        }
+
+        .bravo-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+            font-family: 'VT323', monospace;
+            text-shadow: 3px 3px 0px #B8860B, 0 0 20px rgba(255, 215, 0, 0.8);
+            margin-bottom: 8px;
+            animation: textGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 3px 3px 0px #B8860B, 0 0 20px rgba(255, 215, 0, 0.8); }
+            50% { text-shadow: 3px 3px 0px #B8860B, 0 0 30px rgba(255, 215, 0, 1); }
+        }
+
+        .bravo-subtext {
+            font-size: 20px;
+            color: #FFF6D1;
+            font-family: 'VT323', monospace;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+            background: rgba(163, 107, 56, 0.9);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid #42210b;
+            display: inline-block;
+        }
+
+        @keyframes bravoCelebration {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.5) rotate(-10deg); 
+            }
+            20% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.1) rotate(5deg); 
+            }
+            40% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+            }
+            80% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.8) rotate(5deg); 
+            }
+        }
         
         @keyframes achievementPop {
             0% {
@@ -5938,14 +6013,19 @@
         
         function switchToNextCharacter() {
             if (gamePhase === 'maitha' && gameComplete.player1) {
-                // Switch to Jamilah after Maitha completes
-                gamePhase = 'jamilah';
-                controlledPlayer = 'player2';
-                updateCharacterDisplay();
+                // Show Bravo celebration first
+                showBravoCelebration();
                 
-                // Show switch message
-                const message = `⛏️ Now guide Jamilah to the Hospital! 🏥`;
-                showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
+                // Then switch to Jamilah after a delay
+                setTimeout(() => {
+                    gamePhase = 'jamilah';
+                    controlledPlayer = 'player2';
+                    updateCharacterDisplay();
+                    
+                    // Show switch message
+                    const message = `⛏️ Now guide Jamilah to the Hospital! 🏥`;
+                    showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
+                }, 2500); // Wait 2.5 seconds for Bravo celebration
             }
         }
         
@@ -6045,6 +6125,25 @@
                 effect.remove();
                 messageEl.remove();
             }, 2000);
+        }
+
+        // Show Bravo celebration when Maitha reaches school
+        function showBravoCelebration() {
+            // Create celebration container
+            const celebrationEl = document.createElement('div');
+            celebrationEl.className = 'bravo-celebration';
+            celebrationEl.innerHTML = `
+                <div class="bravo-cup">🏆</div>
+                <div class="bravo-text">BRAVO!</div>
+                <div class="bravo-subtext">Maitha made it to School!</div>
+            `;
+            
+            document.getElementById('gameContainer').appendChild(celebrationEl);
+            
+            // Remove after animation
+            setTimeout(() => {
+                celebrationEl.remove();
+            }, 2500);
         }
         
         function updateScoreDisplay() {
