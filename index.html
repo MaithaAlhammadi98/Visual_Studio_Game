@@ -1376,13 +1376,13 @@
         const targets = {
             school: {
                 x: 50,
-                y: canvas.height * 0.35, // Moved down from top
+                y: canvas.height * 0.15, // At green line - top area
                 size: 40,
                 emoji: '🏫'
             },
             hospital: {
                 x: canvas.width - 50,
-                y: canvas.height * 0.35, // Moved down from top
+                y: canvas.height * 0.15, // At green line - top area
                 size: 40,
                 emoji: '🏥'
             }
@@ -1831,11 +1831,11 @@
             germHitCooldown.clear(); // Clear any cooldowns
             updateScoreDisplay();
             players.player1.x = 50;
-            players.player1.y = canvas.height * 0.6; // Moved down from center
+            players.player1.y = canvas.height * 0.85; // At orange line - bottom area
             players.player2.x = canvas.width - 50;
-            players.player2.y = canvas.height * 0.6; // Moved down from center
-            targets.school.y = canvas.height * 0.35; // Moved down from top
-            targets.hospital.y = canvas.height * 0.35; // Moved down from top
+            players.player2.y = canvas.height * 0.85; // At orange line - bottom area
+            targets.school.y = canvas.height * 0.15; // At green line - top area
+            targets.hospital.y = canvas.height * 0.15; // At green line - top area
             initGerms();
             initRain();
             playRainSound();
@@ -1882,24 +1882,24 @@
             ctx.font = '40px Arial';
             ctx.textAlign = 'center';
             
-            // Maitha (left side, moved down)
+            // Maitha (left side, at orange line - bottom area)
             ctx.fillStyle = '#ff6b6b';
-            ctx.fillText('🤒', width * 0.15, height * 0.6);
+            ctx.fillText('🤒', width * 0.15, height * 0.85);
             
-            // Jamilah (right side, moved down)
+            // Jamilah (right side, at orange line - bottom area)
             ctx.fillStyle = '#4ecdc4';
-            ctx.fillText('🤕', width * 0.85, height * 0.6);
+            ctx.fillText('🤕', width * 0.85, height * 0.85);
             
             // Draw targets
             ctx.font = '30px Arial';
             
-            // School (moved down from top)
+            // School (at green line - top area)
             ctx.fillStyle = '#ffd93d';
-            ctx.fillText('🏫', width * 0.1, height * 0.35);
+            ctx.fillText('🏫', width * 0.1, height * 0.15);
             
-            // Hospital (moved down from top)
+            // Hospital (at green line - top area)
             ctx.fillStyle = '#6bcf7f';
-            ctx.fillText('🏥', width * 0.9, height * 0.35);
+            ctx.fillText('🏥', width * 0.9, height * 0.15);
             
             // Draw germs (scattered around, frozen)
             ctx.font = '25px Arial';
@@ -2120,13 +2120,13 @@
             
             // Reset player positions
             players.player1.x = 50;
-            players.player1.y = canvas.height * 0.6; // Moved down from center
+            players.player1.y = canvas.height * 0.85; // At orange line - bottom area
             players.player2.x = canvas.width - 50;
-            players.player2.y = canvas.height * 0.6; // Moved down from center
+            players.player2.y = canvas.height * 0.85; // At orange line - bottom area
             
             // Reset targets positions
-            targets.school.y = canvas.height * 0.35; // Moved down from top
-            targets.hospital.y = canvas.height * 0.35; // Moved down from top
+            targets.school.y = canvas.height * 0.15; // At green line - top area
+            targets.hospital.y = canvas.height * 0.15; // At green line - top area
             
             // Show intro screen
             introScreen.style.display = 'flex';
