@@ -630,6 +630,18 @@
             pointer-events: none;
             animation: hitPulse 0.5s ease-out;
         }
+
+        .oof-message {
+            position: absolute;
+            color: #ff4757;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            z-index: 100;
+            white-space: nowrap;
+        }
         
         @keyframes hitPulse {
             0% {
@@ -2660,6 +2672,9 @@
                             // Show hit effect
                             showHitEffect(player.x, player.y);
                             
+                            // Show "Oof! -5" message
+                            showOofMessage(player.x, player.y);
+                            
                             // Update score display with visual feedback
                             updateScoreDisplay();
                             
@@ -3483,6 +3498,32 @@
             setTimeout(() => {
                 effect.remove();
             }, 500);
+        }
+
+        function showOofMessage(x, y) {
+            const oofDiv = document.createElement('div');
+            oofDiv.className = 'oof-message';
+            oofDiv.textContent = 'Oof! -5';
+            oofDiv.style.left = x + 'px';
+            oofDiv.style.top = (y - 60) + 'px';
+            document.getElementById('gameContainer').appendChild(oofDiv);
+            
+            // Animate the message floating up and fading out
+            let opacity = 1;
+            let yPos = y - 60;
+            const animate = () => {
+                opacity -= 0.02;
+                yPos -= 1;
+                oofDiv.style.opacity = opacity;
+                oofDiv.style.top = yPos + 'px';
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    oofDiv.remove();
+                }
+            };
+            animate();
         }
         
         function showCompletionEffect(x, y, message) {
