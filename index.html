@@ -1282,6 +1282,122 @@
             box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
         }
 
+        /* Cute Ending Modal Styles */
+        #cuteEndingModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 182, 193, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+        }
+
+        .cute-ending-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            border: 3px solid rgba(255, 182, 193, 0.8);
+            box-shadow: 0 20px 40px rgba(255, 182, 193, 0.3);
+            font-family: 'VT323', monospace;
+            animation: cuteEndingPop 0.6s ease-out;
+        }
+
+        @keyframes cuteEndingPop {
+            0% { transform: scale(0.8) rotate(-5deg); opacity: 0; }
+            50% { transform: scale(1.05) rotate(2deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .cute-ending-header {
+            margin-bottom: 25px;
+        }
+
+        .cute-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            animation: appleBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes appleBounce {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            50% { transform: translateY(-5px) rotate(-3deg); }
+            75% { transform: translateY(-8px) rotate(3deg); }
+        }
+
+        .cute-ending-header h2 {
+            color: #2b2b2b;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 0px rgba(255, 182, 193, 0.3);
+            line-height: 1.2;
+        }
+
+        .cute-ending-body {
+            margin: 25px 0;
+        }
+
+        .cute-main-message {
+            font-size: 24px;
+            color: #2b2b2b;
+            margin: 0 0 15px 0;
+            font-weight: bold;
+        }
+
+        .cute-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.6), transparent);
+            margin: 20px 0;
+            border-radius: 2px;
+        }
+
+        .cute-sub-message {
+            font-size: 18px;
+            color: #666;
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        .cute-creator {
+            font-size: 20px;
+            color: #2b2b2b;
+            margin: 15px 0 0 0;
+            font-weight: bold;
+        }
+
+        .cute-ending-footer {
+            margin-top: 25px;
+        }
+
+        .cute-ending-btn {
+            background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+            color: white;
+            border: 2px solid rgba(255, 182, 193, 0.8);
+            padding: 15px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
+            font-family: 'VT323', monospace;
+        }
+
+        .cute-ending-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 182, 193, 0.5);
+            background: linear-gradient(135deg, #FFC0CB, #FFB6C1);
+        }
+
         /* Heart floating animation */
         @keyframes minecraftHeartFloat {
             0%, 100% { transform: translateY(0px) scale(1); }
@@ -3489,7 +3605,28 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- Cute Ending Message Modal -->
+        <div id="cuteEndingModal" style="display: none;">
+            <div class="cute-ending-content">
+                <div class="cute-ending-header">
+                    <div class="cute-icon">🍎</div>
+                    <h2>One Apply a Day, Keeps the Doctor Away!</h2>
+                </div>
+                
+                <div class="cute-ending-body">
+                    <p class="cute-main-message">Thank you for playing! 🌸</p>
+                    <div class="cute-divider"></div>
+                    <p class="cute-sub-message">- This game was made for fun -</p>
+                    <p class="cute-creator">Made with 💖 by Maitha</p>
+                </div>
+                
+                <div class="cute-ending-footer">
+                    <button onclick="closeCuteEnding()" class="cute-ending-btn">🌸 Close</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Character Selection Screen -->
         <div id="characterSelection">
             <!-- Frozen Game Preview -->
@@ -5829,6 +5966,26 @@
 
         function hideLeaderboard() {
             document.getElementById('leaderboardPopup').style.display = 'none';
+            // Show cute ending message
+            showCuteEnding();
+        }
+
+        // Show cute ending message
+        function showCuteEnding() {
+            const endingModal = document.getElementById('cuteEndingModal');
+            if (endingModal) {
+                endingModal.style.display = 'flex';
+            }
+        }
+
+        // Close cute ending message
+        function closeCuteEnding() {
+            const endingModal = document.getElementById('cuteEndingModal');
+            if (endingModal) {
+                endingModal.style.display = 'none';
+                // Go back to intro screen
+                document.getElementById('introScreen').style.display = 'flex';
+            }
         }
 
         // Show Minecraft heart with thank you message
