@@ -2481,6 +2481,7 @@
         let rainSound;
         let gameMusic;
         let soundEnabled = true;
+        let audioContext;
 
         // Initialize germs
         function initGerms() {
@@ -2515,16 +2516,24 @@
         function initSounds() {
             // Create rain sound using Web Audio API
             try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // Rain sound effect
+                // Rain sound effect with thunderstorm
                 function createRainSound() {
-                    const bufferSize = audioContext.sampleRate * 2; // 2 seconds
+                    const bufferSize = audioContext.sampleRate * 4; // 4 seconds
                     const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
                     const data = buffer.getChannelData(0);
                     
                     for (let i = 0; i < bufferSize; i++) {
-                        data[i] = (Math.random() * 2 - 1) * 0.1;
+                        // Quieter rain (0.03 instead of 0.1)
+                        let rain = (Math.random() * 2 - 1) * 0.03;
+                        
+                        // Occasional thunder (every ~2 seconds)
+                        if (Math.random() < 0.001) {
+                            rain += (Math.random() * 2 - 1) * 0.2 * Math.exp(-i / audioContext.sampleRate);
+                        }
+                        
+                        data[i] = rain;
                     }
                     
                     return buffer;
@@ -2542,7 +2551,6 @@
             if (!soundEnabled || !rainSound) return;
             
             try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const source = audioContext.createBufferSource();
                 source.buffer = rainSound;
                 source.loop = true;
@@ -2551,6 +2559,82 @@
                 return source;
             } catch (e) {
                 console.log('Could not play rain sound');
+            }
+        }
+
+        // Play game start bell sound
+        function playStartBell() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.2);
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Could not play start bell');
+            }
+        }
+
+        // Play "Oof!" sound for germ hit
+        function playOofSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // "Oof!" sound - low frequency with quick decay
+                oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.1);
+                
+                gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.15);
+            } catch (e) {
+                console.log('Could not play oof sound');
+            }
+        }
+
+        // Play success sound for reaching target
+        function playSuccessSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Success sound - ascending notes
+                oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1); // E5
+                oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2); // G5
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+            } catch (e) {
+                console.log('Could not play success sound');
             }
         }
 
@@ -2675,6 +2759,9 @@
                             // Show "Oof! -5" message
                             showOofMessage(player.x, player.y);
                             
+                            // Play "Oof!" sound
+                            playOofSound();
+                            
                             // Update score display with visual feedback
                             updateScoreDisplay();
                             
@@ -2698,6 +2785,9 @@
                     const targetName = targetKey === 'school' ? 'School' : 'Hospital';
                     const message = `🎉 ${characterName} reached ${targetName}! 🎉`;
                     showCompletionEffect(player.x, player.y, message);
+                    
+                    // Play success sound
+                    playSuccessSound();
                     
                     // Update score display
                     updateScoreDisplay();
@@ -2929,6 +3019,7 @@
                 initGerms();
                 initRain();
                 playRainSound();
+                playStartBell(); // Play bell when game starts
             }, 2000); // 2 second delay after message
         }
         
