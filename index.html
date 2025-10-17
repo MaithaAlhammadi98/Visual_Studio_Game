@@ -2291,9 +2291,8 @@
 
         // Render game
         function render() {
-            // Clear canvas with dark rainy background
-            ctx.fillStyle = '#2C3E50';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Clear canvas with pixel garden background
+            drawPixelGardenBackground(ctx, canvas.width, canvas.height);
             
             // Draw rain
             ctx.strokeStyle = 'rgba(135, 206, 235, 0.6)';
@@ -2533,9 +2532,113 @@
             document.getElementById('playerNamePreview').textContent = playerName;
         }
         
+        // Draw pixel garden background
+        function drawPixelGardenBackground(ctx, width, height) {
+            // Disable anti-aliasing for crisp pixel art
+            ctx.imageSmoothingEnabled = false;
+            
+            // Sky gradient
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, height * 0.6);
+            skyGradient.addColorStop(0, '#87CEEB'); // Sky blue
+            skyGradient.addColorStop(1, '#98FB98'); // Light green
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, width, height * 0.6);
+            
+            // Ground
+            ctx.fillStyle = '#90EE90'; // Light green grass
+            ctx.fillRect(0, height * 0.6, width, height * 0.4);
+            
+            // Draw pixel flowers scattered around
+            drawPixelFlowers(ctx, width, height);
+            
+            // Draw pixel trees in background
+            drawPixelTrees(ctx, width, height);
+            
+            // Draw pixel grass details
+            drawPixelGrass(ctx, width, height);
+        }
+        
+        // Draw pixel flowers
+        function drawPixelFlowers(ctx, width, height) {
+            const flowerPositions = [
+                {x: width * 0.1, y: height * 0.7, color: '#FF69B4'}, // Pink
+                {x: width * 0.3, y: height * 0.8, color: '#FFD700'}, // Yellow
+                {x: width * 0.7, y: height * 0.75, color: '#FF69B4'}, // Pink
+                {x: width * 0.9, y: height * 0.8, color: '#FFD700'}, // Yellow
+                {x: width * 0.5, y: height * 0.85, color: '#FF69B4'}, // Pink
+            ];
+            
+            flowerPositions.forEach(flower => {
+                drawPixelFlower(ctx, flower.x, flower.y, flower.color);
+            });
+        }
+        
+        // Draw a single pixel flower
+        function drawPixelFlower(ctx, x, y, color) {
+            const pixelSize = 2;
+            ctx.fillStyle = color;
+            
+            // Flower petals (5 petals)
+            ctx.fillRect(x - pixelSize, y - pixelSize, pixelSize, pixelSize); // Top
+            ctx.fillRect(x + pixelSize, y - pixelSize, pixelSize, pixelSize); // Right
+            ctx.fillRect(x - pixelSize, y + pixelSize, pixelSize, pixelSize); // Left
+            ctx.fillRect(x + pixelSize, y + pixelSize, pixelSize, pixelSize); // Bottom
+            ctx.fillRect(x, y - pixelSize*2, pixelSize, pixelSize); // Top center
+            
+            // Flower center
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(x, y, pixelSize, pixelSize);
+        }
+        
+        // Draw pixel trees
+        function drawPixelTrees(ctx, width, height) {
+            const treePositions = [
+                {x: width * 0.05, y: height * 0.5},
+                {x: width * 0.95, y: height * 0.45},
+            ];
+            
+            treePositions.forEach(tree => {
+                drawPixelTree(ctx, tree.x, tree.y);
+            });
+        }
+        
+        // Draw a single pixel tree
+        function drawPixelTree(ctx, x, y) {
+            const pixelSize = 2;
+            
+            // Tree trunk
+            ctx.fillStyle = '#8B4513';
+            for (let i = 0; i < 4; i++) {
+                ctx.fillRect(x, y + (i * pixelSize), pixelSize, pixelSize);
+            }
+            
+            // Tree leaves
+            ctx.fillStyle = '#228B22';
+            for (let i = -2; i <= 2; i++) {
+                for (let j = -2; j <= 0; j++) {
+                    if (Math.abs(i) + Math.abs(j) <= 2) {
+                        ctx.fillRect(x + (i * pixelSize), y + (j * pixelSize), pixelSize, pixelSize);
+                    }
+                }
+            }
+        }
+        
+        // Draw pixel grass details
+        function drawPixelGrass(ctx, width, height) {
+            const pixelSize = 1;
+            ctx.fillStyle = '#32CD32';
+            
+            // Scattered grass pixels
+            for (let i = 0; i < 50; i++) {
+                const x = (i * 23) % width;
+                const y = height * 0.6 + (i * 7) % (height * 0.4);
+                ctx.fillRect(x, y, pixelSize, pixelSize);
+            }
+        }
+
         // Draw pixel art character function
         function drawAnimatedCharacter(ctx, x, y, character, isSick = true) {
-            const pixelSize = 4; // Size of each pixel
+            const pixelSize = 2; // Smaller pixels for more detailed characters
             const centerX = x;
             const centerY = y;
             
@@ -2550,16 +2653,16 @@
             const bounceOffset = Math.sin(time) * 1; // Subtle bounce
             const finalY = centerY + bounceOffset;
             
-            // Character colors
+            // Character colors - more human-like
             let skinColor, hairColor, shirtColor, pantsColor;
             if (character === 'maitha') {
                 skinColor = '#FDBCB4';  // Light skin
-                hairColor = '#8B4513';  // Brown hair
+                hairColor = '#8B4513';  // Brown hair (longer, more feminine)
                 shirtColor = '#FF6B6B'; // Red shirt
                 pantsColor = '#4A4A4A'; // Dark pants
             } else {
                 skinColor = '#D4A574';  // Slightly darker skin
-                hairColor = '#2C3E50';  // Dark hair
+                hairColor = '#2C3E50';  // Dark hair (longer, more feminine)
                 shirtColor = '#4ECDC4'; // Teal shirt
                 pantsColor = '#34495E'; // Darker pants
             }
@@ -2571,10 +2674,10 @@
             ctx.restore();
         }
         
-        // Draw pixel art character sprite
+        // Draw pixel art character sprite - more human-like with female hair
         function drawPixelCharacter(ctx, centerX, centerY, pixelSize, skinColor, hairColor, shirtColor, pantsColor, isSick) {
-            const offsetX = centerX - (8 * pixelSize); // Center the 16-pixel wide character
-            const offsetY = centerY - (10 * pixelSize); // Center the 20-pixel tall character
+            const offsetX = centerX - (6 * pixelSize); // Center the 12-pixel wide character
+            const offsetY = centerY - (8 * pixelSize); // Center the 16-pixel tall character
             
             // Helper function to draw a pixel
             function drawPixel(x, y, color) {
@@ -2582,52 +2685,46 @@
                 ctx.fillRect(offsetX + (x * pixelSize), offsetY + (y * pixelSize), pixelSize, pixelSize);
             }
             
-            // Character sprite data (16x20 grid)
-            // Row 0: Hair
-            for (let i = 2; i < 14; i++) drawPixel(i, 0, hairColor);
-            for (let i = 1; i < 15; i++) drawPixel(i, 1, hairColor);
+            // Character sprite data (12x16 grid) - More detailed and human-like
             
-            // Row 2-3: Face
-            for (let i = 3; i < 13; i++) drawPixel(i, 2, skinColor);
-            for (let i = 2; i < 14; i++) drawPixel(i, 3, skinColor);
+            // Row 0-1: Long hair (feminine)
+            for (let i = 1; i < 11; i++) drawPixel(i, 0, hairColor);
+            for (let i = 0; i < 12; i++) drawPixel(i, 1, hairColor);
+            
+            // Row 2-3: Face and hair
+            for (let i = 2; i < 10; i++) drawPixel(i, 2, skinColor);
+            for (let i = 1; i < 11; i++) drawPixel(i, 3, skinColor);
             
             // Row 4-5: Eyes and face
-            drawPixel(5, 4, '#000000'); // Left eye
-            drawPixel(10, 4, '#000000'); // Right eye
-            drawPixel(7, 5, '#000000'); // Nose
-            drawPixel(6, 6, '#000000'); // Mouth left
-            drawPixel(7, 6, '#000000'); // Mouth center
-            drawPixel(8, 6, '#000000'); // Mouth right
+            drawPixel(3, 4, '#000000'); // Left eye
+            drawPixel(8, 4, '#000000'); // Right eye
+            drawPixel(5, 5, '#000000'); // Nose
+            drawPixel(4, 6, '#000000'); // Mouth left
+            drawPixel(5, 6, '#000000'); // Mouth center
+            drawPixel(6, 6, '#000000'); // Mouth right
             
             // Row 6-7: Face continuation
-            for (let i = 3; i < 13; i++) drawPixel(i, 6, skinColor);
-            for (let i = 2; i < 14; i++) drawPixel(i, 7, skinColor);
+            for (let i = 2; i < 10; i++) drawPixel(i, 6, skinColor);
+            for (let i = 1; i < 11; i++) drawPixel(i, 7, skinColor);
             
-            // Row 8-11: Shirt
-            for (let i = 2; i < 14; i++) drawPixel(i, 8, shirtColor);
-            for (let i = 1; i < 15; i++) drawPixel(i, 9, shirtColor);
-            for (let i = 1; i < 15; i++) drawPixel(i, 10, shirtColor);
-            for (let i = 2; i < 14; i++) drawPixel(i, 11, shirtColor);
+            // Row 8-10: Shirt (more feminine)
+            for (let i = 2; i < 10; i++) drawPixel(i, 8, shirtColor);
+            for (let i = 1; i < 11; i++) drawPixel(i, 9, shirtColor);
+            for (let i = 2; i < 10; i++) drawPixel(i, 10, shirtColor);
             
-            // Row 12-15: Pants
-            for (let i = 3; i < 7; i++) drawPixel(i, 12, pantsColor);
-            for (let i = 9; i < 13; i++) drawPixel(i, 12, pantsColor);
-            for (let i = 3; i < 7; i++) drawPixel(i, 13, pantsColor);
-            for (let i = 9; i < 13; i++) drawPixel(i, 13, pantsColor);
-            for (let i = 3; i < 7; i++) drawPixel(i, 14, pantsColor);
-            for (let i = 9; i < 13; i++) drawPixel(i, 14, pantsColor);
-            for (let i = 3; i < 7; i++) drawPixel(i, 15, pantsColor);
-            for (let i = 9; i < 13; i++) drawPixel(i, 15, pantsColor);
+            // Row 11-13: Pants
+            for (let i = 3; i < 6; i++) drawPixel(i, 11, pantsColor);
+            for (let i = 6; i < 9; i++) drawPixel(i, 11, pantsColor);
+            for (let i = 3; i < 6; i++) drawPixel(i, 12, pantsColor);
+            for (let i = 6; i < 9; i++) drawPixel(i, 12, pantsColor);
+            for (let i = 3; i < 6; i++) drawPixel(i, 13, pantsColor);
+            for (let i = 6; i < 9; i++) drawPixel(i, 13, pantsColor);
             
-            // Row 16-19: Legs
-            for (let i = 4; i < 6; i++) drawPixel(i, 16, pantsColor);
-            for (let i = 10; i < 12; i++) drawPixel(i, 16, pantsColor);
-            for (let i = 4; i < 6; i++) drawPixel(i, 17, pantsColor);
-            for (let i = 10; i < 12; i++) drawPixel(i, 17, pantsColor);
-            for (let i = 4; i < 6; i++) drawPixel(i, 18, pantsColor);
-            for (let i = 10; i < 12; i++) drawPixel(i, 18, pantsColor);
-            for (let i = 4; i < 6; i++) drawPixel(i, 19, pantsColor);
-            for (let i = 10; i < 12; i++) drawPixel(i, 19, pantsColor);
+            // Row 14-15: Legs
+            for (let i = 4; i < 6; i++) drawPixel(i, 14, pantsColor);
+            for (let i = 6; i < 8; i++) drawPixel(i, 14, pantsColor);
+            for (let i = 4; i < 6; i++) drawPixel(i, 15, pantsColor);
+            for (let i = 6; i < 8; i++) drawPixel(i, 15, pantsColor);
             
             // Add sick effects if needed
             if (isSick) {
@@ -2653,9 +2750,8 @@
         }
 
         function drawPreviewGame(ctx, width, height) {
-            // Clear canvas
-            ctx.fillStyle = '#f0f8ff';
-            ctx.fillRect(0, 0, width, height);
+            // Draw pixel garden background for preview too
+            drawPixelGardenBackground(ctx, width, height);
             
             // Draw rain effect (static)
             ctx.fillStyle = 'rgba(173, 216, 230, 0.6)';
