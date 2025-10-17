@@ -2055,7 +2055,6 @@
                 
                 <div class="game-start-section">
                     <input type="text" class="nameInput minecraft-input" id="playerName" placeholder="Enter your Minecraft name (required)" maxlength="20" required>
-                    <input type="url" class="nameInput minecraft-input" id="musicUrl" placeholder="🎵 Paste your music link here (optional)" style="margin-top: 10px;">
                     <button id="startBtn" class="minecraft-btn">⛏️ Start Minecraft Adventure!</button>
                     <button id="adminLoginBtn" class="minecraft-btn admin">👑 Admin Panel</button>
                     <button id="musicBtn" class="minecraft-btn music">🎵 Play Music</button>
@@ -2515,6 +2514,9 @@
         let audioContext;
         let customBackgroundMusic = null;
         let backgroundMusicSource = null;
+        
+        // DEVELOPER: Set your YouTube music link here (for everyone)
+        const DEVELOPER_BACKGROUND_MUSIC = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'; // Replace with your YouTube link
 
         // Initialize germs
         function initGerms() {
@@ -4250,8 +4252,11 @@
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
             
-            // Start cute background music for login screen (after user interaction)
-            // Music will start when user clicks the start button or interacts with the page
+            // Load developer's background music automatically
+            if (DEVELOPER_BACKGROUND_MUSIC) {
+                console.log('Loading developer background music...');
+                loadCustomMusic(DEVELOPER_BACKGROUND_MUSIC);
+            }
             document.getElementById('leaderboardPopup').style.display = 'none';
             document.getElementById('selectedCharacter').style.display = 'none';
             document.getElementById('scoreDisplay').style.display = 'none';
@@ -4273,20 +4278,14 @@
         document.getElementById('musicBtn').addEventListener('click', () => {
             console.log('Music button clicked');
             
-            // Check if user provided a custom music URL
-            const musicUrl = document.getElementById('musicUrl').value.trim();
-            if (musicUrl) {
-                console.log('Loading custom music from URL:', musicUrl);
-                loadCustomMusic(musicUrl);
-                
-                // Wait a moment for the music to load, then play
-                setTimeout(() => {
-                    playBackgroundMusic();
-                }, 1000);
-            } else {
-                console.log('No custom music URL, playing generated music');
+            // Use developer's YouTube music for everyone
+            console.log('Loading developer background music from:', DEVELOPER_BACKGROUND_MUSIC);
+            loadCustomMusic(DEVELOPER_BACKGROUND_MUSIC);
+            
+            // Wait a moment for the music to load, then play
+            setTimeout(() => {
                 playBackgroundMusic();
-            }
+            }, 1000);
         });
 
         // Admin event listeners
