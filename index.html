@@ -1314,6 +1314,56 @@
             z-index: 1;
         }
 
+        /* Make all text inside sections dark and readable */
+        .minecraft-guide .control-item,
+        .minecraft-guide .character-card,
+        .minecraft-guide .warning-text,
+        .minecraft-guide .score-item {
+            color: #654321 !important;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .minecraft-guide .control-item span,
+        .minecraft-guide .character-card span,
+        .minecraft-guide .score-item span {
+            color: #654321 !important;
+        }
+
+        .minecraft-guide .warning-text strong {
+            color: #8B0000 !important;
+        }
+
+        /* Minecraft Sections with solid boxes */
+        .minecraft-guide .guide-section {
+            background: rgba(255, 182, 193, 0.9);
+            border: 2px solid #8B4513;
+            border-radius: 0;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .minecraft-guide .guide-header {
+            background: rgba(255, 182, 193, 0.9);
+            border: 2px solid #8B4513;
+            border-radius: 0;
+            padding: 20px;
+            margin: 0 0 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .minecraft-guide .game-start-section {
+            background: rgba(255, 182, 193, 0.9);
+            border: 2px solid #8B4513;
+            border-radius: 0;
+            padding: 20px;
+            margin: 20px 0 0 0;
+            position: relative;
+            z-index: 1;
+        }
+
         /* Minecraft Items */
         .minecraft-item {
             background: linear-gradient(45deg, #8B4513, #A0522D);
