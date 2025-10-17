@@ -2306,22 +2306,20 @@
             });
             ctx.globalAlpha = 1;
             
-            // Draw targets with glow effect
+            // Draw MINECRAFT-style targets
             Object.values(targets).forEach(target => {
-                // Glow effect
-                ctx.shadowColor = '#FFD700';
-                ctx.shadowBlur = 20;
-                ctx.font = `${target.size}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.fillText(target.emoji, target.x, target.y + target.size/3);
-                ctx.shadowBlur = 0;
+                if (target.emoji === '🏫') {
+                    drawMinecraftSchool(ctx, target.x, target.y);
+                } else {
+                    drawMinecraftHospital(ctx, target.x, target.y);
+                }
                 
                 // Draw target title
                 ctx.font = '16px Arial';
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
                 const title = target.emoji === '🏫' ? 'School' : 'Hospital';
-                ctx.fillText(title, target.x, target.y + target.size/3 + 25);
+                ctx.fillText(title, target.x, target.y + 60);
             });
             
             // Draw germs with sick glow
@@ -2532,45 +2530,253 @@
             document.getElementById('playerNamePreview').textContent = playerName;
         }
         
-        // Draw pixel garden background
+        // Draw MINECRAFT-style background
         function drawPixelGardenBackground(ctx, width, height) {
             // Disable anti-aliasing for crisp pixel art
             ctx.imageSmoothingEnabled = false;
             
-            // Sky gradient
-            const skyGradient = ctx.createLinearGradient(0, 0, 0, height * 0.6);
+            // Minecraft sky gradient
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, height * 0.7);
             skyGradient.addColorStop(0, '#87CEEB'); // Sky blue
-            skyGradient.addColorStop(1, '#98FB98'); // Light green
+            skyGradient.addColorStop(0.8, '#98FB98'); // Light green
+            skyGradient.addColorStop(1, '#8FBC8F'); // Darker green
             ctx.fillStyle = skyGradient;
-            ctx.fillRect(0, 0, width, height * 0.6);
+            ctx.fillRect(0, 0, width, height * 0.7);
             
-            // Ground
-            ctx.fillStyle = '#90EE90'; // Light green grass
-            ctx.fillRect(0, height * 0.6, width, height * 0.4);
+            // Minecraft grass blocks layer
+            drawMinecraftGrassBlocks(ctx, width, height);
             
-            // Draw pixel flowers scattered around
-            drawPixelFlowers(ctx, width, height);
+            // Minecraft dirt layer
+            drawMinecraftDirtBlocks(ctx, width, height);
             
-            // Draw pixel trees in background
-            drawPixelTrees(ctx, width, height);
+            // Minecraft stone layer
+            drawMinecraftStoneBlocks(ctx, width, height);
             
-            // Draw pixel grass details
-            drawPixelGrass(ctx, width, height);
+            // Draw Minecraft-style trees
+            drawMinecraftTrees(ctx, width, height);
+            
+            // Draw Minecraft flowers and grass
+            drawMinecraftVegetation(ctx, width, height);
         }
         
-        // Draw pixel flowers
-        function drawPixelFlowers(ctx, width, height) {
+        // Draw Minecraft grass blocks
+        function drawMinecraftGrassBlocks(ctx, width, height) {
+            const blockSize = 16;
+            const startY = height * 0.7;
+            const blocksWide = Math.ceil(width / blockSize);
+            const blocksHigh = Math.ceil((height - startY) / 3);
+            
+            for (let x = 0; x < blocksWide; x++) {
+                for (let y = 0; y < blocksHigh; y++) {
+                    const blockX = x * blockSize;
+                    const blockY = startY + (y * blockSize);
+                    
+                    // Grass block top (green)
+                    ctx.fillStyle = '#7CB342';
+                    ctx.fillRect(blockX, blockY, blockSize, blockSize);
+                    
+                    // Grass block side (darker green)
+                    ctx.fillStyle = '#689F38';
+                    ctx.fillRect(blockX, blockY + blockSize, blockSize, blockSize);
+                    
+                    // Grass block bottom (dirt color)
+                    ctx.fillStyle = '#8D6E63';
+                    ctx.fillRect(blockX, blockY + (blockSize * 2), blockSize, blockSize);
+                }
+            }
+        }
+        
+        // Draw Minecraft dirt blocks
+        function drawMinecraftDirtBlocks(ctx, width, height) {
+            const blockSize = 16;
+            const startY = height * 0.7 + 48; // Below grass layer
+            const blocksWide = Math.ceil(width / blockSize);
+            const blocksHigh = 2;
+            
+            for (let x = 0; x < blocksWide; x++) {
+                for (let y = 0; y < blocksHigh; y++) {
+                    const blockX = x * blockSize;
+                    const blockY = startY + (y * blockSize);
+                    
+                    // Dirt block
+                    ctx.fillStyle = '#8D6E63';
+                    ctx.fillRect(blockX, blockY, blockSize, blockSize);
+                    
+                    // Dirt block side (darker)
+                    ctx.fillStyle = '#795548';
+                    ctx.fillRect(blockX, blockY + blockSize, blockSize, blockSize);
+                }
+            }
+        }
+        
+        // Draw Minecraft stone blocks
+        function drawMinecraftStoneBlocks(ctx, width, height) {
+            const blockSize = 16;
+            const startY = height * 0.7 + 80; // Below dirt layer
+            const blocksWide = Math.ceil(width / blockSize);
+            const blocksHigh = 1;
+            
+            for (let x = 0; x < blocksWide; x++) {
+                for (let y = 0; y < blocksHigh; y++) {
+                    const blockX = x * blockSize;
+                    const blockY = startY + (y * blockSize);
+                    
+                    // Stone block
+                    ctx.fillStyle = '#9E9E9E';
+                    ctx.fillRect(blockX, blockY, blockSize, blockSize);
+                    
+                    // Stone block side (darker)
+                    ctx.fillStyle = '#757575';
+                    ctx.fillRect(blockX, blockY + blockSize, blockSize, blockSize);
+                }
+            }
+        }
+        
+        // Draw Minecraft-style trees
+        function drawMinecraftTrees(ctx, width, height) {
+            const treePositions = [
+                {x: width * 0.05, y: height * 0.6},
+                {x: width * 0.95, y: height * 0.55},
+                {x: width * 0.3, y: height * 0.65},
+                {x: width * 0.7, y: height * 0.6},
+            ];
+            
+            treePositions.forEach(tree => {
+                drawMinecraftTree(ctx, tree.x, tree.y);
+            });
+        }
+        
+        // Draw a single Minecraft tree
+        function drawMinecraftTree(ctx, x, y) {
+            const blockSize = 8;
+            
+            // Tree trunk (brown blocks)
+            ctx.fillStyle = '#8D6E63';
+            for (let i = 0; i < 3; i++) {
+                ctx.fillRect(x - blockSize/2, y + (i * blockSize), blockSize, blockSize);
+            }
+            
+            // Tree leaves (green blocks)
+            ctx.fillStyle = '#4CAF50';
+            for (let i = -2; i <= 2; i++) {
+                for (let j = -2; j <= 0; j++) {
+                    if (Math.abs(i) + Math.abs(j) <= 2) {
+                        ctx.fillRect(x + (i * blockSize), y + (j * blockSize), blockSize, blockSize);
+                    }
+                }
+            }
+        }
+        
+        // Draw Minecraft vegetation
+        function drawMinecraftVegetation(ctx, width, height) {
+            const blockSize = 8;
+            const startY = height * 0.7;
+            
+            // Grass tufts
+            ctx.fillStyle = '#4CAF50';
+            for (let i = 0; i < 30; i++) {
+                const x = (i * 23) % width;
+                const y = startY + (i * 7) % 20;
+                ctx.fillRect(x, y, 2, 6);
+            }
+            
+            // Flowers
             const flowerPositions = [
-                {x: width * 0.1, y: height * 0.7, color: '#FF69B4'}, // Pink
-                {x: width * 0.3, y: height * 0.8, color: '#FFD700'}, // Yellow
-                {x: width * 0.7, y: height * 0.75, color: '#FF69B4'}, // Pink
-                {x: width * 0.9, y: height * 0.8, color: '#FFD700'}, // Yellow
-                {x: width * 0.5, y: height * 0.85, color: '#FF69B4'}, // Pink
+                {x: width * 0.1, y: height * 0.75, color: '#E91E63'}, // Pink
+                {x: width * 0.3, y: height * 0.8, color: '#FFEB3B'}, // Yellow
+                {x: width * 0.7, y: height * 0.75, color: '#E91E63'}, // Pink
+                {x: width * 0.9, y: height * 0.8, color: '#FFEB3B'}, // Yellow
             ];
             
             flowerPositions.forEach(flower => {
-                drawPixelFlower(ctx, flower.x, flower.y, flower.color);
+                drawMinecraftFlower(ctx, flower.x, flower.y, flower.color);
             });
+        }
+        
+        // Draw Minecraft flower
+        function drawMinecraftFlower(ctx, x, y, color) {
+            const pixelSize = 2;
+            ctx.fillStyle = color;
+            
+            // Flower petals
+            ctx.fillRect(x - pixelSize, y - pixelSize, pixelSize, pixelSize); // Top
+            ctx.fillRect(x + pixelSize, y - pixelSize, pixelSize, pixelSize); // Right
+            ctx.fillRect(x - pixelSize, y + pixelSize, pixelSize, pixelSize); // Left
+            ctx.fillRect(x + pixelSize, y + pixelSize, pixelSize, pixelSize); // Bottom
+            
+            // Flower center
+            ctx.fillStyle = '#FFEB3B';
+            ctx.fillRect(x, y, pixelSize, pixelSize);
+        }
+        
+        // Draw Minecraft School building
+        function drawMinecraftSchool(ctx, x, y) {
+            const blockSize = 8;
+            const centerX = x;
+            const centerY = y;
+            
+            // School building base (yellow blocks)
+            ctx.fillStyle = '#FFD700'; // Gold
+            for (let i = -3; i <= 3; i++) {
+                for (let j = 0; j < 4; j++) {
+                    ctx.fillRect(centerX + (i * blockSize), centerY + (j * blockSize), blockSize, blockSize);
+                }
+            }
+            
+            // School roof (red blocks)
+            ctx.fillStyle = '#D32F2F'; // Red
+            for (let i = -2; i <= 2; i++) {
+                for (let j = -1; j <= 0; j++) {
+                    ctx.fillRect(centerX + (i * blockSize), centerY + (j * blockSize), blockSize, blockSize);
+                }
+            }
+            
+            // School door (brown)
+            ctx.fillStyle = '#8D6E63';
+            ctx.fillRect(centerX - blockSize, centerY, blockSize, blockSize * 2);
+            
+            // School windows (blue)
+            ctx.fillStyle = '#2196F3';
+            ctx.fillRect(centerX + blockSize, centerY + blockSize, blockSize, blockSize);
+            ctx.fillRect(centerX + (2 * blockSize), centerY + blockSize, blockSize, blockSize);
+        }
+        
+        // Draw Minecraft Hospital building
+        function drawMinecraftHospital(ctx, x, y) {
+            const blockSize = 8;
+            const centerX = x;
+            const centerY = y;
+            
+            // Hospital building base (white blocks)
+            ctx.fillStyle = '#FFFFFF'; // White
+            for (let i = -3; i <= 3; i++) {
+                for (let j = 0; j < 4; j++) {
+                    ctx.fillRect(centerX + (i * blockSize), centerY + (j * blockSize), blockSize, blockSize);
+                }
+            }
+            
+            // Hospital roof (red blocks)
+            ctx.fillStyle = '#D32F2F'; // Red
+            for (let i = -2; i <= 2; i++) {
+                for (let j = -1; j <= 0; j++) {
+                    ctx.fillRect(centerX + (i * blockSize), centerY + (j * blockSize), blockSize, blockSize);
+                }
+            }
+            
+            // Hospital cross (red)
+            ctx.fillStyle = '#D32F2F';
+            ctx.fillRect(centerX, centerY - blockSize, blockSize, blockSize);
+            ctx.fillRect(centerX - blockSize, centerY - blockSize, blockSize, blockSize);
+            ctx.fillRect(centerX + blockSize, centerY - blockSize, blockSize, blockSize);
+            
+            // Hospital door (brown)
+            ctx.fillStyle = '#8D6E63';
+            ctx.fillRect(centerX - blockSize, centerY, blockSize, blockSize * 2);
+            
+            // Hospital windows (blue)
+            ctx.fillStyle = '#2196F3';
+            ctx.fillRect(centerX + blockSize, centerY + blockSize, blockSize, blockSize);
+            ctx.fillRect(centerX + (2 * blockSize), centerY + blockSize, blockSize, blockSize);
         }
         
         // Draw a single pixel flower
@@ -2674,10 +2880,10 @@
             ctx.restore();
         }
         
-        // Draw pixel art character sprite - more human-like with female hair
+        // Draw MINECRAFT-style character sprite - blocky and cute!
         function drawPixelCharacter(ctx, centerX, centerY, pixelSize, skinColor, hairColor, shirtColor, pantsColor, isSick) {
-            const offsetX = centerX - (6 * pixelSize); // Center the 12-pixel wide character
-            const offsetY = centerY - (8 * pixelSize); // Center the 16-pixel tall character
+            const offsetX = centerX - (4 * pixelSize); // Center the 8-pixel wide character
+            const offsetY = centerY - (6 * pixelSize); // Center the 12-pixel tall character
             
             // Helper function to draw a pixel
             function drawPixel(x, y, color) {
@@ -2685,46 +2891,38 @@
                 ctx.fillRect(offsetX + (x * pixelSize), offsetY + (y * pixelSize), pixelSize, pixelSize);
             }
             
-            // Character sprite data (12x16 grid) - More detailed and human-like
+            // MINECRAFT-style character sprite (8x12 grid) - Blocky and cute!
             
-            // Row 0-1: Long hair (feminine)
-            for (let i = 1; i < 11; i++) drawPixel(i, 0, hairColor);
-            for (let i = 0; i < 12; i++) drawPixel(i, 1, hairColor);
+            // Row 0-1: Hair (blocky)
+            for (let i = 1; i < 7; i++) drawPixel(i, 0, hairColor);
+            for (let i = 0; i < 8; i++) drawPixel(i, 1, hairColor);
             
-            // Row 2-3: Face and hair
-            for (let i = 2; i < 10; i++) drawPixel(i, 2, skinColor);
-            for (let i = 1; i < 11; i++) drawPixel(i, 3, skinColor);
+            // Row 2-3: Face (blocky)
+            for (let i = 1; i < 7; i++) drawPixel(i, 2, skinColor);
+            for (let i = 0; i < 8; i++) drawPixel(i, 3, skinColor);
             
-            // Row 4-5: Eyes and face
-            drawPixel(3, 4, '#000000'); // Left eye
-            drawPixel(8, 4, '#000000'); // Right eye
-            drawPixel(5, 5, '#000000'); // Nose
-            drawPixel(4, 6, '#000000'); // Mouth left
-            drawPixel(5, 6, '#000000'); // Mouth center
-            drawPixel(6, 6, '#000000'); // Mouth right
+            // Row 4: Eyes and face
+            drawPixel(2, 4, '#000000'); // Left eye
+            drawPixel(5, 4, '#000000'); // Right eye
+            drawPixel(3, 5, '#000000'); // Nose
+            drawPixel(2, 6, '#000000'); // Mouth left
+            drawPixel(3, 6, '#000000'); // Mouth center
+            drawPixel(4, 6, '#000000'); // Mouth right
+            drawPixel(5, 6, '#000000'); // Mouth right
             
             // Row 6-7: Face continuation
-            for (let i = 2; i < 10; i++) drawPixel(i, 6, skinColor);
-            for (let i = 1; i < 11; i++) drawPixel(i, 7, skinColor);
+            for (let i = 1; i < 7; i++) drawPixel(i, 6, skinColor);
+            for (let i = 0; i < 8; i++) drawPixel(i, 7, skinColor);
             
-            // Row 8-10: Shirt (more feminine)
-            for (let i = 2; i < 10; i++) drawPixel(i, 8, shirtColor);
-            for (let i = 1; i < 11; i++) drawPixel(i, 9, shirtColor);
-            for (let i = 2; i < 10; i++) drawPixel(i, 10, shirtColor);
+            // Row 8-9: Shirt (blocky)
+            for (let i = 1; i < 7; i++) drawPixel(i, 8, shirtColor);
+            for (let i = 0; i < 8; i++) drawPixel(i, 9, shirtColor);
             
-            // Row 11-13: Pants
-            for (let i = 3; i < 6; i++) drawPixel(i, 11, pantsColor);
-            for (let i = 6; i < 9; i++) drawPixel(i, 11, pantsColor);
-            for (let i = 3; i < 6; i++) drawPixel(i, 12, pantsColor);
-            for (let i = 6; i < 9; i++) drawPixel(i, 12, pantsColor);
-            for (let i = 3; i < 6; i++) drawPixel(i, 13, pantsColor);
-            for (let i = 6; i < 9; i++) drawPixel(i, 13, pantsColor);
-            
-            // Row 14-15: Legs
-            for (let i = 4; i < 6; i++) drawPixel(i, 14, pantsColor);
-            for (let i = 6; i < 8; i++) drawPixel(i, 14, pantsColor);
-            for (let i = 4; i < 6; i++) drawPixel(i, 15, pantsColor);
-            for (let i = 6; i < 8; i++) drawPixel(i, 15, pantsColor);
+            // Row 10-11: Pants (blocky)
+            for (let i = 2; i < 4; i++) drawPixel(i, 10, pantsColor);
+            for (let i = 4; i < 6; i++) drawPixel(i, 10, pantsColor);
+            for (let i = 2; i < 4; i++) drawPixel(i, 11, pantsColor);
+            for (let i = 4; i < 6; i++) drawPixel(i, 11, pantsColor);
             
             // Add sick effects if needed
             if (isSick) {
@@ -2768,29 +2966,16 @@
             // Jamilah (right side, moved down 5cm)
             drawAnimatedCharacter(ctx, width * 0.85, height * 0.9, 'jamilah', true);
             
-            // Draw targets
-            ctx.font = '30px Arial';
+            // Draw MINECRAFT-style targets
+            drawMinecraftSchool(ctx, width * 0.1, height * 0.15);
+            drawMinecraftHospital(ctx, width * 0.9, height * 0.15);
             
-            // School (at green line - top area)
-            ctx.fillStyle = '#ffd93d';
-            ctx.fillText('🏫', width * 0.1, height * 0.15);
-            
-            // School title
+            // Target titles
             ctx.font = '16px Arial';
             ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
-            ctx.fillText('School', width * 0.1, height * 0.15 + 25);
-            
-            // Hospital (at green line - top area)
-            ctx.font = '30px Arial';
-            ctx.fillStyle = '#6bcf7f';
-            ctx.fillText('🏥', width * 0.9, height * 0.15);
-            
-            // Hospital title
-            ctx.font = '16px Arial';
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.fillText('Hospital', width * 0.9, height * 0.15 + 25);
+            ctx.fillText('School', width * 0.1, height * 0.15 + 60);
+            ctx.fillText('Hospital', width * 0.9, height * 0.15 + 60);
             
             // Draw germs (scattered around, frozen)
             ctx.font = '25px Arial';
