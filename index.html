@@ -3992,7 +3992,7 @@
                 <div class="card">
                     <h2>⚠️ Avoid the Minecraft Germs!</h2>
                     <div class="rule"></div>
-                    <div class="strip">Navigate carefully! <span class="muted">Hitting a germ costs <b>–5 points</b>.</span></div>
+                    <div class="strip">Navigate carefully! <span class="muted">Hitting a germ costs <b> points</b>.</span></div>
                 </div>
 
                 <div class="card">
@@ -4322,7 +4322,6 @@
             if (window._lbUnsub) window._lbUnsub();
             window._lbUnsub = window.scoresRef
                 .orderBy('score', 'desc')
-                .orderBy('ts', 'asc')
                 .limit(20)
                 .onSnapshot(
                     snap => renderLeaderboardFromSnapshot(snap),
@@ -4334,7 +4333,6 @@
         async function fetchLeaderboardOnce() {
             const snap = await window.scoresRef
                 .orderBy('score', 'desc')
-                .orderBy('ts', 'asc')
                 .limit(20)
                 .get();
             renderLeaderboardFromSnapshot(snap);
@@ -6489,7 +6487,6 @@
             console.log('Fetching live Firebase data for player popup...');
             window.scoresRef
                 .orderBy('score', 'desc')
-                .orderBy('ts', 'asc')
                 .limit(10)
                 .get()
                 .then((snap) => {
@@ -6600,7 +6597,6 @@
                 console.log('Fetching Firebase data for player leaderboard...');
                 window.scoresRef
                     .orderBy('score', 'desc')
-                    .orderBy('timeSec', 'asc')
                     .limit(10)
                     .get()
                     .then((snapshot) => {
