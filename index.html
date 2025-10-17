@@ -725,10 +725,6 @@
         
         <canvas id="gameCanvas"></canvas>
         
-        <div id="instructions">
-            Use arrow buttons ONLY to move your character!<br>
-            Avoid germs 🦠 (-10 pts) | Reach your goal (+50 pts)
-        </div>
         
         <!-- Selected Character Display -->
         <div id="selectedCharacter">
@@ -1047,7 +1043,7 @@
                 // Check germ collisions
                 germs.forEach((germ, index) => {
                     if (checkCollision(player, germ)) {
-                        currentScore -= 10;
+                        currentScore -= 5;
                         currentScore = Math.max(0, currentScore);
                         
                         // Show hit effect
@@ -1285,6 +1281,11 @@
         // Arrow control functions
         function moveCharacter(direction) {
             if (!controlledPlayer || gameState !== 'playing') return;
+            
+            // Check if the controlled player has completed their goal
+            if (gameComplete[controlledPlayer]) {
+                return; // Lock movement if they've reached their destination
+            }
             
             const player = players[controlledPlayer];
             const moveDistance = 20;
