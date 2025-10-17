@@ -2514,9 +2514,10 @@
         let audioContext;
         let customBackgroundMusic = null;
         let backgroundMusicSource = null;
+        let isMusicPlaying = false;
         
         // DEVELOPER: Set your YouTube music link here (for everyone)
-        const DEVELOPER_BACKGROUND_MUSIC = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'; // Replace with your YouTube link
+        const DEVELOPER_BACKGROUND_MUSIC = 'https://www.youtube.com/watch?v=U9RxGijXy4g&list=RDU9RxGijXy4g&start_radio=1'; // Replace with your YouTube link
 
         // Initialize germs
         function initGerms() {
@@ -2706,6 +2707,43 @@
             }
         }
 
+        // Stop background music
+        function stopBackgroundMusic() {
+            if (customBackgroundMusic) {
+                try {
+                    customBackgroundMusic.pause();
+                    customBackgroundMusic.currentTime = 0;
+                    console.log('Custom music stopped');
+                } catch (e) {
+                    console.log('Could not stop custom music:', e);
+                }
+            }
+            
+            if (backgroundMusicSource) {
+                try {
+                    backgroundMusicSource.stop();
+                    backgroundMusicSource = null;
+                } catch (e) {
+                    console.log('Could not stop background music source:', e);
+                }
+            }
+            
+            isMusicPlaying = false;
+            updateMusicButton();
+        }
+
+        // Update music button text
+        function updateMusicButton() {
+            const musicBtn = document.getElementById('musicBtn');
+            if (musicBtn) {
+                if (isMusicPlaying) {
+                    musicBtn.innerHTML = '🔇 Stop Music';
+                } else {
+                    musicBtn.innerHTML = '🎵 Play Music';
+                }
+            }
+        }
+
         // Play background music (custom or generated)
         function playBackgroundMusic() {
             if (!soundEnabled || !audioContext) {
@@ -2740,6 +2778,8 @@
                     customBackgroundMusic.play();
                     
                     backgroundMusicSource = source;
+                    isMusicPlaying = true;
+                    updateMusicButton();
                     console.log('Custom music started');
                     return;
                 } catch (e) {
@@ -4252,10 +4292,16 @@
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
             
-            // Load developer's background music automatically
+            // Load and start developer's background music automatically
             if (DEVELOPER_BACKGROUND_MUSIC) {
                 console.log('Loading developer background music...');
                 loadCustomMusic(DEVELOPER_BACKGROUND_MUSIC);
+                
+                // Auto-start music after a short delay
+                setTimeout(() => {
+                    console.log('Auto-starting background music...');
+                    playBackgroundMusic();
+                }, 2000); // 2 second delay
             }
             document.getElementById('leaderboardPopup').style.display = 'none';
             document.getElementById('selectedCharacter').style.display = 'none';
@@ -4278,14 +4324,19 @@
         document.getElementById('musicBtn').addEventListener('click', () => {
             console.log('Music button clicked');
             
-            // Use developer's YouTube music for everyone
-            console.log('Loading developer background music from:', DEVELOPER_BACKGROUND_MUSIC);
-            loadCustomMusic(DEVELOPER_BACKGROUND_MUSIC);
-            
-            // Wait a moment for the music to load, then play
-            setTimeout(() => {
-                playBackgroundMusic();
-            }, 1000);
+            if (isMusicPlaying) {
+                // Stop the music
+                stopBackgroundMusic();
+            } else {
+                // Start the music
+                console.log('Loading developer background music from:', DEVELOPER_BACKGROUND_MUSIC);
+                loadCustomMusic(DEVELOPER_BACKGROUND_MUSIC);
+                
+                // Wait a moment for the music to load, then play
+                setTimeout(() => {
+                    playBackgroundMusic();
+                }, 1000);
+            }
         });
 
         // Admin event listeners
