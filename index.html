@@ -615,6 +615,8 @@
                 return;
             }
             
+            console.log('Starting game - adminGameState:', adminGameState, 'activePlayers:', activePlayers.length);
+            
             // Assign player to either Maitha or Jamilah based on current players
             const isPlayer1 = activePlayers.length % 2 === 1;
             const targetPlayer = isPlayer1 ? 'player1' : 'player2';
