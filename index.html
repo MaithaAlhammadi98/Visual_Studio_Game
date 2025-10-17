@@ -786,6 +786,75 @@
             background: #218838;
         }
 
+        /* Minecraft Heart Modal */
+        #minecraftHeartModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .minecraft-heart-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .minecraft-heart {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px auto;
+            position: relative;
+        }
+
+        .heart-message h2 {
+            color: white;
+            margin: 0 0 15px 0;
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .heart-message p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .heart-close-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .heart-close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Heart floating animation */
+        @keyframes minecraftHeartFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+
         .leaderboard-header {
             display: flex;
             justify-content: space-between;
@@ -1751,6 +1820,21 @@
                     <button onclick="hideLeaderboard()" class="close-btn">Close</button>
                     <button onclick="restartGame()" class="restart-btn">Play Again</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Minecraft Heart Modal -->
+        <div id="minecraftHeartModal" style="display: none;">
+            <div class="minecraft-heart-content">
+                <div class="minecraft-heart" id="minecraftHeart">
+                    <!-- Heart will be drawn with canvas -->
+                </div>
+                <div class="heart-message">
+                    <h2>Thank you for playing!</h2>
+                    <p>This game was made by Maitha</p>
+                    <p>UwU</p>
+                </div>
+                <button onclick="hideMinecraftHeart()" class="heart-close-btn">💖 Close</button>
             </div>
         </div>
 
@@ -3217,6 +3301,11 @@
                     
                     // Show the popup
                     popup.style.display = 'flex';
+                    
+                    // Add Minecraft heart after a short delay
+                    setTimeout(() => {
+                        showMinecraftHeart();
+                    }, 2000); // 2 seconds after leaderboard appears
                 })
                 .catch((error) => {
                     console.error('Error fetching Firebase data for popup:', error);
@@ -3228,6 +3317,100 @@
 
         function hideLeaderboard() {
             document.getElementById('leaderboardPopup').style.display = 'none';
+        }
+
+        // Show Minecraft heart with thank you message
+        function showMinecraftHeart() {
+            const heartModal = document.getElementById('minecraftHeartModal');
+            if (heartModal) {
+                heartModal.style.display = 'flex';
+                
+                // Draw the Minecraft heart
+                drawMinecraftHeart();
+                
+                // Add floating animation to the heart
+                const heart = document.getElementById('minecraftHeart');
+                if (heart) {
+                    heart.style.animation = 'minecraftHeartFloat 2s ease-in-out infinite';
+                }
+            }
+        }
+
+        function hideMinecraftHeart() {
+            const heartModal = document.getElementById('minecraftHeartModal');
+            if (heartModal) {
+                heartModal.style.display = 'none';
+            }
+        }
+
+        // Draw Minecraft heart with canvas
+        function drawMinecraftHeart() {
+            const heartContainer = document.getElementById('minecraftHeart');
+            if (!heartContainer) return;
+
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = 120;
+            canvas.height = 120;
+            const ctx = canvas.getContext('2d');
+            
+            // Disable anti-aliasing for crisp pixel art
+            ctx.imageSmoothingEnabled = false;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, 120, 120);
+            
+            // Draw Minecraft heart (pixel art style)
+            const pixelSize = 8;
+            const centerX = 60;
+            const centerY = 60;
+            
+            // Heart color (red/pink)
+            ctx.fillStyle = '#FF69B4';
+            
+            // Draw heart shape with pixels
+            // Top of heart
+            for (let x = 0; x < 3; x++) {
+                ctx.fillRect(centerX - 12 + (x * pixelSize), centerY - 20, pixelSize, pixelSize);
+            }
+            for (let x = 0; x < 3; x++) {
+                ctx.fillRect(centerX + 12 + (x * pixelSize), centerY - 20, pixelSize, pixelSize);
+            }
+            
+            // Heart curves
+            for (let x = 0; x < 2; x++) {
+                ctx.fillRect(centerX - 20 + (x * pixelSize), centerY - 12, pixelSize, pixelSize);
+            }
+            for (let x = 0; x < 2; x++) {
+                ctx.fillRect(centerX + 12 + (x * pixelSize), centerY - 12, pixelSize, pixelSize);
+            }
+            
+            // Heart center
+            for (let x = 0; x < 5; x++) {
+                ctx.fillRect(centerX - 20 + (x * pixelSize), centerY - 4, pixelSize, pixelSize);
+            }
+            
+            // Heart bottom
+            for (let x = 0; x < 3; x++) {
+                ctx.fillRect(centerX - 12 + (x * pixelSize), centerY + 4, pixelSize, pixelSize);
+            }
+            
+            // Heart point
+            ctx.fillRect(centerX - 4, centerY + 12, pixelSize, pixelSize);
+            
+            // Add sparkles around the heart
+            ctx.fillStyle = '#FFD700';
+            for (let i = 0; i < 8; i++) {
+                const angle = (i * Math.PI * 2) / 8;
+                const radius = 50;
+                const sparkleX = centerX + Math.cos(angle) * radius;
+                const sparkleY = centerY + Math.sin(angle) * radius;
+                ctx.fillRect(sparkleX - 2, sparkleY - 2, 4, 4);
+            }
+            
+            // Replace the container content with the canvas
+            heartContainer.innerHTML = '';
+            heartContainer.appendChild(canvas);
         }
 
         // Old showLiveLeaderboard function removed - using new clean implementation above
