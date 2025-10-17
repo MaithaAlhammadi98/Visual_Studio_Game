@@ -1339,6 +1339,7 @@
         let selectedCharacter = null;
         let controlledPlayer = null;
         let gamePhase = 'maitha'; // 'maitha' or 'jamilah'
+        let germHitCooldown = new Set(); // Track which germs were hit to prevent multiple hits
 
         // Players
         const players = {
@@ -1547,15 +1548,25 @@
                 // Check germ collisions - only if player hasn't completed their goal yet
                 if (!gameComplete[controlledPlayer]) {
                     germs.forEach((germ, index) => {
-                        if (checkCollision(player, germ)) {
+                        if (checkCollision(player, germ) && !germHitCooldown.has(index)) {
+                            console.log(`Germ hit! Score before: ${currentScore}`);
                             currentScore -= 5;
                             currentScore = Math.max(0, currentScore);
+                            console.log(`Score after: ${currentScore}`);
+                            
+                            // Add to cooldown to prevent multiple hits
+                            germHitCooldown.add(index);
                             
                             // Show hit effect
                             showHitEffect(player.x, player.y);
                             
                             // Update score display with visual feedback
                             updateScoreDisplay();
+                            
+                            // Remove from cooldown after a short delay
+                            setTimeout(() => {
+                                germHitCooldown.delete(index);
+                            }, 1000);
                         }
                     });
                 }
@@ -1776,6 +1787,7 @@
             currentScore = 100; // Reset to 100 points
             scores = { player1: 0, player2: 0 };
             gameComplete = { player1: false, player2: false };
+            germHitCooldown.clear(); // Clear any cooldowns
             updateScoreDisplay();
             players.player1.x = 50;
             players.player1.y = canvas.height / 2;
