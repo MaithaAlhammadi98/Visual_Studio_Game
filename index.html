@@ -5786,8 +5786,8 @@
             targets.school.y = canvas.height * 0.15; // At green line - top area
             targets.hospital.y = canvas.height * 0.15; // At green line - top area
             
-            // Start with cinematic intro instead of direct login screen
-            startCinematicIntro();
+            // Skip cinematic intro and go directly to game guide screen
+            introScreen.style.display = 'flex';
             characterSelection.style.display = 'none';
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
