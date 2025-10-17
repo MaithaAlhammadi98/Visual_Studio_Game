@@ -3420,6 +3420,9 @@
             
             <div class="intro-scene" id="scene7" style="display: none;">
                 <div class="intro-background title-bg">
+                    <div class="cloud cloud1"></div>
+                    <div class="cloud cloud2"></div>
+                    <div class="cloud cloud3"></div>
                     <div class="title-text">Welcome to... Block City: The Minecraft Mission</div>
                 </div>
             </div>
@@ -3989,7 +3992,7 @@
                 document.getElementById('scene1').style.display = 'flex';
             }, 100);
             
-            // Scene 2: The Call (after 4s)
+            // Scene 2: The Call (after 6s)
             setTimeout(() => {
                 console.log('Scene 2: The Call');
                 document.getElementById('scene1').style.display = 'none';
@@ -3997,9 +4000,9 @@
                 
                 // Play soft chime sound
                 playSoftChime();
-            }, 4000);
+            }, 6000);
             
-            // Scene 3: The Threat (after 4s more)
+            // Scene 3: The Threat (after 6s more)
             setTimeout(() => {
                 console.log('Scene 3: The Threat');
                 document.getElementById('scene2').style.display = 'none';
@@ -4008,9 +4011,9 @@
                 // Play rumble and squish sounds
                 playRumbleSound();
                 setTimeout(() => playSquishSound(), 500);
-            }, 6000);
+            }, 12000);
             
-            // Scene 4: Controls (after 5s more)
+            // Scene 4: Controls (after 6s more)
             setTimeout(() => {
                 console.log('Scene 4: Controls');
                 document.getElementById('scene3').style.display = 'none';
@@ -4018,9 +4021,9 @@
                 
                 // Play button click sound
                 playButtonClickSound();
-            }, 11000);
+            }, 18000);
             
-            // Scene 5: The Race (after 5s more)
+            // Scene 5: The Race (after 6s more)
             setTimeout(() => {
                 console.log('Scene 5: The Race');
                 document.getElementById('scene4').style.display = 'none';
@@ -4028,7 +4031,7 @@
                 
                 // Play race start sound
                 playRaceStartSound();
-            }, 16000);
+            }, 24000);
             
             // Scene 6: The Leaderboard (after 6s more)
             setTimeout(() => {
@@ -4041,9 +4044,9 @@
                 
                 // Play leaderboard sound
                 playLeaderboardSound();
-            }, 22000);
+            }, 30000);
             
-            // Scene 7: Title (after 6s more - extended to 8s)
+            // Scene 7: Title (after 6s more)
             setTimeout(() => {
                 console.log('Scene 7: Title');
                 document.getElementById('scene6').style.display = 'none';
@@ -4051,9 +4054,9 @@
                 
                 // Play title music
                 playTitleMusic();
-            }, 28000);
+            }, 36000);
             
-            // End intro and show login screen (after 8s more)
+            // End intro and show login screen (after 6s more)
             setTimeout(() => {
                 console.log('Ending cinematic intro');
                 document.getElementById('cinematicIntro').style.display = 'none';
@@ -4075,7 +4078,7 @@
                         playBackgroundMusic();
                     }, 1000);
                 }
-            }, 36000); // Total intro time: 36 seconds
+            }, 42000); // Total intro time: 42 seconds
         }
 
         // Skip cinematic intro function
