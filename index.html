@@ -358,21 +358,23 @@
             opacity: 0.9;
         }
 
-        /* Game Summary Styles */
+        /* Game Summary Styles - Mobile Optimized */
         .game-summary {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 182, 193, 0.6);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
             backdrop-filter: blur(10px);
             font-family: 'VT323', monospace;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .game-summary h3 {
             color: #FFB6C1;
-            font-size: 24px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 12px;
             text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
             font-weight: bold;
         }
@@ -380,26 +382,28 @@
         .summary-item {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
-            font-size: 18px;
+            margin-bottom: 10px;
+            font-size: 16px;
             color: #FFF6D1;
             text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+            line-height: 1.3;
         }
 
         .summary-item.goal {
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 2px solid rgba(255, 182, 193, 0.3);
-            font-size: 20px;
+            font-size: 18px;
             color: #FFD700;
             text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
         }
 
         .germ-icon, .mission-icon, .trophy-icon {
-            font-size: 24px;
-            margin-right: 12px;
-            width: 30px;
+            font-size: 20px;
+            margin-right: 10px;
+            width: 25px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .germ-icon.red-germ {
@@ -5329,15 +5333,16 @@
             // Check collisions - only for the controlled player
             if (controlledPlayer && players[controlledPlayer]) {
                 const player = players[controlledPlayer];
+                console.log(`Game loop - Player: ${controlledPlayer}, Game state: ${gameState}, Score: ${currentScore}`);
                 
                 // Check germ collisions - only if player hasn't completed their goal yet
                 if (!gameComplete[controlledPlayer]) {
                     germs.forEach((germ, index) => {
                         if (checkCollision(player, germ) && !germHitCooldown.has(index)) {
-                            console.log(`${germ.color} germ hit! Score before: ${currentScore}, Points lost: ${germ.points}`);
+                            console.log(`${germ.color} germ hit! Player: ${controlledPlayer}, Score before: ${currentScore}, Points lost: ${germ.points}`);
                             currentScore += germ.points; // Use the germ's point value (-5 or -10)
                             currentScore = Math.max(0, currentScore);
-                            console.log(`Score after: ${currentScore}`);
+                            console.log(`Score after: ${currentScore}, Game state: ${gameState}, Controlled player: ${controlledPlayer}`);
                             
                             // Add to cooldown to prevent multiple hits
                             germHitCooldown.add(index);
