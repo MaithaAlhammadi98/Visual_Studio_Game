@@ -126,12 +126,19 @@
             opacity: 0.9;
         }
         
-        #startGameBtn {
+        .preview-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        #startGameBtn, #viewInstructionsBtn {
             background: linear-gradient(45deg, #4CAF50, #45a049);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
@@ -139,9 +146,21 @@
             transition: all 0.3s ease;
         }
         
-        #startGameBtn:hover {
+        #viewInstructionsBtn {
+            background: linear-gradient(45deg, #6366F1, #4F46E5);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        #startGameBtn:hover, #viewInstructionsBtn:hover {
             transform: translateY(-2px);
+        }
+        
+        #startGameBtn:hover {
             box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+        }
+        
+        #viewInstructionsBtn:hover {
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
         }
         
         @media (max-height: 2000px) {
@@ -1070,12 +1089,15 @@
                     <div class="preview-content">
                         <h1>Ready to Play?</h1>
                         <p>Welcome <span id="playerNamePreview">Player</span>! Navigate both characters to their destinations!</p>
-                        <button id="startGameBtn">Start Game</button>
+                        <div class="preview-buttons">
+                            <button id="viewInstructionsBtn">📖 View Instructions</button>
+                            <button id="startGameBtn">🚀 Start Game</button>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="game-guide">
+            <div class="game-guide" style="display: none;">
                 <div class="guide-header">
                     <h1>🎮 The Mission</h1>
                     <p>Guide Maitha to School and Jamilah to Hospital by manually controlling them with the arrow buttons!</p>
@@ -1497,6 +1519,17 @@
             // Show character selection instead of starting game immediately
             introScreen.style.display = 'none';
             characterSelection.style.display = 'flex';
+        }
+        
+        // Show game preview function
+        function showGamePreview() {
+            // Hide the game guide and show just the preview
+            document.querySelector('.game-guide').style.display = 'none';
+            document.getElementById('gamePreview').style.display = 'block';
+            
+            // Update preview with player name
+            const playerName = document.getElementById('playerName').value || 'Player';
+            document.getElementById('playerNamePreview').textContent = playerName;
         }
 
         // Touch and mouse controls DISABLED - only arrow buttons work now!
@@ -2115,6 +2148,12 @@
         
         // Start game button event listener
         document.getElementById('startGameBtn').addEventListener('click', startGame);
+        
+        // View instructions button event listener
+        document.getElementById('viewInstructionsBtn').addEventListener('click', () => {
+            document.getElementById('gamePreview').style.display = 'none';
+            document.querySelector('.game-guide').style.display = 'block';
+        });
         
         // Character selection event listeners - no longer needed since we auto-select both
         // document.querySelectorAll('.character-option').forEach(option => {
