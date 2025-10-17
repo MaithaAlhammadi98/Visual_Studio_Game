@@ -643,7 +643,60 @@
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .leaderboard-header {
             text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-header h2 {
+            color: white;
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .leaderboard-header p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .leaderboard-list {
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .close-btn, .restart-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .restart-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .close-btn:hover {
+            background: #5a6268;
+        }
+
+        .restart-btn:hover {
+            background: #218838;
         }
 
         .leaderboard-header {
@@ -1596,6 +1649,23 @@
             </div>
             
             <button id="restartBtn">Play Again</button>
+        </div>
+
+        <!-- Leaderboard Popup for Individual Players -->
+        <div id="leaderboardPopup" style="display: none;">
+            <div class="leaderboard-content">
+                <div class="leaderboard-header">
+                    <h2>🏆 Your Score & Leaderboard 🏆</h2>
+                    <p>Great job! Here's how you rank:</p>
+                </div>
+                <div class="leaderboard-list" id="popupLeaderboardList">
+                    <!-- Player entries will be populated here -->
+                </div>
+                <div class="leaderboard-actions">
+                    <button onclick="hideLeaderboard()" class="close-btn">Close</button>
+                    <button onclick="restartGame()" class="restart-btn">Play Again</button>
+                </div>
+            </div>
         </div>
 
         <!-- Live Leaderboard (like Kahoot) -->
