@@ -1661,13 +1661,23 @@
 
         // Renders both the big overlay list and the mini list, if present
         function renderLeaderboardFromSnapshot(snap) {
+            console.log('Rendering leaderboard with', snap.size, 'documents');
             const list = document.getElementById('liveLeaderboardList');
             const mini = document.getElementById('leaderboardList');
+            
+            if (!list) {
+                console.error('liveLeaderboardList element not found!');
+                return;
+            }
+            
             if (list) list.innerHTML = '';
             if (mini) mini.innerHTML = '';
+            
             let rank = 1;
             snap.forEach(doc => {
-                const {name='Player', score=0, timeSec='-', germsHit='-'} = doc.data();
+                const data = doc.data();
+                const {name='Player', score=0, timeSec='-', germsHit='-'} = data;
+                console.log(`Rank ${rank}: ${name} - ${score} points`);
 
                 if (list) {
                     const row = document.createElement('div');
@@ -1693,18 +1703,37 @@
             });
             const total = document.getElementById('totalPlayers');
             if (total) total.textContent = `Players: ${snap.size}`;
+            console.log('Leaderboard rendered successfully');
         }
 
         // Live subscription
         function startLeaderboardListener() {
-            if (window._lbUnsub) window._lbUnsub();        // clean previous
+            console.log('Starting leaderboard listener...');
+            if (window._lbUnsub) {
+                console.log('Cleaning up previous listener');
+                window._lbUnsub();
+            }
+            
+            // Make sure we have the collection reference
+            if (!window.scoresRef) {
+                console.error('scoresRef not found!');
+                return;
+            }
+            
+            console.log('Setting up new listener...');
             window._lbUnsub = window.scoresRef
                 .orderBy('score','desc')
-                .orderBy('ts','asc') // you already built this index
+                .orderBy('ts','asc')
                 .limit(20)
                 .onSnapshot(
-                    snap => renderLeaderboardFromSnapshot(snap),
-                    err  => console.error('Leaderboard listen error:', err.code, err.message)
+                    (snap) => {
+                        console.log('Leaderboard update received:', snap.size, 'documents');
+                        renderLeaderboardFromSnapshot(snap);
+                    },
+                    (err) => {
+                        console.error('Leaderboard listen error:', err.code, err.message);
+                        alert('Leaderboard error: ' + err.message);
+                    }
                 );
         }
 
@@ -1742,8 +1771,17 @@
 
         // Call when opening the modal
         function showLiveLeaderboard() {
+            console.log('Opening live leaderboard...');
             const el = document.getElementById('liveLeaderboard');
-            if (el) el.style.display = 'flex';
+            if (el) {
+                el.style.display = 'flex';
+                console.log('Leaderboard modal shown');
+            } else {
+                console.error('liveLeaderboard element not found!');
+                return;
+            }
+            
+            // Start the listener
             startLeaderboardListener();
             wireLeaderboardButtons();
         }
