@@ -586,20 +586,20 @@
         /* Score display enhancement */
         #scoreDisplay {
             position: absolute;
-            top: 20px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 18px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 16px;
             font-weight: bold;
-            z-index: 15;
+            z-index: 5;
             display: none;
             border: 2px solid #4CAF50;
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
-            min-width: 80px;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+            min-width: 70px;
             text-align: center;
         }
         
@@ -1365,6 +1365,8 @@
             <div class="admin-control">
                 <button class="admin-btn" id="showLeaderboardBtn">Show Leaderboard</button>
                 <button class="admin-btn danger" id="clearLeaderboardBtn">Clear Leaderboard</button>
+                <button class="admin-btn" id="downloadHistoryBtn">📊 Download History (CSV)</button>
+                <button class="admin-btn" id="todayWinnerBtn">🏆 Today's Winner</button>
             </div>
             
             <div class="admin-control">
@@ -1490,6 +1492,7 @@
         let playerNames = { player1: 'Maitha', player2: 'Jamilah' };
         let currentPlayer = null;
         let currentScore = 100; // Start with 100 points
+        let gameStartTime = Date.now();
         
         // Leaderboard (stored in localStorage)
         let leaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
@@ -1864,26 +1867,12 @@
         function endGame() {
             gameState = 'gameOver';
             
-            // Add scores to leaderboard
-            leaderboard.push({
-                name: playerNames.player1,
-                score: scores.player1,
-                date: new Date().toLocaleDateString()
-            });
-            leaderboard.push({
-                name: playerNames.player2,
-                score: scores.player2,
-                date: new Date().toLocaleDateString()
-            });
+            // Calculate completion time and germs hit
+            const completionTime = Math.floor((Date.now() - gameStartTime) / 1000);
+            const germsHit = Math.floor((100 - currentScore) / 5);
             
-            // Sort leaderboard by score (highest first)
-            leaderboard.sort((a, b) => b.score - a.score);
-            
-            // Keep only top 20 scores
-            leaderboard = leaderboard.slice(0, 20);
-            
-            // Save to localStorage
-            localStorage.setItem('schoolHospitalLeaderboard', JSON.stringify(leaderboard));
+            // Save the game attempt
+            saveGameAttempt(playerName, currentScore, completionTime, germsHit);
             
             let winner = 'Tie!';
             if (scores.player1 > scores.player2) {
@@ -1998,6 +1987,7 @@
             scores = { player1: 0, player2: 0 };
             gameComplete = { player1: false, player2: false };
             germHitCooldown.clear(); // Clear any cooldowns
+            gameStartTime = Date.now(); // Reset start time
             updateScoreDisplay();
             players.player1.x = 50;
             players.player1.y = canvas.height * 0.85; // At orange line - bottom area
@@ -2252,7 +2242,7 @@
             currentPlayerEntry.innerHTML = `
                 <div class="rank-number">#1</div>
                 <div class="player-info">
-                    <div class="player-name">${playerName} (You)</div>
+                    <div class="player-name">${playerName || 'Player'} (You)</div>
                     <div class="player-stats">Final Score</div>
                 </div>
                 <div class="player-score">${currentScore}</div>
@@ -2282,6 +2272,85 @@
 
         function hideLeaderboard() {
             document.getElementById('leaderboardPopup').style.display = 'none';
+        }
+
+        // Enhanced history tracking
+        let gameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
+
+        function saveGameAttempt(playerName, score, completionTime, germsHit) {
+            const attempt = {
+                id: Date.now(),
+                playerName: playerName,
+                score: score,
+                completionTime: completionTime,
+                germsHit: germsHit,
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString()
+            };
+            
+            gameHistory.push(attempt);
+            
+            // Keep only last 100 attempts to prevent storage bloat
+            if (gameHistory.length > 100) {
+                gameHistory = gameHistory.slice(-100);
+            }
+            
+            localStorage.setItem('gameHistory', JSON.stringify(gameHistory));
+            
+            // Also add to leaderboard
+            leaderboard.push({
+                name: playerName,
+                score: score,
+                date: new Date().toLocaleDateString(),
+                timestamp: new Date().toISOString()
+            });
+            
+            // Sort and limit leaderboard
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboard = leaderboard.slice(0, 20);
+            localStorage.setItem('schoolHospitalLeaderboard', JSON.stringify(leaderboard));
+        }
+
+        function downloadGameHistory() {
+            if (gameHistory.length === 0) {
+                alert('No game history found!');
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = 'ID,Player Name,Score,Completion Time,Germs Hit,Date,Time\n';
+            gameHistory.forEach(attempt => {
+                csvContent += `${attempt.id},"${attempt.playerName}",${attempt.score},${attempt.completionTime},${attempt.germsHit},"${attempt.date}","${attempt.time}"\n`;
+            });
+            
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `game_history_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function getClassWinners() {
+            if (gameHistory.length === 0) return 'No games played yet!';
+            
+            // Get today's games
+            const today = new Date().toLocaleDateString();
+            const todayGames = gameHistory.filter(attempt => attempt.date === today);
+            
+            if (todayGames.length === 0) return 'No games played today!';
+            
+            // Find highest score today
+            const bestToday = todayGames.reduce((best, current) => 
+                current.score > best.score ? current : best
+            );
+            
+            return `Today's Winner: ${bestToday.playerName} with ${bestToday.score} points!`;
         }
 
         function clearLeaderboard() {
@@ -2383,6 +2452,8 @@
         stopGameBtn.addEventListener('click', adminStopGame);
         showLeaderboardBtn.addEventListener('click', showLeaderboard);
         clearLeaderboardBtn.addEventListener('click', clearLeaderboard);
+        document.getElementById('downloadHistoryBtn').addEventListener('click', downloadGameHistory);
+        document.getElementById('todayWinnerBtn').addEventListener('click', () => alert(getClassWinners()));
         logoutBtn.addEventListener('click', logoutAdmin);
         
         // Login event listeners
