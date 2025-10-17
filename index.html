@@ -5282,11 +5282,13 @@
                     // No points added for reaching target
                     gameComplete[controlledPlayer] = true;
                     
-                    // Show completion effect
-                    const characterName = controlledPlayer === 'player1' ? 'Maitha' : 'Jamilah';
-                    const targetName = targetKey === 'school' ? 'School' : 'Hospital';
-                    const message = `⛏️ ${characterName} successfully reached ${targetName}! 🎉`;
-                    showCompletionEffect(player.x, player.y, message);
+                    // Show completion effect (only for Jamilah, Maitha gets Bravo celebration)
+                    if (controlledPlayer === 'player2') { // Only for Jamilah
+                        const characterName = 'Jamilah';
+                        const targetName = 'Hospital';
+                        const message = `⛏️ ${characterName} successfully reached ${targetName}! 🎉`;
+                        showCompletionEffect(player.x, player.y, message);
+                    }
                     
                     // Play success sound
                     playSuccessSound();
