@@ -1052,22 +1052,18 @@
         
         <!-- Character Selection Screen -->
         <div id="characterSelection">
-            <h1>🎮 Choose Your Character 🎮</h1>
-            <p>Select which character you want to control:</p>
+            <h1>🎮 Mission Briefing 🎮</h1>
+            <p>You will guide BOTH characters to safety!<br>
+            <strong>First:</strong> Guide Maitha to School 🏫<br>
+            <strong>Then:</strong> Guide Jamilah to Hospital 🏥</p>
             
-            <div class="character-option" data-character="maitha">
-                <div class="character-emoji">🤒</div>
-                <div class="character-name">Maitha</div>
-                <div class="character-goal">Goal: Reach School 🏫</div>
+            <div class="character-option" data-character="both" style="background: linear-gradient(45deg, #667eea, #764ba2);">
+                <div class="character-emoji">🤒🤕</div>
+                <div class="character-name">Mission: Save Both!</div>
+                <div class="character-goal">Guide Maitha → School, then Jamilah → Hospital</div>
             </div>
             
-            <div class="character-option" data-character="jamilah">
-                <div class="character-emoji">🤕</div>
-                <div class="character-name">Jamilah</div>
-                <div class="character-goal">Goal: Reach Hospital 🏥</div>
-            </div>
-            
-            <button id="confirmCharacter" style="margin-top: 20px; padding: 15px 30px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 10px; cursor: pointer; display: none;">Start Game!</button>
+            <button id="confirmCharacter" style="margin-top: 20px; padding: 15px 30px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 10px; cursor: pointer; display: block;">🚀 Start Mission!</button>
         </div>
         
         <!-- Admin Login Modal -->
@@ -1240,6 +1236,7 @@
         // Character selection
         let selectedCharacter = null;
         let controlledPlayer = null;
+        let gamePhase = 'maitha'; // 'maitha' or 'jamilah'
 
         // Players
         const players = {
@@ -1471,17 +1468,15 @@
                     // Show completion effect
                     const characterName = controlledPlayer === 'player1' ? 'Maitha' : 'Jamilah';
                     const targetName = targetKey === 'school' ? 'School' : 'Hospital';
-                    const message = `🎉 ${characterName} reached ${targetName}! +50 points! Score frozen! 🎉`;
+                    const message = `🎉 ${characterName} reached ${targetName}! +50 points! 🎉`;
                     showCompletionEffect(player.x, player.y, message);
                     
-                    // Update score display and show it's frozen
+                    // Update score display
                     updateScoreDisplay();
                     
-                    // Show score frozen indicator
+                    // Switch to next character if this was Maitha
                     setTimeout(() => {
-                        const scoreDisplay = document.getElementById('scoreDisplay');
-                        scoreDisplay.innerHTML = `Score: <span id="currentScore">${currentScore}</span> <span style="color: #4CAF50;">🔒 FROZEN</span>`;
-                        scoreDisplay.classList.add('score-frozen');
+                        switchToNextCharacter();
                     }, 2000);
                 }
             }
@@ -1651,10 +1646,9 @@
         }
         
         function confirmCharacterSelection() {
-            if (!selectedCharacter) return;
-            
-            // Set controlled player
-            controlledPlayer = selectedCharacter === 'maitha' ? 'player1' : 'player2';
+            // Always start with Maitha first
+            gamePhase = 'maitha';
+            controlledPlayer = 'player1'; // Start with Maitha
             
             // Keep character names fixed (Maitha & Jamilah)
             playerNames.player1 = 'Maitha';
@@ -1665,8 +1659,8 @@
             player1Display.textContent = `Maitha: `;
             player2Display.textContent = `Jamilah: `;
             
-            // Show selected character
-            document.getElementById('selectedCharName').textContent = selectedCharacter === 'maitha' ? 'Maitha 🤒' : 'Jamilah 🤕';
+            // Show current character (start with Maitha)
+            updateCharacterDisplay();
             
             // Start the game
             characterSelection.style.display = 'none';
@@ -1690,6 +1684,24 @@
             initGerms();
             initRain();
             playRainSound();
+        }
+        
+        function updateCharacterDisplay() {
+            const characterName = gamePhase === 'maitha' ? 'Maitha 🤒' : 'Jamilah 🤕';
+            document.getElementById('selectedCharName').textContent = characterName;
+        }
+        
+        function switchToNextCharacter() {
+            if (gamePhase === 'maitha' && gameComplete.player1) {
+                // Switch to Jamilah after Maitha completes
+                gamePhase = 'jamilah';
+                controlledPlayer = 'player2';
+                updateCharacterDisplay();
+                
+                // Show switch message
+                const message = `🎯 Now guide Jamilah to Hospital! 🏥`;
+                showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
+            }
         }
         
         // Arrow control functions
@@ -1851,6 +1863,7 @@
             gameComplete = { player1: false, player2: false };
             selectedCharacter = null;
             controlledPlayer = null;
+            gamePhase = 'maitha';
             
             // Reset player positions
             players.player1.x = 50;
@@ -1906,12 +1919,12 @@
             if (e.key === 'Enter') startGame();
         });
         
-        // Character selection event listeners
-        document.querySelectorAll('.character-option').forEach(option => {
-            option.addEventListener('click', () => {
-                selectCharacter(option.dataset.character);
-            });
-        });
+        // Character selection event listeners - no longer needed since we auto-select both
+        // document.querySelectorAll('.character-option').forEach(option => {
+        //     option.addEventListener('click', () => {
+        //         selectCharacter(option.dataset.character);
+        //     });
+        // });
         
         document.getElementById('confirmCharacter').addEventListener('click', confirmCharacterSelection);
         
