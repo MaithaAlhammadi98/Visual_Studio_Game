@@ -2112,6 +2112,225 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
+        /* Scene 8 - Minecraft Leaderboard Styles */
+        .leaderboard-intro-bg {
+            background: linear-gradient(180deg, #87CEEB 0%, #FFB6C1 30%, #FFC0CB 60%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clouds-pan-up {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.8) 8px, transparent 8px),
+                radial-gradient(circle at 80% 30%, rgba(255,255,255,0.7) 10px, transparent 10px),
+                radial-gradient(circle at 50% 60%, rgba(255,255,255,0.6) 6px, transparent 6px);
+            animation: cloudsPanUp 4s ease-out forwards;
+        }
+
+        @keyframes cloudsPanUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        .leaderboard-intro {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 20, 0.85);
+            border: 4px solid #3a3a3a;
+            border-radius: 0;
+            width: 420px;
+            padding: 20px;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            animation: leaderboardSlideDown 1s ease-out forwards;
+            box-shadow: 0 0 25px #00ff80;
+        }
+
+        @keyframes leaderboardSlideDown {
+            0% { transform: translate(-50%, -70vh); opacity: 0; filter: blur(10px); }
+            100% { transform: translate(-50%, -50%); opacity: 1; filter: blur(0); }
+        }
+
+        .leaderboard-intro h2 {
+            color: #00ff80;
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            animation: glowPulse 3s infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { 
+                box-shadow: 0 0 15px #00ff80;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px #00ff80;
+            }
+            50% { 
+                box-shadow: 0 0 30px #4cff9f;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px #4cff9f;
+            }
+        }
+
+        .leaderboard-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #00ff80, transparent);
+            margin: 10px 0;
+            border-radius: 1px;
+        }
+
+        .leaderRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 128, 0.2);
+            border-radius: 0;
+            transition: all 0.3s ease;
+            animation: rowSlideIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .leaderRow:nth-child(1) { animation-delay: 0.2s; }
+        .leaderRow:nth-child(2) { animation-delay: 0.4s; }
+        .leaderRow:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes rowSlideIn {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .leaderRow:hover { 
+            background: rgba(0, 255, 128, 0.2); 
+            border-color: #00ff80;
+            transform: translateX(5px);
+        }
+
+        .leaderRow.top { 
+            color: #ffd700; 
+            font-weight: bold;
+            background: rgba(255, 215, 0, 0.1);
+            border-color: #ffd700;
+            animation: topPlayerGlow 2s ease-in-out;
+        }
+
+        @keyframes topPlayerGlow {
+            0%, 100% { 
+                box-shadow: 0 0 10px #ffd700;
+                background: rgba(255, 215, 0, 0.1);
+            }
+            50% { 
+                box-shadow: 0 0 20px #ffd700;
+                background: rgba(255, 215, 0, 0.2);
+            }
+        }
+
+        .rank {
+            color: #cccccc;
+            font-weight: bold;
+            min-width: 30px;
+        }
+
+        .player-name {
+            flex: 1;
+            text-align: left;
+            margin-left: 10px;
+            color: #ffffff;
+        }
+
+        .score {
+            color: #00ff80;
+            font-weight: bold;
+            min-width: 50px;
+            animation: scoreCountUp 1s ease-out;
+            animation-delay: 1s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes scoreCountUp {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .score-icon {
+            margin-left: 10px;
+            animation: iconSparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes iconSparkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .current-top {
+            color: #cccccc;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .current-top b {
+            color: #ffd700;
+            animation: crownSparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes crownSparkle {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); }
+            50% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px #ffd700; }
+        }
+
+        .leaderboard-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .pixelBtn {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #00ff80;
+            border: 3px solid #00ff80;
+            padding: 10px 20px;
+            margin: 0;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 0;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pixelBtn:hover {
+            background: #00ff80;
+            color: #1e1e1e;
+            box-shadow: 0 0 15px #00ff80;
+            transform: translateY(-2px);
+        }
+
+        .pixelBtn:active {
+            transform: translateY(0);
+            box-shadow: 0 0 5px #00ff80;
+        }
+
+        .leaderboard-narration {
+            animation: textFadeIn 0.5s ease-out;
+            animation-delay: 1s;
+            animation-fill-mode: both;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-style: italic;
+        }
+
         /* Minecraft Box for consistent styling */
         .minecraft-box {
             background: rgba(255, 182, 193, 0.3);
@@ -2629,7 +2848,47 @@
             
             <div class="intro-scene" id="scene7" style="display: none;">
                 <div class="intro-background title-bg">
-                    <div class="title-text">Block City: The Minecraft Mission</div>
+                    <div class="title-text">Welcome to... Block City: The Minecraft Mission</div>
+                </div>
+            </div>
+            
+            <div class="intro-scene" id="scene8" style="display: none;">
+                <div class="intro-background leaderboard-intro-bg">
+                    <div class="clouds-pan-up"></div>
+                    <div id="leaderboardContainer" class="leaderboard-intro">
+                        <h2>🏆 CLASS LEADERBOARD</h2>
+                        <div class="leaderboard-divider"></div>
+                        <div id="leaderboardList">
+                            <div class="leaderRow top">
+                                <span class="rank">1.</span>
+                                <span class="player-name">Kitten</span>
+                                <span class="score">125</span>
+                                <span class="score-icon">🟩</span>
+                            </div>
+                            <div class="leaderRow">
+                                <span class="rank">2.</span>
+                                <span class="player-name">Jich</span>
+                                <span class="score">110</span>
+                                <span class="score-icon">🟩</span>
+                            </div>
+                            <div class="leaderRow">
+                                <span class="rank">3.</span>
+                                <span class="player-name">Maitha</span>
+                                <span class="score">95</span>
+                                <span class="score-icon">🟩</span>
+                            </div>
+                        </div>
+                        <div class="leaderboard-divider"></div>
+                        <p class="current-top">👑 Current Top: <b>Kitten</b></p>
+                        <div class="leaderboard-buttons">
+                            <button class="pixelBtn" onclick="refreshLeaderboard()">⟳ Refresh</button>
+                            <button class="pixelBtn" onclick="startMissionFromLeaderboard()">⛏️ Start Mission</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-text-container">
+                    <div class="intro-text leaderboard-narration">Your scores will rise here, in the halls of the pixel gods.</div>
+                    <div class="intro-text leaderboard-narration">Will you reach the top… or get lost among the blocks?</div>
                 </div>
             </div>
         </div>
@@ -3265,7 +3524,20 @@
                 playTitleMusic();
             }, 28000);
             
-            // End intro and show login screen (after 3s more)
+            // Scene 8: Leaderboard (after 3s more)
+            setTimeout(() => {
+                console.log('Scene 8: Leaderboard');
+                document.getElementById('scene7').style.display = 'none';
+                document.getElementById('scene8').style.display = 'flex';
+                
+                // Load real leaderboard data
+                loadLeaderboardData();
+                
+                // Play leaderboard sound
+                playLeaderboardSound();
+            }, 31000);
+            
+            // End intro and show login screen (after 8s more)
             setTimeout(() => {
                 console.log('Ending cinematic intro');
                 document.getElementById('cinematicIntro').style.display = 'none';
@@ -3287,7 +3559,7 @@
                         playBackgroundMusic();
                     }, 1000);
                 }
-            }, 31000); // Total intro time: 31 seconds
+            }, 39000); // Total intro time: 39 seconds
         }
 
         // Sound effects for intro
@@ -3467,6 +3739,109 @@
                 oscillator.stop(audioContext.currentTime + 2);
             } catch (e) {
                 console.log('Could not play title music');
+            }
+        }
+
+        function playLeaderboardSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                // Magical leaderboard sound
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(784, audioContext.currentTime); // G5
+                oscillator.frequency.setValueAtTime(1047, audioContext.currentTime + 0.3); // C6
+                oscillator.frequency.setValueAtTime(1319, audioContext.currentTime + 0.6); // E6
+                
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 1);
+            } catch (e) {
+                console.log('Could not play leaderboard sound');
+            }
+        }
+
+        // Leaderboard functions
+        function loadLeaderboardData() {
+            // Load real data from Firebase or localStorage
+            if (window.scoresRef) {
+                // Use Firebase data
+                window.scoresRef.orderBy('score', 'desc').limit(3).get().then(snapshot => {
+                    const leaderboardList = document.getElementById('leaderboardList');
+                    if (leaderboardList && snapshot.docs.length > 0) {
+                        leaderboardList.innerHTML = '';
+                        snapshot.docs.forEach((doc, index) => {
+                            const data = doc.data();
+                            const row = document.createElement('div');
+                            row.className = `leaderRow ${index === 0 ? 'top' : ''}`;
+                            row.innerHTML = `
+                                <span class="rank">${index + 1}.</span>
+                                <span class="player-name">${data.name || 'Player'}</span>
+                                <span class="score">${data.score || 0}</span>
+                                <span class="score-icon">🟩</span>
+                            `;
+                            leaderboardList.appendChild(row);
+                        });
+                        
+                        // Update current top player
+                        const currentTop = document.querySelector('.current-top b');
+                        if (currentTop && snapshot.docs[0]) {
+                            currentTop.textContent = snapshot.docs[0].data().name || 'Player';
+                        }
+                    }
+                }).catch(e => {
+                    console.log('Could not load Firebase leaderboard:', e);
+                    loadFallbackLeaderboard();
+                });
+            } else {
+                loadFallbackLeaderboard();
+            }
+        }
+
+        function loadFallbackLeaderboard() {
+            // Fallback to localStorage or demo data
+            const leaderboardList = document.getElementById('leaderboardList');
+            if (leaderboardList) {
+                leaderboardList.innerHTML = `
+                    <div class="leaderRow top">
+                        <span class="rank">1.</span>
+                        <span class="player-name">Kitten</span>
+                        <span class="score">125</span>
+                        <span class="score-icon">🟩</span>
+                    </div>
+                    <div class="leaderRow">
+                        <span class="rank">2.</span>
+                        <span class="player-name">Jich</span>
+                        <span class="score">110</span>
+                        <span class="score-icon">🟩</span>
+                    </div>
+                    <div class="leaderRow">
+                        <span class="rank">3.</span>
+                        <span class="player-name">Maitha</span>
+                        <span class="score">95</span>
+                        <span class="score-icon">🟩</span>
+                    </div>
+                `;
+            }
+        }
+
+        function startMissionFromLeaderboard() {
+            // Skip to login screen
+            document.getElementById('cinematicIntro').style.display = 'none';
+            document.getElementById('introScreen').style.display = 'flex';
+            
+            // Load and start background music
+            if (DEVELOPER_BACKGROUND_MUSIC) {
+                loadCustomMusic(DEVELOPER_BACKGROUND_MUSIC);
+                setTimeout(() => { playBackgroundMusic(); }, 1000);
+            } else {
+                setTimeout(() => { playBackgroundMusic(); }, 1000);
             }
         }
 
