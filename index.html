@@ -258,49 +258,46 @@
             animation: germFloat 3s ease-in-out infinite;
         }
 
-        /* Character animations */
-        @keyframes characterIdle {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-3px) rotate(1deg); }
-            50% { transform: translateY(-5px) rotate(0deg); }
-            75% { transform: translateY(-3px) rotate(-1deg); }
+        /* Pixel character animations */
+        @keyframes pixelIdle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
         }
 
-        @keyframes sickBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+        @keyframes pixelWalk {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-1px) translateX(1px); }
+            50% { transform: translateY(-2px) translateX(0px); }
+            75% { transform: translateY(-1px) translateX(-1px); }
         }
 
-        @keyframes germFloat {
-            0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.7; }
-            25% { transform: translateY(-5px) translateX(3px); opacity: 1; }
-            50% { transform: translateY(-8px) translateX(0px); opacity: 0.8; }
-            75% { transform: translateY(-5px) translateX(-3px); opacity: 0.9; }
+        @keyframes pixelSick {
+            0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+            25% { filter: hue-rotate(90deg) brightness(1.1); }
+            50% { filter: hue-rotate(180deg) brightness(0.9); }
+            75% { filter: hue-rotate(270deg) brightness(1.1); }
         }
 
-        /* Walking animation for game */
-        .character-sprite.walking {
-            animation: characterWalk 0.6s ease-in-out infinite;
-        }
-
-        @keyframes characterWalk {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-2px) rotate(2deg); }
-            50% { transform: translateY(-4px) rotate(0deg); }
-            75% { transform: translateY(-2px) rotate(-2deg); }
+        @keyframes pixelGermFloat {
+            0%, 100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.8; }
+            25% { transform: translateY(-3px) translateX(2px) scale(1.1); opacity: 1; }
+            50% { transform: translateY(-5px) translateX(0px) scale(0.9); opacity: 0.9; }
+            75% { transform: translateY(-3px) translateX(-2px) scale(1.1); opacity: 1; }
         }
 
         /* Rain effect on characters */
         .character-sprite.raining::before {
-            content: '💧';
+            content: '';
             position: absolute;
             top: -15px;
             left: 20px;
-            font-size: 12px;
-            animation: rainDrop 1.5s linear infinite;
+            width: 2px;
+            height: 8px;
+            background: #87CEEB;
+            animation: pixelRainDrop 1.5s linear infinite;
         }
 
-        @keyframes rainDrop {
+        @keyframes pixelRainDrop {
             0% { transform: translateY(-10px); opacity: 1; }
             100% { transform: translateY(80px); opacity: 0; }
         }
@@ -2536,54 +2533,123 @@
             document.getElementById('playerNamePreview').textContent = playerName;
         }
         
-        // Draw animated character function
+        // Draw pixel art character function
         function drawAnimatedCharacter(ctx, x, y, character, isSick = true) {
-            const size = 40;
+            const pixelSize = 4; // Size of each pixel
             const centerX = x;
             const centerY = y;
             
             // Save context
             ctx.save();
             
-            // Character body (colored circle)
+            // Disable anti-aliasing for crisp pixel art
+            ctx.imageSmoothingEnabled = false;
+            
+            // Add subtle pixel-style animation
+            const time = Date.now() * 0.002;
+            const bounceOffset = Math.sin(time) * 1; // Subtle bounce
+            const finalY = centerY + bounceOffset;
+            
+            // Character colors
+            let skinColor, hairColor, shirtColor, pantsColor;
             if (character === 'maitha') {
-                const gradient = ctx.createLinearGradient(centerX - size/2, centerY - size/2, centerX + size/2, centerY + size/2);
-                gradient.addColorStop(0, '#ff6b6b');
-                gradient.addColorStop(1, '#ff8e8e');
-                ctx.fillStyle = gradient;
+                skinColor = '#FDBCB4';  // Light skin
+                hairColor = '#8B4513';  // Brown hair
+                shirtColor = '#FF6B6B'; // Red shirt
+                pantsColor = '#4A4A4A'; // Dark pants
             } else {
-                const gradient = ctx.createLinearGradient(centerX - size/2, centerY - size/2, centerX + size/2, centerY + size/2);
-                gradient.addColorStop(0, '#4ecdc4');
-                gradient.addColorStop(1, '#44a08d');
-                ctx.fillStyle = gradient;
+                skinColor = '#D4A574';  // Slightly darker skin
+                hairColor = '#2C3E50';  // Dark hair
+                shirtColor = '#4ECDC4'; // Teal shirt
+                pantsColor = '#34495E'; // Darker pants
             }
             
-            // Draw character body (oval shape)
-            ctx.beginPath();
-            ctx.ellipse(centerX, centerY, size/2, size/2.5, 0, 0, 2 * Math.PI);
-            ctx.fill();
-            
-            // Add sick effects if needed
-            if (isSick) {
-                // Sick face
-                ctx.fillStyle = '#ff4757';
-                ctx.font = '20px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('🤒', centerX, centerY - 5);
-                
-                // Floating germs
-                ctx.fillStyle = 'rgba(255, 71, 87, 0.8)';
-                ctx.beginPath();
-                ctx.arc(centerX - 15, centerY + 10, 3, 0, 2 * Math.PI);
-                ctx.fill();
-                
-                ctx.beginPath();
-                ctx.arc(centerX + 10, centerY - 5, 2, 0, 2 * Math.PI);
-                ctx.fill();
-            }
+            // Draw pixel character (16x20 pixels)
+            drawPixelCharacter(ctx, centerX, finalY, pixelSize, skinColor, hairColor, shirtColor, pantsColor, isSick);
             
             // Restore context
             ctx.restore();
+        }
+        
+        // Draw pixel art character sprite
+        function drawPixelCharacter(ctx, centerX, centerY, pixelSize, skinColor, hairColor, shirtColor, pantsColor, isSick) {
+            const offsetX = centerX - (8 * pixelSize); // Center the 16-pixel wide character
+            const offsetY = centerY - (10 * pixelSize); // Center the 20-pixel tall character
+            
+            // Helper function to draw a pixel
+            function drawPixel(x, y, color) {
+                ctx.fillStyle = color;
+                ctx.fillRect(offsetX + (x * pixelSize), offsetY + (y * pixelSize), pixelSize, pixelSize);
+            }
+            
+            // Character sprite data (16x20 grid)
+            // Row 0: Hair
+            for (let i = 2; i < 14; i++) drawPixel(i, 0, hairColor);
+            for (let i = 1; i < 15; i++) drawPixel(i, 1, hairColor);
+            
+            // Row 2-3: Face
+            for (let i = 3; i < 13; i++) drawPixel(i, 2, skinColor);
+            for (let i = 2; i < 14; i++) drawPixel(i, 3, skinColor);
+            
+            // Row 4-5: Eyes and face
+            drawPixel(5, 4, '#000000'); // Left eye
+            drawPixel(10, 4, '#000000'); // Right eye
+            drawPixel(7, 5, '#000000'); // Nose
+            drawPixel(6, 6, '#000000'); // Mouth left
+            drawPixel(7, 6, '#000000'); // Mouth center
+            drawPixel(8, 6, '#000000'); // Mouth right
+            
+            // Row 6-7: Face continuation
+            for (let i = 3; i < 13; i++) drawPixel(i, 6, skinColor);
+            for (let i = 2; i < 14; i++) drawPixel(i, 7, skinColor);
+            
+            // Row 8-11: Shirt
+            for (let i = 2; i < 14; i++) drawPixel(i, 8, shirtColor);
+            for (let i = 1; i < 15; i++) drawPixel(i, 9, shirtColor);
+            for (let i = 1; i < 15; i++) drawPixel(i, 10, shirtColor);
+            for (let i = 2; i < 14; i++) drawPixel(i, 11, shirtColor);
+            
+            // Row 12-15: Pants
+            for (let i = 3; i < 7; i++) drawPixel(i, 12, pantsColor);
+            for (let i = 9; i < 13; i++) drawPixel(i, 12, pantsColor);
+            for (let i = 3; i < 7; i++) drawPixel(i, 13, pantsColor);
+            for (let i = 9; i < 13; i++) drawPixel(i, 13, pantsColor);
+            for (let i = 3; i < 7; i++) drawPixel(i, 14, pantsColor);
+            for (let i = 9; i < 13; i++) drawPixel(i, 14, pantsColor);
+            for (let i = 3; i < 7; i++) drawPixel(i, 15, pantsColor);
+            for (let i = 9; i < 13; i++) drawPixel(i, 15, pantsColor);
+            
+            // Row 16-19: Legs
+            for (let i = 4; i < 6; i++) drawPixel(i, 16, pantsColor);
+            for (let i = 10; i < 12; i++) drawPixel(i, 16, pantsColor);
+            for (let i = 4; i < 6; i++) drawPixel(i, 17, pantsColor);
+            for (let i = 10; i < 12; i++) drawPixel(i, 17, pantsColor);
+            for (let i = 4; i < 6; i++) drawPixel(i, 18, pantsColor);
+            for (let i = 10; i < 12; i++) drawPixel(i, 18, pantsColor);
+            for (let i = 4; i < 6; i++) drawPixel(i, 19, pantsColor);
+            for (let i = 10; i < 12; i++) drawPixel(i, 19, pantsColor);
+            
+            // Add sick effects if needed
+            if (isSick) {
+                // Sick face - green tint
+                drawPixel(4, 4, '#90EE90'); // Left sick pixel
+                drawPixel(11, 4, '#90EE90'); // Right sick pixel
+                
+                // Floating germs around character
+                const time = Date.now() * 0.003;
+                const germ1X = Math.sin(time) * 15;
+                const germ1Y = Math.cos(time) * 10;
+                const germ2X = Math.sin(time + 2) * 12;
+                const germ2Y = Math.cos(time + 2) * 8;
+                
+                // Germ 1
+                ctx.fillStyle = '#FF4757';
+                ctx.fillRect(centerX + germ1X - 2, centerY + germ1Y - 2, 4, 4);
+                
+                // Germ 2
+                ctx.fillStyle = '#FF6B6B';
+                ctx.fillRect(centerX + germ2X - 1, centerY + germ2Y - 1, 2, 2);
+            }
         }
 
         function drawPreviewGame(ctx, width, height) {
