@@ -761,6 +761,161 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
+        /* Live Leaderboard (Kahoot-style) */
+        #liveLeaderboard {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .live-leaderboard-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .live-leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .live-leaderboard-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .live-stats {
+            display: flex;
+            gap: 20px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .live-stats span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .live-leaderboard-list {
+            margin: 20px 0;
+        }
+
+        .live-leaderboard-entry {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .live-leaderboard-entry.rank-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .live-leaderboard-entry.rank-2 {
+            background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+            color: #333;
+        }
+
+        .live-leaderboard-entry.rank-3 {
+            background: linear-gradient(135deg, #CD7F32, #B8860B);
+            color: white;
+        }
+
+        .live-leaderboard-entry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .live-rank-number {
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 15px;
+            min-width: 40px;
+        }
+
+        .live-player-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .live-player-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .live-player-stats {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .live-player-score {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .live-leaderboard-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         /* Mobile score display adjustments */
         @media (max-width: 768px) {
             #scoreDisplay {
@@ -1379,7 +1534,7 @@
             </div>
             
             <div class="admin-control">
-                <button class="admin-btn" id="showLeaderboardBtn">Show Leaderboard</button>
+                <button class="admin-btn" id="showLiveLeaderboardBtn">📊 Live Leaderboard</button>
                 <button class="admin-btn danger" id="clearLeaderboardBtn">Clear Leaderboard</button>
                 <button class="admin-btn" id="downloadHistoryBtn">📊 Download History (CSV)</button>
                 <button class="admin-btn" id="todayWinnerBtn">🏆 Today's Winner</button>
@@ -1436,19 +1591,22 @@
             <button id="restartBtn">Play Again</button>
         </div>
 
-        <!-- Leaderboard Popup -->
-        <div id="leaderboardPopup">
-            <div class="leaderboard-content">
-                <div class="leaderboard-header">
-                    <h2>🏆 Race Complete!</h2>
-                    <button class="close-leaderboard" onclick="hideLeaderboard()">×</button>
+        <!-- Live Leaderboard (like Kahoot) -->
+        <div id="liveLeaderboard" style="display: none;">
+            <div class="live-leaderboard-content">
+                <div class="live-leaderboard-header">
+                    <h2>🏆 Live Leaderboard</h2>
+                    <div class="live-stats">
+                        <span id="totalPlayers">Players: 0</span>
+                        <span id="activeGames">Active: 0</span>
+                    </div>
                 </div>
-                <div class="leaderboard-list" id="popupLeaderboardList">
-                    <!-- Leaderboard entries will be populated here -->
+                <div class="live-leaderboard-list" id="liveLeaderboardList">
+                    <!-- Live entries will be populated here -->
                 </div>
-                <div class="leaderboard-actions">
-                    <button onclick="restartGame()" class="play-again-btn">🔄 Play Again</button>
-                    <button onclick="hideLeaderboard()" class="close-btn">Close</button>
+                <div class="live-leaderboard-actions">
+                    <button onclick="hideLiveLeaderboard()" class="close-btn">Close</button>
+                    <button onclick="refreshLeaderboard()" class="refresh-btn">🔄 Refresh</button>
                 </div>
             </div>
         </div>
@@ -2327,6 +2485,81 @@
             document.getElementById('leaderboardPopup').style.display = 'none';
         }
 
+        // Live Leaderboard Functions (Kahoot-style)
+        function showLiveLeaderboard() {
+            const liveLeaderboard = document.getElementById('liveLeaderboard');
+            liveLeaderboard.style.display = 'flex';
+            updateLiveLeaderboard();
+            
+            // Auto-refresh every 3 seconds
+            if (window.leaderboardInterval) {
+                clearInterval(window.leaderboardInterval);
+            }
+            window.leaderboardInterval = setInterval(updateLiveLeaderboard, 3000);
+        }
+
+        function hideLiveLeaderboard() {
+            const liveLeaderboard = document.getElementById('liveLeaderboard');
+            liveLeaderboard.style.display = 'none';
+            
+            // Stop auto-refresh
+            if (window.leaderboardInterval) {
+                clearInterval(window.leaderboardInterval);
+            }
+        }
+
+        function updateLiveLeaderboard() {
+            const liveList = document.getElementById('liveLeaderboardList');
+            const totalPlayersEl = document.getElementById('totalPlayers');
+            const activeGamesEl = document.getElementById('activeGames');
+            
+            // Clear the list
+            liveList.innerHTML = '';
+            
+            // Get all players sorted by best score
+            const allPlayers = getTopPlayers();
+            
+            // Update stats
+            totalPlayersEl.textContent = `Players: ${allPlayers.length}`;
+            activeGamesEl.textContent = `Active: ${gameHistory.filter(h => {
+                const gameTime = new Date(h.timestamp);
+                const now = new Date();
+                return (now - gameTime) < 300000; // Active if played within last 5 minutes
+            }).length}`;
+            
+            // Show top 10 players
+            allPlayers.slice(0, 10).forEach((player, index) => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = `live-leaderboard-entry rank-${index + 1}`;
+                entryDiv.innerHTML = `
+                    <div class="live-rank-number">#${index + 1}</div>
+                    <div class="live-player-info">
+                        <div class="live-player-name">${player.name}</div>
+                        <div class="live-player-stats">Best Score</div>
+                    </div>
+                    <div class="live-player-score">${player.bestScore}</div>
+                `;
+                liveList.appendChild(entryDiv);
+            });
+            
+            // If no players, show message
+            if (allPlayers.length === 0) {
+                const noPlayersDiv = document.createElement('div');
+                noPlayersDiv.className = 'live-leaderboard-entry';
+                noPlayersDiv.innerHTML = `
+                    <div class="live-player-info">
+                        <div class="live-player-name">No players yet!</div>
+                        <div class="live-player-stats">Start playing to see scores</div>
+                    </div>
+                `;
+                liveList.appendChild(noPlayersDiv);
+            }
+        }
+
+        function refreshLeaderboard() {
+            updateLiveLeaderboard();
+        }
+
         // New comprehensive history tracking system
         let gameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
         let playerScores = JSON.parse(localStorage.getItem('playerScores') || '[]');
@@ -2528,7 +2761,7 @@
         adminToggle.addEventListener('click', toggleAdminPanel);
         startGameBtn.addEventListener('click', adminStartGame);
         stopGameBtn.addEventListener('click', adminStopGame);
-        showLeaderboardBtn.addEventListener('click', showLeaderboard);
+        document.getElementById('showLiveLeaderboardBtn').addEventListener('click', showLiveLeaderboard);
         clearLeaderboardBtn.addEventListener('click', clearLeaderboard);
         document.getElementById('downloadHistoryBtn').addEventListener('click', downloadGameHistory);
         document.getElementById('todayWinnerBtn').addEventListener('click', () => alert(getClassWinners()));
