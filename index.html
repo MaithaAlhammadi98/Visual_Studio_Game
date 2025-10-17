@@ -5460,11 +5460,13 @@
 
         // End game
         function endGame() {
+            console.log('endGame() called - showing Jamilah Bravo celebration');
             // Show Bravo celebration for Jamilah first
             showJamilahBravoCelebration();
             
             // Then show leaderboard after celebration
             setTimeout(() => {
+                console.log('endGame timeout executed - setting gameState to gameOver');
                 gameState = 'gameOver';
                 
                 // Calculate completion time and germs hit
@@ -5504,6 +5506,7 @@
             updateLeaderboard();
             
             // Show leaderboard popup instead of game over screen
+            console.log('endGame timeout - calling showLeaderboardPopup()');
             showLeaderboardPopup();
             }, 2500); // Wait 2.5 seconds for Jamilah's Bravo celebration
         }
@@ -6355,13 +6358,16 @@
         }
 
         function showLeaderboardPopup() {
+            console.log('showLeaderboardPopup() called');
             const popup = document.getElementById('leaderboardPopup');
             const popupList = document.getElementById('popupLeaderboardList');
             
             if (!popup || !popupList) {
-                console.log('Leaderboard popup elements not found');
+                console.log('Leaderboard popup elements not found:', { popup, popupList });
                 return;
             }
+            
+            console.log('Leaderboard popup elements found, proceeding...');
             
             // Clear the popup
             popupList.innerHTML = '';
@@ -6438,6 +6444,7 @@
                     }
                     
                     // Show the popup
+                    console.log('Showing leaderboard popup');
                     popup.style.display = 'flex';
                     
                     // Add Minecraft heart after a short delay
