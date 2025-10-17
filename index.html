@@ -1779,13 +1779,20 @@
             if (!confirm("⚠️ Are you sure you want to clear all leaderboard data?")) return;
 
             try {
-                const snapshot = await window.db.collection('scores').get();
+                // Clear both collections to be safe
+                const scoresSnapshot = await window.db.collection('scores').get();
+                const gameScoresSnapshot = await window.db.collection('gameScores').get();
                 const batch = window.db.batch();
-                snapshot.forEach((doc) => batch.delete(doc.ref));
+                
+                // Delete from scores collection
+                scoresSnapshot.forEach((doc) => batch.delete(doc.ref));
+                // Delete from gameScores collection
+                gameScoresSnapshot.forEach((doc) => batch.delete(doc.ref));
+                
                 await batch.commit();
 
-                alert("✅ Leaderboard has been cleared!");
-                console.log("All scores deleted from Firestore");
+                alert("✅ All leaderboard data has been cleared!");
+                console.log("All scores and gameScores deleted from Firestore");
 
                 // Optional: refresh the leaderboard if it's visible
                 if (typeof fetchLeaderboardOnce === 'function') {
