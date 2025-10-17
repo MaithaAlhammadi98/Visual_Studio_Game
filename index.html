@@ -2255,10 +2255,25 @@
             // Show current player's score prominently
             const currentPlayerEntry = document.createElement('div');
             currentPlayerEntry.className = 'leaderboard-entry rank-1';
+            
+            // Get player name safely - avoid object errors
+            let displayName = 'Player';
+            if (typeof playerName === 'string') {
+                displayName = playerName;
+            } else if (playerName && typeof playerName === 'object' && playerName.value) {
+                displayName = playerName.value;
+            } else {
+                // Try to get from input field directly
+                const nameInput = document.getElementById('playerName');
+                if (nameInput && nameInput.value) {
+                    displayName = nameInput.value;
+                }
+            }
+            
             currentPlayerEntry.innerHTML = `
                 <div class="rank-number">#1</div>
                 <div class="player-info">
-                    <div class="player-name">${playerName || 'Player'} (You)</div>
+                    <div class="player-name">${displayName} (You)</div>
                     <div class="player-stats">Final Score</div>
                 </div>
                 <div class="player-score">${currentScore}</div>
@@ -2268,7 +2283,7 @@
             // Show top 3 from leaderboard
             const sortedLeaderboard = [...leaderboard].sort((a, b) => b.score - a.score);
             sortedLeaderboard.slice(0, 3).forEach((entry, index) => {
-                if (entry.name !== playerName) { // Don't show current player twice
+                if (entry.name !== displayName) { // Don't show current player twice
                     const entryDiv = document.createElement('div');
                     entryDiv.className = `leaderboard-entry rank-${index + 2}`;
                     entryDiv.innerHTML = `
