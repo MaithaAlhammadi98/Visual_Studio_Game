@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School & Hospital Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #87CEEB, #98FB98);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 500px;
+            max-height: 800px;
+            border: 3px solid #333;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #f0f8ff;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+        
+        #introScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            z-index: 30;
+            padding: 20px;
+        }
+        
+        #adminPanel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 100;
+            min-width: 200px;
+            display: none;
+        }
+        
+        #adminToggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 101;
+            display: none;
+        }
+        
+        #loginModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+        
+        #loginForm {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        #loginForm h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        #loginForm input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        #loginForm button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        #loginForm button:hover {
+            background: #45a049;
+        }
+        
+        #logoutBtn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 12px;
+        }
+        
+        #logoutBtn:hover {
+            background: #da190b;
+        }
+        
+        .admin-control {
+            margin: 10px 0;
+            padding: 8px;
+            background: #444;
+            border-radius: 5px;
+        }
+        
+        .admin-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .admin-btn:hover {
+            background: #45a049;
+        }
+        
+        .admin-btn.danger {
+            background: #f44336;
+        }
+        
+        .admin-btn.danger:hover {
+            background: #da190b;
+        }
+        
+        #introScreen h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        #introScreen p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .nameInput {
+            width: 80%;
+            max-width: 300px;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        #startBtn {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        #startBtn:hover {
+            background: #45a049;
+        }
+        
+        #gameUI {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            z-index: 10;
+            display: none;
+            justify-content: space-between;
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        #instructions {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            text-align: center;
+            color: #333;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            z-index: 20;
+            padding: 20px;
+        }
+        
+        #leaderboard {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .leaderboard-entry:last-child {
+            border-bottom: none;
+        }
+        
+        #restartBtn {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        #restartBtn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <!-- Introduction Screen -->
+        <div id="introScreen">
+            <h1>🎮 School & Hospital Adventure 🎮</h1>
+            <p>Welcome to our interactive game!<br>
+            Help Maitha reach school and Jamilah reach the hospital<br>
+            while avoiding the bouncing germs!</p>
+            
+            <input type="text" class="nameInput" id="playerName" placeholder="Enter your name" maxlength="20">
+            
+            <button id="startBtn">Start Game!</button>
+            
+            <button id="adminLoginBtn" style="margin-top: 20px; background: #666; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">👑 Admin Login</button>
+        </div>
+        
+        <!-- Admin Login Modal -->
+        <div id="loginModal">
+            <div id="loginForm">
+                <h2>🔐 Admin Login</h2>
+                <input type="email" id="adminEmail" placeholder="Enter admin email" required>
+                <input type="password" id="adminPassword" placeholder="Enter admin password" required>
+                <button id="loginBtn">Login</button>
+                <button id="cancelLoginBtn">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <button id="adminToggle">👑 Admin</button>
+        <div id="adminPanel">
+            <h3>🎮 Game Admin Panel</h3>
+            <button id="logoutBtn">Logout</button>
+            
+            <div class="admin-control">
+                <strong>Players Online:</strong> <span id="playerCount">0</span>
+            </div>
+            
+            <div class="admin-control">
+                <strong>Game Status:</strong> <span id="gameStatus">Waiting</span>
+            </div>
+            
+            <div class="admin-control">
+                <button class="admin-btn" id="startGameBtn">Start Game</button>
+                <button class="admin-btn danger" id="stopGameBtn">Stop Game</button>
+            </div>
+            
+            <div class="admin-control">
+                <button class="admin-btn" id="showLeaderboardBtn">Show Leaderboard</button>
+                <button class="admin-btn danger" id="clearLeaderboardBtn">Clear Leaderboard</button>
+            </div>
+            
+            <div class="admin-control">
+                <h4>Recent Players:</h4>
+                <div id="playerList" style="max-height: 150px; overflow-y: auto;"></div>
+            </div>
+        </div>
+        
+        <!-- Game UI -->
+        <div id="gameUI">
+            <div id="player1Display">Player 1: <span id="score1">0</span></div>
+            <div id="player2Display">Player 2: <span id="score2">0</span></div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="instructions">
+            Touch and drag to move your character!<br>
+            Avoid germs 🦠 (-10 pts) | Reach your goal (+50 pts)
+        </div>
+        
+        <!-- Game Over Screen with Leaderboard -->
+        <div id="gameOverScreen">
+            <h2>🎉 Game Complete! 🎉</h2>
+            <div id="winnerText"></div>
+            
+            <div id="leaderboard">
+                <h3>🏆 Class Leaderboard 🏆</h3>
+                <div id="leaderboardList"></div>
+            </div>
+            
+            <button id="restartBtn">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const score1El = document.getElementById('score1');
+        const score2El = document.getElementById('score2');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const winnerText = document.getElementById('winnerText');
+        const restartBtn = document.getElementById('restartBtn');
+        const introScreen = document.getElementById('introScreen');
+        const gameUI = document.getElementById('gameUI');
+        const startBtn = document.getElementById('startBtn');
+        const playerNameInput = document.getElementById('playerName');
+        const player1Display = document.getElementById('player1Display');
+        const player2Display = document.getElementById('player2Display');
+        const leaderboardList = document.getElementById('leaderboardList');
+        
+        // Admin elements
+        const adminToggle = document.getElementById('adminToggle');
+        const adminPanel = document.getElementById('adminPanel');
+        const playerCount = document.getElementById('playerCount');
+        const gameStatus = document.getElementById('gameStatus');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const stopGameBtn = document.getElementById('stopGameBtn');
+        const showLeaderboardBtn = document.getElementById('showLeaderboardBtn');
+        const clearLeaderboardBtn = document.getElementById('clearLeaderboardBtn');
+        const playerList = document.getElementById('playerList');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Login elements
+        const loginModal = document.getElementById('loginModal');
+        const loginForm = document.getElementById('loginForm');
+        const adminEmail = document.getElementById('adminEmail');
+        const adminPassword = document.getElementById('adminPassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const cancelLoginBtn = document.getElementById('cancelLoginBtn');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+
+        // Set canvas size
+        function resizeCanvas() {
+            const container = document.getElementById('gameContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Game state
+        let gameState = 'intro'; // 'intro', 'playing', or 'gameOver'
+        let adminGameState = 'waiting'; // 'waiting', 'active', 'stopped'
+        let scores = { player1: 0, player2: 0 };
+        let gameComplete = { player1: false, player2: false };
+        let playerNames = { player1: 'Maitha', player2: 'Jamilah' };
+        let currentPlayer = null;
+        
+        // Leaderboard (stored in localStorage)
+        let leaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
+        
+        // Player tracking
+        let activePlayers = [];
+        let playerLog = JSON.parse(localStorage.getItem('schoolHospitalPlayerLog') || '[]');
+        
+        // Admin credentials (you can change these)
+        const ADMIN_EMAIL = 'maithahabib@hotmail.com';
+        const ADMIN_PASSWORD = 'admin1234';
+        
+        // Admin state
+        let isAdminLoggedIn = false;
+
+        // Players
+        const players = {
+            player1: {
+                x: 50,
+                y: canvas.height / 2,
+                size: 25,
+                color: '#FF6B6B',
+                name: 'Maitha',
+                target: 'school',
+                emoji: '👩‍🎓'
+            },
+            player2: {
+                x: canvas.width - 50,
+                y: canvas.height / 2,
+                size: 25,
+                color: '#4ECDC4',
+                name: 'Jamilah',
+                target: 'hospital',
+                emoji: '👩‍⚕️'
+            }
+        };
+
+        // Targets
+        const targets = {
+            school: {
+                x: 50,
+                y: 50,
+                size: 40,
+                emoji: '🏫'
+            },
+            hospital: {
+                x: canvas.width - 50,
+                y: 50,
+                size: 40,
+                emoji: '🏥'
+            }
+        };
+
+        // Germs
+        const germs = [];
+        const germCount = 5;
+
+        // Initialize germs
+        function initGerms() {
+            germs.length = 0;
+            for (let i = 0; i < germCount; i++) {
+                germs.push({
+                    x: Math.random() * (canvas.width - 40),
+                    y: Math.random() * (canvas.height - 40),
+                    size: 20,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    emoji: '🦠'
+                });
+            }
+        }
+
+        // Touch controls
+        let touches = {};
+        let isDragging = false;
+
+        // Start game function
+        function startGame() {
+            const playerName = playerNameInput.value.trim() || 'Player';
+            
+            // Add player to active players list
+            const playerId = Date.now() + Math.random();
+            const newPlayer = {
+                id: playerId,
+                name: playerName,
+                joinTime: new Date().toLocaleTimeString(),
+                score: 0
+            };
+            
+            activePlayers.push(newPlayer);
+            playerLog.push({
+                ...newPlayer,
+                action: 'joined'
+            });
+            
+            // Keep only last 50 entries in log
+            playerLog = playerLog.slice(-50);
+            localStorage.setItem('schoolHospitalPlayerLog', JSON.stringify(playerLog));
+            
+            currentPlayer = newPlayer;
+            updateAdminPanel();
+            
+            // Check if admin has started the game
+            if (adminGameState !== 'active') {
+                alert('Waiting for admin to start the game...');
+                return;
+            }
+            
+            // Assign player to either Maitha or Jamilah based on current players
+            const isPlayer1 = activePlayers.length % 2 === 1;
+            const targetPlayer = isPlayer1 ? 'player1' : 'player2';
+            
+            playerNames[targetPlayer] = playerName;
+            players[targetPlayer].name = playerName;
+            
+            player1Display.textContent = `${playerNames.player1}: `;
+            player2Display.textContent = `${playerNames.player2}: `;
+            
+            introScreen.style.display = 'none';
+            gameUI.style.display = 'flex';
+            gameState = 'playing';
+            
+            // Reset game
+            scores = { player1: 0, player2: 0 };
+            gameComplete = { player1: false, player2: false };
+            players.player1.x = 50;
+            players.player1.y = canvas.height / 2;
+            players.player2.x = canvas.width - 50;
+            players.player2.y = canvas.height / 2;
+            targets.school.y = 50;
+            targets.hospital.y = 50;
+            initGerms();
+        }
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (gameState !== 'playing') return;
+            e.preventDefault();
+            isDragging = true;
+            const rect = canvas.getBoundingClientRect();
+            
+            for (let touch of e.changedTouches) {
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                // Determine which player to control based on touch position
+                const player = x < canvas.width / 2 ? 'player1' : 'player2';
+                
+                touches[touch.identifier] = {
+                    player: player,
+                    startX: x,
+                    startY: y,
+                    lastX: x,
+                    lastY: y
+                };
+            }
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (gameState !== 'playing') return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            
+            for (let touch of e.changedTouches) {
+                const touchData = touches[touch.identifier];
+                if (!touchData) continue;
+                
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                const player = players[touchData.player];
+                const deltaX = x - touchData.lastX;
+                const deltaY = y - touchData.lastY;
+                
+                player.x += deltaX;
+                player.y += deltaY;
+                
+                // Keep player within bounds
+                player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
+                player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
+                
+                touchData.lastX = x;
+                touchData.lastY = y;
+            }
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            if (gameState !== 'playing') return;
+            e.preventDefault();
+            isDragging = false;
+            for (let touch of e.changedTouches) {
+                delete touches[touch.identifier];
+            }
+        });
+
+        // Mouse controls for desktop testing
+        canvas.addEventListener('mousedown', (e) => {
+            if (gameState !== 'playing') return;
+            e.preventDefault();
+            isDragging = true;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const player = x < canvas.width / 2 ? 'player1' : 'player2';
+            
+            touches['mouse'] = {
+                player: player,
+                startX: x,
+                startY: y,
+                lastX: x,
+                lastY: y
+            };
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (gameState !== 'playing' || !isDragging) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const touchData = touches['mouse'];
+            if (!touchData) return;
+            
+            const player = players[touchData.player];
+            const deltaX = x - touchData.lastX;
+            const deltaY = y - touchData.lastY;
+            
+            player.x += deltaX;
+            player.y += deltaY;
+            
+            // Keep player within bounds
+            player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
+            player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
+            
+            touchData.lastX = x;
+            touchData.lastY = y;
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (gameState !== 'playing') return;
+            e.preventDefault();
+            isDragging = false;
+            delete touches['mouse'];
+        });
+
+        // Collision detection
+        function checkCollision(obj1, obj2) {
+            const dx = obj1.x - obj2.x;
+            const dy = obj1.y - obj2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            return distance < (obj1.size + obj2.size) / 2;
+        }
+
+        // Update game
+        function update() {
+            if (gameState !== 'playing') return;
+            
+            // Update germs
+            germs.forEach(germ => {
+                germ.x += germ.vx;
+                germ.y += germ.vy;
+                
+                // Bounce off walls
+                if (germ.x <= germ.size/2 || germ.x >= canvas.width - germ.size/2) {
+                    germ.vx *= -1;
+                }
+                if (germ.y <= germ.size/2 || germ.y >= canvas.height - germ.size/2) {
+                    germ.vy *= -1;
+                }
+                
+                // Keep germs in bounds
+                germ.x = Math.max(germ.size/2, Math.min(canvas.width - germ.size/2, germ.x));
+                germ.y = Math.max(germ.size/2, Math.min(canvas.height - germ.size/2, germ.y));
+            });
+            
+            // Check collisions
+            Object.keys(players).forEach(playerKey => {
+                const player = players[playerKey];
+                
+                // Check germ collisions
+                germs.forEach((germ, index) => {
+                    if (checkCollision(player, germ)) {
+                        scores[playerKey] -= 10;
+                        scores[playerKey] = Math.max(0, scores[playerKey]);
+                        
+                        // Push player away from germ
+                        const dx = player.x - germ.x;
+                        const dy = player.y - germ.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        const pushForce = 30;
+                        player.x += (dx / distance) * pushForce;
+                        player.y += (dy / distance) * pushForce;
+                        
+                        // Keep player in bounds
+                        player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
+                        player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
+                    }
+                });
+                
+                // Check target collisions
+                const targetKey = player.target;
+                const target = targets[targetKey];
+                if (checkCollision(player, target) && !gameComplete[playerKey]) {
+                    scores[playerKey] += 50;
+                    gameComplete[playerKey] = true;
+                }
+            });
+            
+            // Check win condition
+            if (gameComplete.player1 && gameComplete.player2) {
+                endGame();
+            }
+        }
+
+        // Render game
+        function render() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw targets
+            Object.values(targets).forEach(target => {
+                ctx.font = `${target.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText(target.emoji, target.x, target.y + target.size/3);
+            });
+            
+            // Draw germs
+            germs.forEach(germ => {
+                ctx.font = `${germ.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText(germ.emoji, germ.x, germ.y + germ.size/3);
+            });
+            
+            // Draw players
+            Object.values(players).forEach(player => {
+                ctx.font = `${player.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText(player.emoji, player.x, player.y + player.size/3);
+                
+                // Draw player name
+                ctx.font = '12px Arial';
+                ctx.fillStyle = player.color;
+                ctx.fillText(player.name, player.x, player.y - player.size - 5);
+                ctx.fillStyle = '#000';
+            });
+            
+            // Update score display
+            score1El.textContent = scores.player1;
+            score2El.textContent = scores.player2;
+        }
+
+        // End game
+        function endGame() {
+            gameState = 'gameOver';
+            
+            // Add scores to leaderboard
+            leaderboard.push({
+                name: playerNames.player1,
+                score: scores.player1,
+                date: new Date().toLocaleDateString()
+            });
+            leaderboard.push({
+                name: playerNames.player2,
+                score: scores.player2,
+                date: new Date().toLocaleDateString()
+            });
+            
+            // Sort leaderboard by score (highest first)
+            leaderboard.sort((a, b) => b.score - a.score);
+            
+            // Keep only top 20 scores
+            leaderboard = leaderboard.slice(0, 20);
+            
+            // Save to localStorage
+            localStorage.setItem('schoolHospitalLeaderboard', JSON.stringify(leaderboard));
+            
+            let winner = 'Tie!';
+            if (scores.player1 > scores.player2) {
+                winner = `${playerNames.player1} wins! 🎉`;
+            } else if (scores.player2 > scores.player1) {
+                winner = `${playerNames.player2} wins! 🎉`;
+            }
+            
+            winnerText.innerHTML = `
+                <div>Final Scores:</div>
+                <div>${playerNames.player1}: ${scores.player1}</div>
+                <div>${playerNames.player2}: ${scores.player2}</div>
+                <div style="margin-top: 20px; font-size: 28px;">${winner}</div>
+            `;
+            
+            // Update leaderboard display
+            updateLeaderboard();
+            
+            gameOverScreen.style.display = 'flex';
+        }
+
+        // Update leaderboard display
+        function updateLeaderboard() {
+            leaderboardList.innerHTML = '';
+            
+            leaderboard.forEach((entry, index) => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'leaderboard-entry';
+                entryDiv.innerHTML = `
+                    <span>${index + 1}. ${entry.name}</span>
+                    <span>${entry.score} pts</span>
+                `;
+                leaderboardList.appendChild(entryDiv);
+            });
+        }
+
+        // Admin functions
+        function updateAdminPanel() {
+            playerCount.textContent = activePlayers.length;
+            gameStatus.textContent = adminGameState.charAt(0).toUpperCase() + adminGameState.slice(1);
+            
+            // Update player list
+            playerList.innerHTML = '';
+            activePlayers.slice(-10).reverse().forEach(player => {
+                const playerDiv = document.createElement('div');
+                playerDiv.innerHTML = `${player.name} (${player.joinTime})`;
+                playerList.appendChild(playerDiv);
+            });
+        }
+
+        function adminStartGame() {
+            adminGameState = 'active';
+            gameStatus.textContent = 'Active';
+            alert('Game started! Players can now join and play.');
+            updateAdminPanel();
+        }
+
+        function adminStopGame() {
+            adminGameState = 'stopped';
+            gameStatus.textContent = 'Stopped';
+            
+            // End all active games
+            if (gameState === 'playing') {
+                endGame();
+            }
+            
+            alert('Game stopped!');
+            updateAdminPanel();
+        }
+
+        function showLeaderboard() {
+            gameOverScreen.style.display = 'flex';
+            introScreen.style.display = 'none';
+            gameUI.style.display = 'none';
+        }
+
+        function clearLeaderboard() {
+            if (confirm('Are you sure you want to clear the leaderboard?')) {
+                leaderboard = [];
+                playerLog = [];
+                localStorage.removeItem('schoolHospitalLeaderboard');
+                localStorage.removeItem('schoolHospitalPlayerLog');
+                updateLeaderboard();
+                updateAdminPanel();
+                alert('Leaderboard cleared!');
+            }
+        }
+
+        // Admin login functions
+        function showLoginModal() {
+            loginModal.style.display = 'flex';
+        }
+
+        function hideLoginModal() {
+            loginModal.style.display = 'none';
+            adminEmail.value = '';
+            adminPassword.value = '';
+        }
+
+        function loginAdmin() {
+            const email = adminEmail.value.trim();
+            const password = adminPassword.value.trim();
+            
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                adminToggle.style.display = 'block';
+                hideLoginModal();
+                alert('Welcome Admin! 👑');
+            } else {
+                alert('Invalid credentials! ❌');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            adminToggle.style.display = 'none';
+            adminPanel.style.display = 'none';
+            alert('Logged out successfully! 👋');
+        }
+
+        function toggleAdminPanel() {
+            if (!isAdminLoggedIn) {
+                showLoginModal();
+                return;
+            }
+            adminPanel.style.display = adminPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Restart game
+        function restartGame() {
+            gameState = 'intro';
+            scores = { player1: 0, player2: 0 };
+            gameComplete = { player1: false, player2: false };
+            
+            // Reset player positions
+            players.player1.x = 50;
+            players.player1.y = canvas.height / 2;
+            players.player2.x = canvas.width - 50;
+            players.player2.y = canvas.height / 2;
+            
+            // Reset targets positions
+            targets.school.y = 50;
+            targets.hospital.y = 50;
+            
+            // Show intro screen
+            introScreen.style.display = 'flex';
+            gameUI.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            
+            // Clear name input
+            playerNameInput.value = '';
+        }
+
+        // Event listeners
+        restartBtn.addEventListener('click', restartGame);
+        startBtn.addEventListener('click', startGame);
+
+        // Admin event listeners
+        adminToggle.addEventListener('click', toggleAdminPanel);
+        startGameBtn.addEventListener('click', adminStartGame);
+        stopGameBtn.addEventListener('click', adminStopGame);
+        showLeaderboardBtn.addEventListener('click', showLeaderboard);
+        clearLeaderboardBtn.addEventListener('click', clearLeaderboard);
+        logoutBtn.addEventListener('click', logoutAdmin);
+        
+        // Login event listeners
+        loginBtn.addEventListener('click', loginAdmin);
+        cancelLoginBtn.addEventListener('click', hideLoginModal);
+        adminLoginBtn.addEventListener('click', showLoginModal);
+        
+        // Allow Enter key to login
+        adminPassword.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loginAdmin();
+        });
+
+        // Allow Enter key to start game
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startGame();
+        });
+
+        // Initialize displays
+        updateLeaderboard();
+        updateAdminPanel();
+
+        // Game loop
+        function gameLoop() {
+            if (gameState === 'playing') {
+                update();
+                render();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
