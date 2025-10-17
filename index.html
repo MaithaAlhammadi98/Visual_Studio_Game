@@ -1585,6 +1585,24 @@
         .minecraft-btn.admin:hover {
             background: linear-gradient(45deg, #FFA500, #FFB74D);
         }
+
+        /* Minecraft Box for consistent styling */
+        .minecraft-box {
+            background: rgba(255, 182, 193, 0.3);
+            border: 2px solid #FFB6C1;
+            border-radius: 0;
+            padding: 10px;
+            margin: 5px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .minecraft-box p {
+            color: #654321 !important;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            margin: 0;
+            font-weight: bold;
+        }
         
         .guide-header {
             text-align: center;
@@ -1974,7 +1992,7 @@
                 
             <div class="guide-section">
                 <h2>🎮 Minecraft Controls</h2>
-                <div class="control-message">
+                <div class="control-message minecraft-box">
                     <p>Tap/Arrow keys to move</p>
                 </div>
             </div>
@@ -2635,6 +2653,51 @@
                 oscillator.stop(audioContext.currentTime + 0.4);
             } catch (e) {
                 console.log('Could not play success sound');
+            }
+        }
+
+        // Play cute calm feminine background music for login screen
+        function playBackgroundMusic() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                // Create a gentle, feminine melody
+                const melody = [
+                    {freq: 523, time: 0},    // C5
+                    {freq: 587, time: 0.5},  // D5
+                    {freq: 659, time: 1.0},  // E5
+                    {freq: 523, time: 1.5},  // C5
+                    {freq: 698, time: 2.0},  // F5
+                    {freq: 659, time: 2.5},  // E5
+                    {freq: 587, time: 3.0},  // D5
+                    {freq: 523, time: 3.5}   // C5
+                ];
+                
+                melody.forEach(note => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.time);
+                    oscillator.type = 'sine'; // Soft, gentle sound
+                    
+                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime + note.time); // Very quiet
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + note.time + 0.8);
+                    
+                    oscillator.start(audioContext.currentTime + note.time);
+                    oscillator.stop(audioContext.currentTime + note.time + 0.8);
+                });
+                
+                // Repeat the melody every 4 seconds
+                setTimeout(() => {
+                    if (document.getElementById('introScreen').style.display !== 'none') {
+                        playBackgroundMusic();
+                    }
+                }, 4000);
+            } catch (e) {
+                console.log('Could not play background music');
             }
         }
 
@@ -4093,6 +4156,11 @@
             characterSelection.style.display = 'none';
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
+            
+            // Start cute background music for login screen
+            setTimeout(() => {
+                playBackgroundMusic();
+            }, 1000); // Start after 1 second delay
             document.getElementById('leaderboardPopup').style.display = 'none';
             document.getElementById('selectedCharacter').style.display = 'none';
             document.getElementById('scoreDisplay').style.display = 'none';
