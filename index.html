@@ -587,17 +587,20 @@
         #scoreDisplay {
             position: absolute;
             top: 20px;
-            right: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            padding: 15px 20px;
-            border-radius: 15px;
-            font-size: 24px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 18px;
             font-weight: bold;
             z-index: 15;
             display: none;
             border: 2px solid #4CAF50;
             box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+            min-width: 80px;
+            text-align: center;
         }
         
         .score-positive {
@@ -615,6 +618,147 @@
             border-color: #4CAF50;
             box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
             animation: scoreFreeze 1s ease-in-out;
+        }
+
+        /* Leaderboard Popup */
+        #leaderboardPopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .leaderboard-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .close-leaderboard {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .leaderboard-list {
+            margin: 20px 0;
+        }
+
+        .leaderboard-entry {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .leaderboard-entry.rank-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+        }
+
+        .leaderboard-entry.rank-2 {
+            background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+            color: #333;
+        }
+
+        .leaderboard-entry.rank-3 {
+            background: linear-gradient(135deg, #CD7F32, #B8860B);
+            color: white;
+        }
+
+        .rank-number {
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .player-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .player-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .player-stats {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .player-score {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .leaderboard-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .play-again-btn, .close-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-again-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .play-again-btn:hover, .close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         @keyframes scoreFreeze {
@@ -1272,6 +1416,23 @@
             
             <button id="restartBtn">Play Again</button>
         </div>
+
+        <!-- Leaderboard Popup -->
+        <div id="leaderboardPopup">
+            <div class="leaderboard-content">
+                <div class="leaderboard-header">
+                    <h2>🏆 Race Complete!</h2>
+                    <button class="close-leaderboard" onclick="hideLeaderboard()">×</button>
+                </div>
+                <div class="leaderboard-list" id="popupLeaderboardList">
+                    <!-- Leaderboard entries will be populated here -->
+                </div>
+                <div class="leaderboard-actions">
+                    <button onclick="restartGame()" class="play-again-btn">🔄 Play Again</button>
+                    <button onclick="hideLeaderboard()" class="close-btn">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1741,7 +1902,8 @@
             // Update leaderboard display
             updateLeaderboard();
             
-            gameOverScreen.style.display = 'flex';
+            // Show leaderboard popup instead of game over screen
+            showLeaderboardPopup();
         }
 
         // Update leaderboard display
@@ -2077,6 +2239,51 @@
             gameUI.style.display = 'none';
         }
 
+        function showLeaderboardPopup() {
+            const popup = document.getElementById('leaderboardPopup');
+            const popupList = document.getElementById('popupLeaderboardList');
+            
+            // Populate the popup leaderboard
+            popupList.innerHTML = '';
+            
+            // Show current player's score prominently
+            const currentPlayerEntry = document.createElement('div');
+            currentPlayerEntry.className = 'leaderboard-entry rank-1';
+            currentPlayerEntry.innerHTML = `
+                <div class="rank-number">#1</div>
+                <div class="player-info">
+                    <div class="player-name">${playerName} (You)</div>
+                    <div class="player-stats">Final Score</div>
+                </div>
+                <div class="player-score">${currentScore}</div>
+            `;
+            popupList.appendChild(currentPlayerEntry);
+            
+            // Show top 3 from leaderboard
+            const sortedLeaderboard = [...leaderboard].sort((a, b) => b.score - a.score);
+            sortedLeaderboard.slice(0, 3).forEach((entry, index) => {
+                if (entry.name !== playerName) { // Don't show current player twice
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = `leaderboard-entry rank-${index + 2}`;
+                    entryDiv.innerHTML = `
+                        <div class="rank-number">#${index + 2}</div>
+                        <div class="player-info">
+                            <div class="player-name">${entry.name}</div>
+                            <div class="player-stats">Previous Score</div>
+                        </div>
+                        <div class="player-score">${entry.score}</div>
+                    `;
+                    popupList.appendChild(entryDiv);
+                }
+            });
+            
+            popup.style.display = 'flex';
+        }
+
+        function hideLeaderboard() {
+            document.getElementById('leaderboardPopup').style.display = 'none';
+        }
+
         function clearLeaderboard() {
             if (confirm('Are you sure you want to clear the leaderboard?')) {
                 leaderboard = [];
@@ -2153,6 +2360,7 @@
             characterSelection.style.display = 'none';
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
+            document.getElementById('leaderboardPopup').style.display = 'none';
             document.getElementById('selectedCharacter').style.display = 'none';
             document.getElementById('scoreDisplay').style.display = 'none';
             document.getElementById('arrowControls').style.display = 'none';
