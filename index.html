@@ -2664,21 +2664,7 @@
             document.getElementById('leaderboardPopup').style.display = 'none';
         }
 
-        // Live Leaderboard Functions (Kahoot-style)
-        function showLiveLeaderboard() {
-            const liveLeaderboard = document.getElementById('liveLeaderboard');
-            liveLeaderboard.style.display = 'flex';
-            updateLiveLeaderboard();
-            
-            // Start Firebase real-time listening
-            startLiveLeaderboard();
-            
-            // Auto-refresh every 3 seconds (backup)
-            if (window.leaderboardInterval) {
-                clearInterval(window.leaderboardInterval);
-            }
-            window.leaderboardInterval = setInterval(updateLiveLeaderboard, 3000);
-        }
+        // Old showLiveLeaderboard function removed - using new clean implementation above
 
         function hideLiveLeaderboard() {
             const liveLeaderboard = document.getElementById('liveLeaderboard');
@@ -2690,80 +2676,7 @@
             }
         }
 
-        function updateLiveLeaderboard() {
-            const liveList = document.getElementById('liveLeaderboardList');
-            const totalPlayersEl = document.getElementById('totalPlayers');
-            const activeGamesEl = document.getElementById('activeGames');
-            
-            // Clear the list
-            liveList.innerHTML = '';
-            
-            // Use Firebase data if available, otherwise use local data
-            const allPlayers = livePlayers.length > 0 ? livePlayers : getTopPlayers();
-            
-            // Update stats
-            totalPlayersEl.textContent = `Players: ${allPlayers.length}`;
-            activeGamesEl.textContent = `Active: ${livePlayers.filter(p => {
-                const gameTime = new Date(p.timestamp);
-                const now = new Date();
-                return (now - gameTime) < 300000; // Active if played within last 5 minutes
-            }).length}`;
-            
-            // Show top 10 players
-            allPlayers.slice(0, 10).forEach((player, index) => {
-                const entryDiv = document.createElement('div');
-                entryDiv.className = `live-leaderboard-entry rank-${index + 1}`;
-                
-                // Ensure player name is a string, not an object
-                const playerName = typeof player.name === 'string' ? player.name : 'Player';
-                
-                entryDiv.innerHTML = `
-                    <div class="live-rank-number">#${index + 1}</div>
-                    <div class="live-player-info">
-                        <div class="live-player-name">${playerName}</div>
-                        <div class="live-player-stats">${livePlayers.length > 0 ? 'Live Score' : 'Best Score'}</div>
-                    </div>
-                    <div class="live-player-score">${player.score || player.bestScore || 0}</div>
-                `;
-                liveList.appendChild(entryDiv);
-            });
-            
-            // If no players, show message
-            if (allPlayers.length === 0) {
-                const noPlayersDiv = document.createElement('div');
-                noPlayersDiv.className = 'live-leaderboard-entry';
-                noPlayersDiv.innerHTML = `
-                    <div class="live-player-info">
-                        <div class="live-player-name">No players yet!</div>
-                        <div class="live-player-stats">Start playing to see scores</div>
-                    </div>
-                `;
-                liveList.appendChild(noPlayersDiv);
-            }
-        }
-
-        function refreshLeaderboard() {
-            updateLiveLeaderboard();
-        }
-
-        // Firebase Real-time Database Functions
-        let firebaseReady = false;
-        let livePlayers = [];
-
-        // Wait for Firebase to load
-        function waitForFirebase() {
-            return new Promise((resolve) => {
-                const checkFirebase = () => {
-                    if (typeof firebase !== 'undefined' && firebase.firestore) {
-                        firebaseReady = true;
-                        resolve();
-                    } else {
-                        setTimeout(checkFirebase, 100);
-                    }
-                };
-                checkFirebase();
-            });
-        }
+        // Old Firebase functions removed - using new clean implementation above
 
         // Save game score to Firebase
         async function saveScoreToFirebase(playerName, score, completionTime, germsHit) {
@@ -2787,39 +2700,7 @@
             }
         }
 
-        // Listen for live updates from Firebase
-        async function startLiveLeaderboard() {
-            if (!firebaseReady) await waitForFirebase();
-            
-            try {
-                db.collection('gameScores')
-                    .orderBy('score', 'desc')
-                    .limit(20)
-                    .onSnapshot((snapshot) => {
-                        livePlayers = [];
-                        snapshot.forEach((doc) => {
-                            const data = doc.data();
-                            livePlayers.push({
-                                id: doc.id,
-                                name: data.playerName,
-                                score: data.score,
-                                timestamp: data.timestamp,
-                                date: data.date,
-                                time: data.time
-                            });
-                        });
-                        
-                        console.log('Live players updated:', livePlayers);
-                        
-                        // Update live leaderboard if it's open
-                        if (document.getElementById('liveLeaderboard').style.display === 'flex') {
-                            updateLiveLeaderboard();
-                        }
-                    });
-            } catch (error) {
-                console.error('Error listening to Firebase:', error);
-            }
-        }
+        // Old Firebase code removed - using new clean implementation above
 
         // New comprehensive history tracking system
         let gameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
