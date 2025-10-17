@@ -1412,6 +1412,64 @@
             background: linear-gradient(135deg, #FFC0CB, #FFB6C1);
         }
 
+        /* Minecraft Sound Gate Button */
+        .minecraft-sound-gate-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: 3px solid #2E7D32;
+            border-radius: 15px;
+            padding: 20px 30px;
+            color: white;
+            font-family: 'VT323', monospace;
+            font-weight: bold;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 0 #2E7D32, 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            min-width: 200px;
+            animation: soundGateBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes soundGateBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .minecraft-sound-gate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #2E7D32, 0 12px 30px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #5CBF60, #4CAF50);
+        }
+
+        .minecraft-sound-gate-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #2E7D32, 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sound-gate-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            animation: musicPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .sound-gate-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        .sound-gate-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
         /* Heart floating animation */
         @keyframes minecraftHeartFloat {
             0%, 100% { transform: translateY(0px) scale(1); }
@@ -6523,12 +6581,12 @@
 
 
     <!-- One-time prompt if autoplay is blocked -->
-    <div id="soundGate" style="
-        display:none; position:fixed; inset:auto 16px 16px 16px;
-        background:rgba(0,0,0,.75); color:#fff; padding:12px 14px;
-        border:2px solid #00ff80; border-radius:12px; z-index:3000;
-        font-family:'VT323', monospace; text-align:center;">
-        ▶️ Tap anywhere (or press any key) to enable sound
+    <div id="soundGate" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:3000;">
+        <button id="soundGateBtn" class="minecraft-sound-gate-btn">
+            <div class="sound-gate-icon">🎵</div>
+            <div class="sound-gate-text">Hello Minecrafter!</div>
+            <div class="sound-gate-subtitle">Click to enable sound</div>
+        </button>
     </div>
 
     <script>
@@ -6569,17 +6627,18 @@
                 console.log('Autoplay blocked, showing sound gate');
                 // Autoplay blocked: show gate and wait for a gesture
                 if (gate) gate.style.display = 'block';
+                const soundGateBtn = document.getElementById('soundGateBtn');
                 const unlock = () => {
                     if (gate) gate.style.display = 'none';
-                    document.removeEventListener('pointerdown', unlock);
-                    document.removeEventListener('keydown', unlock);
                     bgm.muted = isMuted;
                     if (!isMuted) bgm.play().catch(()=>{}); // safe retry
                     if (toggle) toggle.style.display = 'inline-flex';
                     updateToggleLabel();
                 };
-                document.addEventListener('pointerdown', unlock, { once: true });
-                document.addEventListener('keydown', unlock, { once: true });
+                // Only listen for button click, not document events
+                if (soundGateBtn) {
+                    soundGateBtn.addEventListener('click', unlock, { once: true });
+                }
                 return false;
             }
         }
