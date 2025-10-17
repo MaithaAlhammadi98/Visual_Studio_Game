@@ -607,7 +607,7 @@
         <canvas id="gameCanvas"></canvas>
         
         <div id="instructions">
-            Use arrow buttons to move your character!<br>
+            Use arrow buttons ONLY to move your character!<br>
             Avoid germs 🦠 (-10 pts) | Reach your goal (+50 pts)
         </div>
         
@@ -873,117 +873,8 @@
             characterSelection.style.display = 'flex';
         }
 
-        canvas.addEventListener('touchstart', (e) => {
-            if (gameState !== 'playing') return;
-            e.preventDefault();
-            isDragging = true;
-            const rect = canvas.getBoundingClientRect();
-            
-            for (let touch of e.changedTouches) {
-                const x = touch.clientX - rect.left;
-                const y = touch.clientY - rect.top;
-                
-                // Determine which player to control based on touch position
-                const player = x < canvas.width / 2 ? 'player1' : 'player2';
-                
-                touches[touch.identifier] = {
-                    player: player,
-                    startX: x,
-                    startY: y,
-                    lastX: x,
-                    lastY: y
-                };
-            }
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            if (gameState !== 'playing') return;
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            
-            for (let touch of e.changedTouches) {
-                const touchData = touches[touch.identifier];
-                if (!touchData) continue;
-                
-                const x = touch.clientX - rect.left;
-                const y = touch.clientY - rect.top;
-                
-                const player = players[touchData.player];
-                const deltaX = x - touchData.lastX;
-                const deltaY = y - touchData.lastY;
-                
-                player.x += deltaX;
-                player.y += deltaY;
-                
-                // Keep player within bounds
-                player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
-                player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
-                
-                touchData.lastX = x;
-                touchData.lastY = y;
-            }
-        });
-
-        canvas.addEventListener('touchend', (e) => {
-            if (gameState !== 'playing') return;
-            e.preventDefault();
-            isDragging = false;
-            for (let touch of e.changedTouches) {
-                delete touches[touch.identifier];
-            }
-        });
-
-        // Mouse controls for desktop testing
-        canvas.addEventListener('mousedown', (e) => {
-            if (gameState !== 'playing') return;
-            e.preventDefault();
-            isDragging = true;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const player = x < canvas.width / 2 ? 'player1' : 'player2';
-            
-            touches['mouse'] = {
-                player: player,
-                startX: x,
-                startY: y,
-                lastX: x,
-                lastY: y
-            };
-        });
-
-        canvas.addEventListener('mousemove', (e) => {
-            if (gameState !== 'playing' || !isDragging) return;
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const touchData = touches['mouse'];
-            if (!touchData) return;
-            
-            const player = players[touchData.player];
-            const deltaX = x - touchData.lastX;
-            const deltaY = y - touchData.lastY;
-            
-            player.x += deltaX;
-            player.y += deltaY;
-            
-            // Keep player within bounds
-            player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
-            player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
-            
-            touchData.lastX = x;
-            touchData.lastY = y;
-        });
-
-        canvas.addEventListener('mouseup', (e) => {
-            if (gameState !== 'playing') return;
-            e.preventDefault();
-            isDragging = false;
-            delete touches['mouse'];
-        });
+        // Touch and mouse controls DISABLED - only arrow buttons work now!
+        // This prevents accidental character movement when touching the screen
 
         // Collision detection
         function checkCollision(obj1, obj2) {
