@@ -1235,6 +1235,149 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
+
+        /* Minecraft Guide Styles */
+        .minecraft-guide {
+            background: linear-gradient(135deg, #2C3E50, #34495E);
+            border: 3px solid #8B4513;
+            border-radius: 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .minecraft-guide .guide-header h1 {
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-family: 'Courier New', monospace;
+        }
+
+        .minecraft-guide .guide-section h2 {
+            color: #4CAF50;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Minecraft Items */
+        .minecraft-item {
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            border: 2px solid #654321;
+            border-radius: 0;
+        }
+
+        .minecraft-block {
+            background: #4CAF50;
+            color: white;
+            border: 2px solid #2E7D32;
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        /* Minecraft Characters */
+        .minecraft-character {
+            width: 32px;
+            height: 32px;
+            border-radius: 0;
+            border: 2px solid #000;
+        }
+
+        .maitha-sprite {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+        }
+
+        .jamilah-sprite {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+        }
+
+        /* Minecraft Buildings */
+        .minecraft-building {
+            width: 24px;
+            height: 24px;
+            border-radius: 0;
+            border: 1px solid #000;
+        }
+
+        .school-building {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+        }
+
+        .hospital-building {
+            background: linear-gradient(45deg, #FFFFFF, #F5F5F5);
+        }
+
+        /* Minecraft Cards */
+        .minecraft-card {
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            border: 2px solid #654321;
+            border-radius: 0;
+        }
+
+        /* Minecraft Warning */
+        .minecraft-warning {
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            border: 2px solid #654321;
+            border-radius: 0;
+        }
+
+        .minecraft-germ {
+            width: 24px;
+            height: 24px;
+            background: #FF4757;
+            border: 2px solid #000;
+            border-radius: 0;
+        }
+
+        /* Minecraft Scoring */
+        .minecraft-score {
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            border: 2px solid #654321;
+            border-radius: 0;
+        }
+
+        .minecraft-icon {
+            background: #4CAF50;
+            color: white;
+            border: 2px solid #2E7D32;
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Minecraft Input */
+        .minecraft-input {
+            background: #2C3E50;
+            border: 2px solid #8B4513;
+            border-radius: 0;
+            color: #FFD700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .minecraft-input::placeholder {
+            color: #8B4513;
+        }
+
+        /* Minecraft Buttons */
+        .minecraft-btn {
+            background: linear-gradient(45deg, #4CAF50, #66BB6A);
+            border: 2px solid #2E7D32;
+            border-radius: 0;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .minecraft-btn:hover {
+            background: linear-gradient(45deg, #66BB6A, #81C784);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .minecraft-btn.admin {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border-color: #FF8F00;
+        }
+
+        .minecraft-btn.admin:hover {
+            background: linear-gradient(45deg, #FFA500, #FFB74D);
+        }
         
         .guide-header {
             text-align: center;
@@ -1616,50 +1759,50 @@
         <!-- Introduction Screen -->
         <div id="introScreen">
             
-            <div class="game-guide">
+            <div class="game-guide minecraft-guide">
                 <div class="guide-header">
-                    <h1>🎮 The Mission</h1>
-                    <p>Guide Maitha to the School and Jamilah to the Hospital by manually controlling them with the arrow buttons!</p>
+                    <h1>⛏️ The Minecraft Mission</h1>
+                    <p>Guide your blocky characters through the Minecraft world to reach their destinations!</p>
                 </div>
                 
                 <div class="guide-section">
-                    <h2>🎮 Controls</h2>
+                    <h2>🎮 Minecraft Controls</h2>
                     <div class="control-list">
-                        <div class="control-item">
-                            <span class="control-number">1️⃣</span>
+                        <div class="control-item minecraft-item">
+                            <span class="control-number minecraft-block">1</span>
                             <span>Select which character to control</span>
                         </div>
-                        <div class="control-item">
-                            <span class="control-number">2️⃣</span>
+                        <div class="control-item minecraft-item">
+                            <span class="control-number minecraft-block">2</span>
                             <span>Use arrow buttons to move them</span>
                         </div>
-                        <div class="control-item">
-                            <span class="control-number">3️⃣</span>
+                        <div class="control-item minecraft-item">
+                            <span class="control-number minecraft-block">3</span>
                             <span>Hold the button to keep moving</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="guide-section">
-                    <h2>👥 Characters & Destinations</h2>
+                    <h2>👥 Minecraft Characters & Buildings</h2>
                     <div class="character-options">
-                        <div class="character-card maitha-card">
-                            <div class="character-dot red"></div>
+                        <div class="character-card minecraft-card maitha-card">
+                            <div class="minecraft-character maitha-sprite"></div>
                             <span>Maitha → School</span>
-                            <div class="destination-icon">🏫</div>
+                            <div class="minecraft-building school-building"></div>
                         </div>
-                        <div class="character-card jamilah-card">
-                            <div class="character-dot purple"></div>
+                        <div class="character-card minecraft-card jamilah-card">
+                            <div class="minecraft-character jamilah-sprite"></div>
                             <span>Jamilah → Hospital</span>
-                            <div class="destination-icon">🏥</div>
+                            <div class="minecraft-building hospital-building"></div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="guide-section">
-                    <h2>⚠️ Avoid the Germs!</h2>
-                    <div class="warning-box">
-                        <div class="germ-icon">🦠</div>
+                    <h2>⚠️ Avoid the Minecraft Germs!</h2>
+                    <div class="warning-box minecraft-warning">
+                        <div class="minecraft-germ"></div>
                         <div class="warning-text">
                             <strong>Navigate carefully!</strong><br>
                             Hitting a germ costs you 5 points. Plan your route wisely!
@@ -1668,27 +1811,27 @@
                 </div>
                 
                 <div class="guide-section">
-                    <h2>⭐ Scoring</h2>
+                    <h2>⭐ Minecraft Scoring</h2>
                     <div class="scoring-list">
-                        <div class="score-item positive">
-                            <span class="score-icon">✅</span>
+                        <div class="score-item minecraft-score positive">
+                            <span class="minecraft-icon">⛏️</span>
                             <span>Reach destination: <span class="score-value">+50 points</span></span>
                         </div>
-                        <div class="score-item negative">
-                            <span class="score-icon">❌</span>
+                        <div class="score-item minecraft-score negative">
+                            <span class="minecraft-icon">💀</span>
                             <span>Hit a germ: <span class="score-value">-5 points</span></span>
                         </div>
-                        <div class="score-item info">
-                            <span class="score-icon">💡</span>
+                        <div class="score-item minecraft-score info">
+                            <span class="minecraft-icon">💎</span>
                             <span>Your score is saved to the leaderboard when you complete the game!</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="game-start-section">
-                    <input type="text" class="nameInput" id="playerName" placeholder="Enter your name (required)" maxlength="20" required>
-                    <button id="startBtn">🎮 Start Adventure!</button>
-                    <button id="adminLoginBtn">👑 Admin Panel</button>
+                    <input type="text" class="nameInput minecraft-input" id="playerName" placeholder="Enter your Minecraft name (required)" maxlength="20" required>
+                    <button id="startBtn" class="minecraft-btn">⛏️ Start Minecraft Adventure!</button>
+                    <button id="adminLoginBtn" class="minecraft-btn admin">👑 Admin Panel</button>
                 </div>
             </div>
         </div>
@@ -1834,7 +1977,7 @@
                     <p>This game was made by Maitha</p>
                     <p>UwU</p>
                 </div>
-                <button onclick="hideMinecraftHeart()" class="heart-close-btn">💖 Close</button>
+                <button onclick="hideMinecraftHeart()" class="heart-close-btn">💖 Awesome Game! THANKS! </button>
             </div>
         </div>
 
