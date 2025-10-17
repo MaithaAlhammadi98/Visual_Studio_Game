@@ -5545,7 +5545,7 @@
             // Show Bravo celebration for Jamilah first
             showJamilahBravoCelebration();
             
-            // Then show leaderboard after celebration
+            // Then show leaderboard after celebration (FIRST TIME)
             setTimeout(() => {
                 console.log('endGame timeout executed - setting gameState to gameOver');
                 gameState = 'gameOver';
@@ -5586,9 +5586,23 @@
             // Update leaderboard display
             updateLeaderboard();
             
-            // Show leaderboard popup instead of game over screen
-            console.log('endGame timeout - calling showLeaderboardPopup()');
+            // Show leaderboard popup (FIRST TIME)
+            console.log('endGame timeout - calling showLeaderboardPopup() - FIRST TIME');
             showLeaderboardPopup();
+            
+            // After 5 seconds, hide leaderboard and show Maitha credit
+            setTimeout(() => {
+                console.log('Hiding leaderboard to show Maitha credit');
+                document.getElementById('leaderboardPopup').style.display = 'none';
+                showMinecraftHeart();
+                
+                // After 3 seconds, hide Maitha credit and show leaderboard again (SECOND TIME)
+                setTimeout(() => {
+                    console.log('Hiding Maitha credit, showing leaderboard SECOND TIME');
+                    document.getElementById('minecraftHeartModal').style.display = 'none';
+                    showLeaderboardPopup();
+                }, 3000); // Wait 3 seconds for Maitha credit
+            }, 5000); // Wait 5 seconds before showing Maitha credit
             }, 2500); // Wait 2.5 seconds for Jamilah's Bravo celebration
         }
 
@@ -6553,15 +6567,8 @@
 
         function hideLeaderboard() {
             document.getElementById('leaderboardPopup').style.display = 'none';
-            // Show Minecraft heart with "made by Maitha" message after 5 seconds
-            setTimeout(() => {
-                showMinecraftHeart();
-                // After Maitha credit, show leaderboard again
-                setTimeout(() => {
-                    document.getElementById('minecraftHeartModal').style.display = 'none';
-                    document.getElementById('leaderboardPopup').style.display = 'flex';
-                }, 3000); // Show leaderboard again after 3 seconds
-            }, 5000); // Wait 5 seconds before showing Maitha credit
+            // Show final "apple a day" message
+            showCuteEnding();
         }
 
         // Show cute ending message
@@ -6671,8 +6678,6 @@
             const heartModal = document.getElementById('minecraftHeartModal');
             if (heartModal) {
                 heartModal.style.display = 'none';
-                // Show final "apple a day" message
-                showCuteEnding();
             }
         }
 
