@@ -23,10 +23,6 @@ An interactive 2-player mobile game where Maitha and Jamilah must reach their de
 4. Touch and drag to move your character
 5. Avoid germs and reach your target!
 
-## 🔐 Admin Access
-- Email: `maithahabib@hotmail.com`
-- Password: `admin1234`
-
 ## 🚀 Live Demo
 [Play the game here!](https://your-username.github.io/school-hospital-game)
 
