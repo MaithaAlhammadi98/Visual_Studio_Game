@@ -1535,7 +1535,7 @@
             
             <div class="admin-control">
                 <button class="admin-btn" id="showLiveLeaderboardBtn">📊 Live Leaderboard</button>
-                <button class="admin-btn danger" id="clearLeaderboardBtn">Clear Leaderboard</button>
+                <button onclick="clearGameScores()" class="admin-btn danger">🧹 Clear Leaderboard</button>
                 <button class="admin-btn" id="downloadHistoryBtn">📊 Download History (CSV)</button>
                 <button class="admin-btn" id="todayWinnerBtn">🏆 Today's Winner</button>
                 <button class="admin-btn" id="debugBtn" onclick="debugLeaderboard()">🔍 Debug Leaderboard</button>
@@ -1768,37 +1768,19 @@
         };
 
         // Clear all leaderboard data (for admin before class)
-        window.clearLeaderboard = async function () {
-            if (!confirm('⚠️ This will DELETE ALL leaderboard data permanently!\n\nAre you sure you want to clear everything?')) {
-                return;
-            }
-            
-            try {
-                console.log('Clearing all leaderboard data...');
-                
-                // Get all documents in the scores collection
-                const snapshot = await window.scoresRef.get();
-                const batch = window.db.batch();
-                
-                // Add each document to the batch for deletion
-                snapshot.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
-                
-                // Commit the batch deletion
-                await batch.commit();
-                
-                console.log('✅ All leaderboard data cleared successfully!');
-                alert('✅ Leaderboard cleared! All data has been deleted.');
-                
-                // Refresh the leaderboard display
-                await fetchLeaderboardOnce();
-                
-            } catch (error) {
-                console.error('Error clearing leaderboard:', error);
-                alert('❌ Error clearing leaderboard: ' + error.message);
-            }
-        };
+        async function clearGameScores() {
+            if (!confirm("Are you sure you want to clear all leaderboard data?")) return;
+
+            const snapshot = await window.db.collection('scores').get();
+            const batch = window.db.batch();
+            snapshot.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+
+            await batch.commit();
+            alert("Leaderboard has been cleared!");
+            console.log("All scores deleted from Firestore");
+        }
     </script>
 
     <script>
@@ -3052,7 +3034,7 @@
         startGameBtn.addEventListener('click', adminStartGame);
         stopGameBtn.addEventListener('click', adminStopGame);
         document.getElementById('showLiveLeaderboardBtn').addEventListener('click', showLiveLeaderboard);
-        clearLeaderboardBtn.addEventListener('click', clearLeaderboard);
+        // clearLeaderboardBtn now uses onclick="clearGameScores()"
         document.getElementById('downloadHistoryBtn').addEventListener('click', downloadGameHistory);
         document.getElementById('todayWinnerBtn').addEventListener('click', () => alert(getClassWinners()));
         logoutBtn.addEventListener('click', logoutAdmin);
