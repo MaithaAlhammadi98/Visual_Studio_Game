@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School & Hospital Adventure</title>
+    <title>School & Hospital Adventure - v2.0</title>
     <style>
         body {
             margin: 0;
@@ -341,7 +341,7 @@
             </div>
             
             <div class="admin-control">
-                <strong>Game Status:</strong> <span id="gameStatus">Waiting</span>
+                <strong>Game Status:</strong> <span id="gameStatus">Active</span>
             </div>
             
             <div class="admin-control">
@@ -436,7 +436,7 @@
 
         // Game state
         let gameState = 'intro'; // 'intro', 'playing', or 'gameOver'
-        let adminGameState = 'waiting'; // 'waiting', 'active', 'stopped'
+        let adminGameState = 'active'; // Always active - no waiting needed
         let scores = { player1: 0, player2: 0 };
         let gameComplete = { player1: false, player2: false };
         let playerNames = { player1: 'Maitha', player2: 'Jamilah' };
