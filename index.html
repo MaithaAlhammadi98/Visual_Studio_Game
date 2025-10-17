@@ -1636,10 +1636,18 @@
         const scoresRef = db.collection('scores');
 
         // Write a score when a run finishes
-        function saveGameAttempt(name, score, timeSec, germsHit) {
+        function saveGameAttemptToFirebase(name, score, timeSec, germsHit) {
+            console.log('Saving to Firebase:', { name, score, timeSec, germsHit });
             return db.collection('scores').add({
-                name, score, timeSec, germsHit,
+                name: String(name), 
+                score: Number(score), 
+                timeSec: Number(timeSec), 
+                germsHit: Number(germsHit),
                 ts: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                console.log('Successfully saved to Firebase!');
+            }).catch((error) => {
+                console.error('Error saving to Firebase:', error);
             });
         }
 
@@ -2144,7 +2152,7 @@
             }
             
             // Save the game attempt to Firebase
-            saveGameAttempt(actualPlayerName, currentScore, completionTime, germsHit);
+            saveGameAttemptToFirebase(actualPlayerName, currentScore, completionTime, germsHit);
             
             let winner = 'Tie!';
             if (scores.player1 > scores.player2) {
