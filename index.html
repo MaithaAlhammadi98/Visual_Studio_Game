@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>School & Hospital Adventure - v2.0</title>
     <style>
+        /* Import fonts */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap');
+
+        :root{
+            --bg:#f9c9cf;             /* soft pink cloud bg you have */
+            --panel:#ffeef3;          /* light panel */
+            --ink:#2b2b2b;            /* main text */
+            --muted:#6b6b6b;
+            --accent:#00d47a;         /* emerald minecraft-y */
+            --accent-dark:#00b066;
+            --warn:#ffcc33;
+            --pixel:#3b3b3b;          /* pixel border color */
+            --shadow:0 6px 20px rgba(0,0,0,.12);
+            --radius:14px;
+            --space:16px;
+            --maxw:680px;             /* keeps text readable */
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -58,22 +76,157 @@
             touch-action: auto;
         }
         
+        /* New clean intro screen design */
         #introScreen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #87CEEB, #98FB98);
             display: block;
-            color: white;
-            text-align: center;
             z-index: 30;
-            padding: 20px;
             overflow-y: scroll;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
         }
+
+        /* Page container */
+        .container{
+            max-width: var(--maxw);
+            margin: 24px auto;
+            padding: 0 16px 80px;
+        }
+
+        /* Headings: pixel vibe */
+        h1,h2,h3{
+            font-family:'VT323', monospace;
+            letter-spacing:.5px;
+            margin:0 0 8px;
+            color: var(--ink);
+        }
+        h1{ font-size:40px; }
+        h2{ font-size:30px; }
+        h3{ font-size:24px; }
+
+        /* Section card */
+        .card{
+            background: var(--panel);
+            border:4px solid var(--pixel);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding:20px;
+            margin:18px 0;
+        }
+
+        /* Subtle divider line inside cards */
+        .rule{
+            height:2px; 
+            background:#e9dfe3; 
+            border-radius:2px; 
+            margin:12px 0;
+        }
+
+        /* Lists */
+        .point{
+            display:flex; 
+            align-items:flex-start; 
+            gap:10px;
+            padding:10px 12px; 
+            margin:8px 0;
+            background:#fff7fa; 
+            border:2px solid #ead6dd; 
+            border-radius:10px;
+        }
+        .point .icon{ 
+            font-size:20px; 
+            line-height:1.1; 
+            margin-top:2px; 
+        }
+        .point b{ 
+            font-weight:600; 
+        }
+
+        /* Characters rows (purple/blue panels) */
+        .row{
+            display:flex; 
+            align-items:center; 
+            gap:12px;
+            background:#7b5cff; 
+            color:white; 
+            padding:14px; 
+            border-radius:12px;
+            border:3px solid #2c1c6e;
+        }
+        .row + .row{ 
+            background:#1f78ff; 
+            border-color:#0c387d; 
+        }
+
+        /* Warning strip */
+        .strip{
+            background:#0b8a57; 
+            color:#eafff5; 
+            padding:14px; 
+            border-radius:12px;
+            border:3px solid #064d34; 
+            text-align:center; 
+            font-weight:600;
+        }
+
+        /* Input */
+        .input{
+            width:100%; 
+            padding:16px 14px; 
+            font-size:18px;
+            background:#172a3a; 
+            color:#cfe9ff;
+            border:3px solid #0a1a25; 
+            border-radius:12px;
+            box-sizing: border-box;
+        }
+
+        /* Buttons */
+        .btn{
+            display:inline-flex; 
+            align-items:center; 
+            justify-content:center;
+            gap:10px; 
+            padding:14px 18px; 
+            border-radius:12px; 
+            border:3px solid #0a3a23;
+            background:var(--accent); 
+            color:#072414; 
+            font-weight:800;
+            text-transform:uppercase; 
+            width:100%;
+            box-shadow:0 6px 0 var(--accent-dark);
+            transition:transform .05s ease, box-shadow .05s ease, filter .2s;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .btn:active{ 
+            transform:translateY(4px); 
+            box-shadow:0 2px 0 var(--accent-dark); 
+        }
+        .btn--secondary{ 
+            background:#30475e; 
+            color:#e6f8ff; 
+            border-color:#152635; 
+            box-shadow:0 6px 0 #223447; 
+        }
+
+        /* Footer buttons wrap */
+        .actions{ 
+            display:grid; 
+            grid-template-columns:1fr 1fr; 
+            gap:12px; 
+        }
+
+        /* Small helpers */
+        .muted{ color:var(--muted); }
+        .center{ text-align:center; }
         
         /* Game Preview Styles */
         #gamePreview {
@@ -3100,70 +3253,55 @@
 
         <!-- Introduction Screen -->
         <div id="introScreen">
-            
-            <div class="game-guide minecraft-guide">
-                <div class="guide-header">
+            <div class="container">
+                <div class="card center">
                     <h1>⛏️ The Minecraft Mission</h1>
-                    <p>Guide Maitha to School and Jamilah to Hospital through Block City. Dodge germs. Beat the class!</p>
+                    <p>Guide <b>Maitha</b> to School and <b>Jamilah</b> to Hospital. Dodge germs. Beat the class!</p>
                 </div>
-                
-            <div class="guide-section">
-                <h2>🎮 Minecraft Controls</h2>
-                <div class="control-message minecraft-box">
-                    <p>Tap/Arrow keys to move</p>
+
+                <div class="card center">
+                    <h2>🎮 Minecraft Controls</h2>
+                    <div class="rule"></div>
+                    <h3>Tap / Arrow keys to move</h3>
                 </div>
-            </div>
-                
-                <div class="guide-section">
+
+                <div class="card">
                     <h2>👥 Minecraft Characters & Buildings</h2>
-                    <div class="character-options">
-                        <div class="character-card minecraft-card maitha-card">
-                            <div class="minecraft-character maitha-sprite"></div>
-                            <span>Maitha → School</span>
-                            <div class="minecraft-building school-building"></div>
-                        </div>
-                        <div class="character-card minecraft-card jamilah-card">
-                            <div class="minecraft-character jamilah-sprite"></div>
-                            <span>Jamilah → Hospital</span>
-                            <div class="minecraft-building hospital-building"></div>
-                        </div>
+                    <div class="rule"></div>
+
+                    <div class="row">
+                        <div class="icon">🟥</div>
+                        <div><b>Maitha</b> → <b>School</b></div>
+                    </div>
+
+                    <div class="row" style="margin-top:10px;">
+                        <div class="icon">🟦</div>
+                        <div><b>Jamilah</b> → <b>Hospital</b></div>
                     </div>
                 </div>
-                
-                <div class="guide-section">
+
+                <div class="card">
                     <h2>⚠️ Avoid the Minecraft Germs!</h2>
-                    <div class="warning-box minecraft-warning">
-                        <div class="minecraft-germ"></div>
-                    <div class="warning-text">
-                        <strong>Navigate carefully!</strong><br>
-                        Germ hit: "Oof! -5 points" Plan your route wisely!
-                    </div>
-                    </div>
+                    <div class="rule"></div>
+                    <div class="strip">Navigate carefully! <span class="muted">Hitting a germ costs <b>–5 points</b>.</span></div>
                 </div>
-                
-                <div class="guide-section">
+
+                <div class="card">
                     <h2>⭐ Minecraft Scoring</h2>
-                    <div class="scoring-list">
-                        <div class="score-item minecraft-score positive">
-                            <span class="minecraft-icon">⛏️</span>
-                            <span>Reach destination: <span class="score-value">Complete the mission!</span></span>
-                        </div>
-                        <div class="score-item minecraft-score negative">
-                            <span class="minecraft-icon">💀</span>
-                            <span>Germ hit: <span class="score-value">"Oof! -5 points"</span></span>
-                        </div>
-                    <div class="score-item minecraft-score info">
-                        <span class="minecraft-icon">💎</span>
-                        <span>Your score is saved to the leaderboard and presented to the class! Bragging rights incoming! 🏆</span>
-                    </div>
-                    </div>
+                    <div class="rule"></div>
+                    <div class="point"><div class="icon">✅</div><div><b>Reach destination</b>: Complete the mission!</div></div>
+                    <div class="point"><div class="icon">💀</div><div><b>Germ hit</b>: –5 points</div></div>
+                    <div class="point"><div class="icon">📡</div><div><b>Auto-save</b>: Your score posts to the live leaderboard.</div></div>
                 </div>
-                
-                <div class="game-start-section">
-                    <input type="text" class="nameInput minecraft-input" id="playerName" placeholder="Enter your Minecraft name (required)" maxlength="20" required>
-                    <button id="startBtn" class="minecraft-btn">⛏️ Start Minecraft Adventure!</button>
-                    <button id="adminLoginBtn" class="minecraft-btn admin">👑 Admin Panel</button>
-                    <button id="musicBtn" class="minecraft-btn music">🎵 Play Music</button>
+
+                <div class="card center">
+                    <input class="input" id="playerName" placeholder="Enter your Minecraft name (required)" maxlength="20" required />
+                    <div style="height:12px"></div>
+                    <button class="btn" id="startBtn">⛏️ Start Minecraft Adventure!</button>
+                    <div class="actions" style="margin-top:12px;">
+                        <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
+                        <button class="btn btn--secondary" id="musicBtn">🎵 Play Music</button>
+                    </div>
                 </div>
             </div>
         </div>
