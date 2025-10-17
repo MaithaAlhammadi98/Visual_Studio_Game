@@ -4766,6 +4766,12 @@
         }
 
         gameLoop();
+        
+        // Show cinematic intro on first page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Show the cinematic on first load
+            startCinematicIntro();
+        });
     </script>
 </body>
 </html>
