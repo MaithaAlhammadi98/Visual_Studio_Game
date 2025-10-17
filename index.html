@@ -55,6 +55,18 @@
             from { transform: translateX(0); }
             to { transform: translateX(120vw); }
         }
+
+        /* Cinematic Intro Clouds */
+        .cinematic-cloud {
+            z-index: 1;
+            position: absolute;
+        }
+
+        /* Guideline Page Clouds */
+        .guideline-cloud {
+            z-index: 1;
+            position: fixed;
+        }
         
         #gameContainer {
             position: relative;
@@ -3231,6 +3243,12 @@
     <div id="gameContainer">
         <!-- Cinematic Intro Screen -->
         <div id="cinematicIntro" style="display: none;">
+            <!-- Floating Clouds for Cinematic Intro -->
+            <div class="cloud cinematic-cloud"></div>
+            <div class="cloud cinematic-cloud"></div>
+            <div class="cloud cinematic-cloud"></div>
+            <div class="cloud cinematic-cloud"></div>
+            
             <!-- Skip Button -->
             <button id="skipIntroBtn" class="skip-btn" onclick="skipCinematicIntro()">
                 ⏭️ Skip
@@ -3372,6 +3390,12 @@
 
         <!-- Introduction Screen -->
         <div id="introScreen">
+            <!-- Floating Clouds for Guideline Page -->
+            <div class="cloud guideline-cloud"></div>
+            <div class="cloud guideline-cloud"></div>
+            <div class="cloud guideline-cloud"></div>
+            <div class="cloud guideline-cloud"></div>
+            
             <div class="container">
                 <div class="card center">
                     <h1>⛏️ The Minecraft Mission</h1>
