@@ -1612,6 +1612,36 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1_gkpoxhQXmn6mFPf8PFtyzugBagTN5U",
+            authDomain: "school-hospital-game.firebaseapp.com",
+            projectId: "school-hospital-game",
+            storageBucket: "school-hospital-game.firebasestorage.app",
+            messagingSenderId: "976651001981",
+            appId: "1:976651001981:web:8205c31633b1fac606d114"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally
+        window.firebaseApp = app;
+        window.firebaseDb = db;
+        window.firebaseCollection = collection;
+        window.firebaseAddDoc = addDoc;
+        window.firebaseOnSnapshot = onSnapshot;
+        window.firebaseOrderBy = orderBy;
+        window.firebaseQuery = query;
+        window.firebaseLimit = limit;
+    </script>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -2491,7 +2521,10 @@
             liveLeaderboard.style.display = 'flex';
             updateLiveLeaderboard();
             
-            // Auto-refresh every 3 seconds
+            // Start Firebase real-time listening
+            startLiveLeaderboard();
+            
+            // Auto-refresh every 3 seconds (backup)
             if (window.leaderboardInterval) {
                 clearInterval(window.leaderboardInterval);
             }
@@ -2516,13 +2549,13 @@
             // Clear the list
             liveList.innerHTML = '';
             
-            // Get all players sorted by best score
-            const allPlayers = getTopPlayers();
+            // Use Firebase data if available, otherwise use local data
+            const allPlayers = livePlayers.length > 0 ? livePlayers : getTopPlayers();
             
             // Update stats
             totalPlayersEl.textContent = `Players: ${allPlayers.length}`;
-            activeGamesEl.textContent = `Active: ${gameHistory.filter(h => {
-                const gameTime = new Date(h.timestamp);
+            activeGamesEl.textContent = `Active: ${livePlayers.filter(p => {
+                const gameTime = new Date(p.timestamp);
                 const now = new Date();
                 return (now - gameTime) < 300000; // Active if played within last 5 minutes
             }).length}`;
@@ -2539,9 +2572,9 @@
                     <div class="live-rank-number">#${index + 1}</div>
                     <div class="live-player-info">
                         <div class="live-player-name">${playerName}</div>
-                        <div class="live-player-stats">Best Score</div>
+                        <div class="live-player-stats">${livePlayers.length > 0 ? 'Live Score' : 'Best Score'}</div>
                     </div>
-                    <div class="live-player-score">${player.bestScore || 0}</div>
+                    <div class="live-player-score">${player.score || player.bestScore || 0}</div>
                 `;
                 liveList.appendChild(entryDiv);
             });
@@ -2562,6 +2595,82 @@
 
         function refreshLeaderboard() {
             updateLiveLeaderboard();
+        }
+
+        // Firebase Real-time Database Functions
+        let firebaseReady = false;
+        let livePlayers = [];
+
+        // Wait for Firebase to load
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                const checkFirebase = () => {
+                    if (window.firebaseDb) {
+                        firebaseReady = true;
+                        resolve();
+                    } else {
+                        setTimeout(checkFirebase, 100);
+                    }
+                };
+                checkFirebase();
+            });
+        }
+
+        // Save game score to Firebase
+        async function saveScoreToFirebase(playerName, score, completionTime, germsHit) {
+            if (!firebaseReady) await waitForFirebase();
+            
+            try {
+                const gameData = {
+                    playerName: playerName,
+                    score: score,
+                    completionTime: completionTime,
+                    germsHit: germsHit,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString()
+                };
+                
+                await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, 'gameScores'), gameData);
+                console.log('Score saved to Firebase:', gameData);
+            } catch (error) {
+                console.error('Error saving to Firebase:', error);
+            }
+        }
+
+        // Listen for live updates from Firebase
+        async function startLiveLeaderboard() {
+            if (!firebaseReady) await waitForFirebase();
+            
+            try {
+                const q = window.firebaseQuery(
+                    window.firebaseCollection(window.firebaseDb, 'gameScores'),
+                    window.firebaseOrderBy('score', 'desc'),
+                    window.firebaseLimit(20)
+                );
+                
+                window.firebaseOnSnapshot(q, (snapshot) => {
+                    livePlayers = [];
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        livePlayers.push({
+                            id: doc.id,
+                            name: data.playerName,
+                            score: data.score,
+                            timestamp: data.timestamp,
+                            date: data.date,
+                            time: data.time
+                        });
+                    });
+                    
+                    // Update live leaderboard if it's open
+                    if (document.getElementById('liveLeaderboard').style.display === 'flex') {
+                        updateLiveLeaderboard();
+                    }
+                });
+            } catch (error) {
+                console.error('Error listening to Firebase:', error);
+            }
         }
 
         // New comprehensive history tracking system
@@ -2607,6 +2716,9 @@
             // Save to localStorage
             localStorage.setItem('gameHistory', JSON.stringify(gameHistory));
             localStorage.setItem('playerScores', JSON.stringify(playerScores));
+            
+            // Save to Firebase for live updates
+            saveScoreToFirebase(playerName, score, completionTime, germsHit);
         }
 
         function getTopPlayers() {
