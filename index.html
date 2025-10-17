@@ -1238,10 +1238,25 @@
 
         /* Minecraft Guide Styles */
         .minecraft-guide {
-            background: linear-gradient(135deg, #2C3E50, #34495E);
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
             border: 3px solid #8B4513;
             border-radius: 0;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        /* Add Minecraft grass texture to background */
+        .minecraft-guide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+            pointer-events: none;
         }
 
         .minecraft-guide .guide-header h1 {
@@ -1277,14 +1292,60 @@
             height: 32px;
             border-radius: 0;
             border: 2px solid #000;
+            position: relative;
         }
 
         .maitha-sprite {
-            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+            background: #FF6B6B;
         }
 
         .jamilah-sprite {
-            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            background: #4ECDC4;
+        }
+
+        /* Add pixel art details to characters */
+        .maitha-sprite::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 8px;
+            width: 4px;
+            height: 4px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .maitha-sprite::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            width: 4px;
+            height: 4px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .jamilah-sprite::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 8px;
+            width: 4px;
+            height: 4px;
+            background: #000;
+            border-radius: 0;
+        }
+
+        .jamilah-sprite::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            width: 4px;
+            height: 4px;
+            background: #000;
+            border-radius: 0;
         }
 
         /* Minecraft Buildings */
@@ -1293,14 +1354,55 @@
             height: 24px;
             border-radius: 0;
             border: 1px solid #000;
+            position: relative;
         }
 
         .school-building {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
+            background: #FFD700;
+        }
+
+        .school-building::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: #D32F2F;
+        }
+
+        .school-building::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 4px;
+            width: 4px;
+            height: 4px;
+            background: #2196F3;
         }
 
         .hospital-building {
-            background: linear-gradient(45deg, #FFFFFF, #F5F5F5);
+            background: #FFFFFF;
+        }
+
+        .hospital-building::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: #D32F2F;
+        }
+
+        .hospital-building::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: #D32F2F;
         }
 
         /* Minecraft Cards */
@@ -1815,7 +1917,7 @@
                     <div class="scoring-list">
                         <div class="score-item minecraft-score positive">
                             <span class="minecraft-icon">⛏️</span>
-                            <span>Reach destination: <span class="score-value">+50 points</span></span>
+                            <span>Reach destination: <span class="score-value">Complete the mission!</span></span>
                         </div>
                         <div class="score-item minecraft-score negative">
                             <span class="minecraft-icon">💀</span>
