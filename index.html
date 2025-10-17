@@ -1613,10 +1613,9 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
         // Your Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyB1_gkpoxhQXmn6mFPf8PFtyzugBagTN5U",
@@ -1628,18 +1627,10 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Make Firebase available globally
-        window.firebaseApp = app;
-        window.firebaseDb = db;
-        window.firebaseCollection = collection;
-        window.firebaseAddDoc = addDoc;
-        window.firebaseOnSnapshot = onSnapshot;
-        window.firebaseOrderBy = orderBy;
-        window.firebaseQuery = query;
-        window.firebaseLimit = limit;
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        console.log('Firebase initialized:', firebase.app().name);
     </script>
 
     <script>
@@ -2605,7 +2596,7 @@
         function waitForFirebase() {
             return new Promise((resolve) => {
                 const checkFirebase = () => {
-                    if (window.firebaseDb) {
+                    if (typeof firebase !== 'undefined' && firebase.firestore) {
                         firebaseReady = true;
                         resolve();
                     } else {
@@ -2631,7 +2622,7 @@
                     time: new Date().toLocaleTimeString()
                 };
                 
-                await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, 'gameScores'), gameData);
+                await db.collection('gameScores').add(gameData);
                 console.log('Score saved to Firebase:', gameData);
             } catch (error) {
                 console.error('Error saving to Firebase:', error);
@@ -2643,31 +2634,30 @@
             if (!firebaseReady) await waitForFirebase();
             
             try {
-                const q = window.firebaseQuery(
-                    window.firebaseCollection(window.firebaseDb, 'gameScores'),
-                    window.firebaseOrderBy('score', 'desc'),
-                    window.firebaseLimit(20)
-                );
-                
-                window.firebaseOnSnapshot(q, (snapshot) => {
-                    livePlayers = [];
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        livePlayers.push({
-                            id: doc.id,
-                            name: data.playerName,
-                            score: data.score,
-                            timestamp: data.timestamp,
-                            date: data.date,
-                            time: data.time
+                db.collection('gameScores')
+                    .orderBy('score', 'desc')
+                    .limit(20)
+                    .onSnapshot((snapshot) => {
+                        livePlayers = [];
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            livePlayers.push({
+                                id: doc.id,
+                                name: data.playerName,
+                                score: data.score,
+                                timestamp: data.timestamp,
+                                date: data.date,
+                                time: data.time
+                            });
                         });
+                        
+                        console.log('Live players updated:', livePlayers);
+                        
+                        // Update live leaderboard if it's open
+                        if (document.getElementById('liveLeaderboard').style.display === 'flex') {
+                            updateLiveLeaderboard();
+                        }
                     });
-                    
-                    // Update live leaderboard if it's open
-                    if (document.getElementById('liveLeaderboard').style.display === 'flex') {
-                        updateLiveLeaderboard();
-                    }
-                });
             } catch (error) {
                 console.error('Error listening to Firebase:', error);
             }
