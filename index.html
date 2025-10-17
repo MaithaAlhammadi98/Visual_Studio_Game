@@ -837,9 +837,9 @@
         .arrow-btn {
             width: 50px;
             height: 50px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #fff;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            border: 3px solid #654321;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -848,6 +848,10 @@
             cursor: pointer;
             user-select: none;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #654321, 0 8px 15px rgba(0, 0, 0, 0.3);
+            font-family: 'VT323', monospace;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
         }
         
         @media (max-height: 2000px) {
@@ -859,13 +863,15 @@
         }
         
         .arrow-btn:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.1);
+            background: linear-gradient(135deg, #A0522D, #CD853F);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #654321, 0 10px 20px rgba(0, 0, 0, 0.4);
         }
         
         .arrow-btn:active {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(0.95);
+            background: linear-gradient(135deg, #654321, #8B4513);
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #654321, 0 5px 10px rgba(0, 0, 0, 0.3);
         }
         
         #selectedCharacter {
@@ -3712,7 +3718,8 @@
                     <h2>⭐ Minecraft Scoring</h2>
                     <div class="rule"></div>
                     <div class="point"><div class="icon">✅</div><div><b>Reach destination</b>: Complete the mission!</div></div>
-                    <div class="point"><div class="icon">💀</div><div><b>Germ hit</b>: –5 points</div></div>
+                    <div class="point"><div class="icon">💀</div><div><b>Red Germ hit</b>: –10 points</div></div>
+                    <div class="point"><div class="icon">🦠</div><div><b>Green Germ hit</b>: –5 points</div></div>
                     <div class="point"><div class="icon">📡</div><div><b>Auto-save</b>: Your score posts to the live leaderboard.</div></div>
                 </div>
 
@@ -4229,17 +4236,35 @@
         // Use direct audio file links instead (MP3, WAV, etc.)
         const DEVELOPER_BACKGROUND_MUSIC = 'https://drive.google.com/uc?export=download&id=1mBLznJBmXeiBWDt-RAnC7b2P8UQonbbv'; // Converted Google Drive link to direct download
 
-        // Initialize germs
+        // Initialize germs (5 red -10 points, 5 green -5 points)
         function initGerms() {
             germs.length = 0;
-            for (let i = 0; i < germCount; i++) {
+            
+            // Create 5 red germs (-10 points each)
+            for (let i = 0; i < 5; i++) {
                 germs.push({
                     x: Math.random() * (canvas.width - 40),
                     y: Math.random() * (canvas.height - 40),
                     size: 20,
                     vx: (Math.random() - 0.5) * 4,
                     vy: (Math.random() - 0.5) * 4,
-                    emoji: '🦠'
+                    emoji: '🦠',
+                    color: 'red',
+                    points: -10
+                });
+            }
+            
+            // Create 5 green germs (-5 points each)
+            for (let i = 0; i < 5; i++) {
+                germs.push({
+                    x: Math.random() * (canvas.width - 40),
+                    y: Math.random() * (canvas.height - 40),
+                    size: 20,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    emoji: '🦠',
+                    color: 'green',
+                    points: -5
                 });
             }
         }
@@ -5075,8 +5100,8 @@
                 if (!gameComplete[controlledPlayer]) {
                     germs.forEach((germ, index) => {
                         if (checkCollision(player, germ) && !germHitCooldown.has(index)) {
-                            console.log(`Germ hit! Score before: ${currentScore}`);
-                            currentScore -= 5;
+                            console.log(`${germ.color} germ hit! Score before: ${currentScore}, Points lost: ${germ.points}`);
+                            currentScore += germ.points; // Use the germ's point value (-5 or -10)
                             currentScore = Math.max(0, currentScore);
                             console.log(`Score after: ${currentScore}`);
                             
@@ -5086,8 +5111,8 @@
                             // Show hit effect
                             showHitEffect(player.x, player.y);
                             
-                            // Show "Oof! -5" message
-                            showOofMessage(player.x, player.y);
+                            // Show "Oof!" message with correct points
+                            showOofMessage(player.x, player.y, germ.points);
                             
                             // Play "Oof!" sound
                             playOofSound();
@@ -5170,7 +5195,8 @@
             
             // Draw germs with sick glow
             germs.forEach(germ => {
-                ctx.shadowColor = '#FF0000';
+                // Set shadow color based on germ type
+                ctx.shadowColor = germ.color === 'red' ? '#FF0000' : '#00FF00';
                 ctx.shadowBlur = 10;
                 ctx.font = `${germ.size}px Arial`;
                 ctx.textAlign = 'center';
@@ -5202,7 +5228,8 @@
             
             // Calculate completion time and germs hit
             const completionTime = Math.floor((Date.now() - gameStartTime) / 1000);
-            const germsHit = Math.floor((100 - currentScore) / 5);
+            // Calculate germs hit based on score difference (since germs can be -5 or -10 points)
+            const germsHit = Math.floor((100 - currentScore) / 5); // Approximate calculation
             
             // Get the actual player name value, not the input element
             let actualPlayerName = 'Player';
@@ -5921,10 +5948,10 @@
             }, 500);
         }
 
-        function showOofMessage(x, y) {
+        function showOofMessage(x, y, points = -5) {
             const oofDiv = document.createElement('div');
             oofDiv.className = 'oof-message';
-            oofDiv.textContent = 'Oof! -5';
+            oofDiv.textContent = `Oof! ${points}`;
             oofDiv.style.left = x + 'px';
             oofDiv.style.top = (y - 60) + 'px';
             document.getElementById('gameContainer').appendChild(oofDiv);
