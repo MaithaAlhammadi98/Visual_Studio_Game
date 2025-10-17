@@ -2511,6 +2511,16 @@
             animation: germSlime 1s ease-out;
         }
 
+        .red-germ {
+            filter: hue-rotate(0deg) saturate(1.5) brightness(0.8);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+        }
+
+        .green-germ {
+            filter: hue-rotate(120deg) saturate(1.5) brightness(1.2);
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        }
+
         @keyframes germSlime {
             0% { transform: translateY(-50px) scale(0); opacity: 0; }
             50% { transform: translateY(10px) scale(1.2); opacity: 0.8; }
@@ -3574,15 +3584,18 @@
             <div class="intro-scene" id="scene3" style="display: none;">
                 <div class="intro-background">
                     <div class="germs-container">
-                        <div class="germ germ1">🦠</div>
-                        <div class="germ germ2">🦠</div>
-                        <div class="germ germ3">🦠</div>
-                        <div class="germ germ4">🦠</div>
+                        <div class="germ germ1 red-germ">🦠</div>
+                        <div class="germ germ2 green-germ">🦠</div>
+                        <div class="germ germ3 red-germ">🦠</div>
+                        <div class="germ germ4 green-germ">🦠</div>
+                        <div class="germ germ5 red-germ">🦠</div>
+                        <div class="germ germ6 green-germ">🦠</div>
                     </div>
                 </div>
                 <div class="intro-text-container">
                     <div class="intro-text warning-text">Beware the Germs...</div>
-                    <div class="intro-text warning-text">every hit costs 5 points!</div>
+                    <div class="intro-text warning-text">Red germs: -10 points!</div>
+                    <div class="intro-text warning-text">Green germs: -5 points!</div>
                 </div>
             </div>
             
