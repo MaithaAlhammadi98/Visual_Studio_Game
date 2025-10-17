@@ -1586,6 +1586,17 @@
             background: linear-gradient(45deg, #FFA500, #FFB74D);
         }
 
+        .minecraft-btn.music {
+            background: linear-gradient(45deg, #FF69B4, #FFB6C1); /* Pink gradient */
+            border-color: #FF69B4;
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+
+        .minecraft-btn.music:hover {
+            background: linear-gradient(45deg, #FFB6C1, #FFC0CB);
+        }
+
         /* Minecraft Box for consistent styling */
         .minecraft-box {
             background: rgba(255, 182, 193, 0.3);
@@ -2046,6 +2057,7 @@
                     <input type="text" class="nameInput minecraft-input" id="playerName" placeholder="Enter your Minecraft name (required)" maxlength="20" required>
                     <button id="startBtn" class="minecraft-btn">⛏️ Start Minecraft Adventure!</button>
                     <button id="adminLoginBtn" class="minecraft-btn admin">👑 Admin Panel</button>
+                    <button id="musicBtn" class="minecraft-btn music">🎵 Play Music</button>
                 </div>
             </div>
         </div>
@@ -2658,9 +2670,14 @@
 
         // Play cute calm feminine background music for login screen
         function playBackgroundMusic() {
-            if (!soundEnabled || !audioContext) return;
+            if (!soundEnabled || !audioContext) {
+                console.log('Sound disabled or no audio context');
+                return;
+            }
             
             try {
+                console.log('Playing background music...');
+                
                 // Create a gentle, feminine melody
                 const melody = [
                     {freq: 523, time: 0},    // C5
@@ -2673,6 +2690,8 @@
                     {freq: 523, time: 3.5}   // C5
                 ];
                 
+                const startTime = audioContext.currentTime;
+                
                 melody.forEach(note => {
                     const oscillator = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
@@ -2680,24 +2699,27 @@
                     oscillator.connect(gainNode);
                     gainNode.connect(audioContext.destination);
                     
-                    oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.time);
+                    oscillator.frequency.setValueAtTime(note.freq, startTime + note.time);
                     oscillator.type = 'sine'; // Soft, gentle sound
                     
-                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime + note.time); // Very quiet
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + note.time + 0.8);
+                    gainNode.gain.setValueAtTime(0.2, startTime + note.time); // Louder for testing
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + note.time + 0.8);
                     
-                    oscillator.start(audioContext.currentTime + note.time);
-                    oscillator.stop(audioContext.currentTime + note.time + 0.8);
+                    oscillator.start(startTime + note.time);
+                    oscillator.stop(startTime + note.time + 0.8);
                 });
                 
-                // Repeat the melody every 4 seconds
+                console.log('Background music notes scheduled');
+                
+                // Repeat the melody every 5 seconds
                 setTimeout(() => {
-                    if (document.getElementById('introScreen').style.display !== 'none') {
+                    const introScreen = document.getElementById('introScreen');
+                    if (introScreen && introScreen.style.display !== 'none') {
                         playBackgroundMusic();
                     }
-                }, 4000);
+                }, 5000);
             } catch (e) {
-                console.log('Could not play background music');
+                console.log('Could not play background music:', e);
             }
         }
 
@@ -4157,10 +4179,8 @@
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
             
-            // Start cute background music for login screen
-            setTimeout(() => {
-                playBackgroundMusic();
-            }, 1000); // Start after 1 second delay
+            // Start cute background music for login screen (after user interaction)
+            // Music will start when user clicks the start button or interacts with the page
             document.getElementById('leaderboardPopup').style.display = 'none';
             document.getElementById('selectedCharacter').style.display = 'none';
             document.getElementById('scoreDisplay').style.display = 'none';
@@ -4177,6 +4197,12 @@
         // Event listeners
         restartBtn.addEventListener('click', restartGame);
         startBtn.addEventListener('click', startGame);
+        
+        // Music button event listener
+        document.getElementById('musicBtn').addEventListener('click', () => {
+            console.log('Music button clicked');
+            playBackgroundMusic();
+        });
 
         // Admin event listeners
         adminToggle.addEventListener('click', toggleAdminPanel);
