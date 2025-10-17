@@ -1632,13 +1632,14 @@
         
         console.log('Firebase initialized:', firebase.app().name);
         
-        // Collection
-        const scoresRef = db.collection('scores');
+        // Make Firestore + collection available everywhere
+        window.db = firebase.firestore();
+        window.scoresRef = window.db.collection('scores');
 
         // Write a score when a run finishes
         function saveGameAttemptToFirebase(name, score, timeSec, germsHit) {
             console.log('Saving to Firebase:', { name, score, timeSec, germsHit });
-            return db.collection('scores').add({
+            return window.scoresRef.add({
                 name: String(name), 
                 score: Number(score), 
                 timeSec: Number(timeSec), 
@@ -1651,28 +1652,25 @@
             });
         }
 
-        // Subscribe to live updates (top 20 by score)
-        function subscribeLiveLeaderboard() {
-            return scoresRef
-                .orderBy('score','desc')
-                .orderBy('ts','asc')
-                .limit(20)
-                .onSnapshot(snap => {
-                    const list = document.getElementById('liveLeaderboardList');
-                    const mini = document.getElementById('leaderboardList'); // game over screen
-                    const totalPlayers = document.getElementById('totalPlayers');
-                    
-                    if (list) list.innerHTML = '';
-                    if (mini) mini.innerHTML = '';
-                    
-                    let rank = 1;
-                    snap.forEach(doc => {
-                        const {name, score, timeSec = '-', germsHit='-'} = doc.data();
+        // Live listener for the overlay
+        function startLeaderboardListener() {
+            // cleanup previous listener if open
+            if (window._lbUnsub) window._lbUnsub();
 
-                        // Live panel
-                        if (list) {
+            window._lbUnsub = window.scoresRef
+                .orderBy('score', 'desc')
+                .orderBy('ts', 'asc') // you already built this index
+                .limit(20)
+                .onSnapshot(
+                    (snap) => {
+                        const list = document.getElementById('liveLeaderboardList');
+                        if (!list) return;
+                        list.innerHTML = '';
+                        let rank = 1;
+                        snap.forEach(doc => {
+                            const { name='Player', score=0, timeSec='-', germsHit='-' } = doc.data();
                             const row = document.createElement('div');
-                            row.className = `live-leaderboard-entry rank-${rank}`;
+                            row.className = 'live-leaderboard-entry';
                             row.innerHTML = `
                                 <div class="live-rank-number">${rank}</div>
                                 <div class="live-player-info">
@@ -1681,29 +1679,29 @@
                                 </div>
                                 <div class="live-player-score">${score}</div>`;
                             list.appendChild(row);
-                        }
-
-                        // Game-over mini list
-                        if (mini) {
-                            const r2 = document.createElement('div');
-                            r2.className = 'leaderboard-entry';
-                            r2.innerHTML = `<span>${rank}. ${name}</span><span>${score} pts</span>`;
-                            mini.appendChild(r2);
-                        }
-
-                        rank++;
-                    });
-                    if (totalPlayers) totalPlayers.textContent = `Players: ${snap.size}`;
-                });
+                            rank++;
+                        });
+                        const total = document.getElementById('totalPlayers');
+                        if (total) total.textContent = `Players: ${snap.size}`;
+                    },
+                    (err) => {
+                        console.error('Leaderboard listen error:', err.code, err.message);
+                    }
+                );
         }
 
-        // Call once on load
-        let unsubscribe = subscribeLiveLeaderboard();
-
-        // Optional helper to show/hide the big overlay already in your HTML
-        function showLiveLeaderboard(){ document.getElementById('liveLeaderboard').style.display='flex'; }
-        function hideLiveLeaderboard(){ document.getElementById('liveLeaderboard').style.display='none'; }
-        function refreshLeaderboard(){ if (unsubscribe) {unsubscribe();} unsubscribe = subscribeLiveLeaderboard(); }
+        // Call this when you open the live leaderboard modal
+        function showLiveLeaderboard() {
+            const el = document.getElementById('liveLeaderboard');
+            if (el) el.style.display = 'flex';
+            startLeaderboardListener();
+        }
+        // Optional close
+        function hideLiveLeaderboard() {
+            if (window._lbUnsub) window._lbUnsub();
+            const el = document.getElementById('liveLeaderboard');
+            if (el) el.style.display = 'none';
+        }
     </script>
 
     <script>
