@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>School & Hospital Adventure - v2.0</title>
     <style>
         body {
@@ -27,6 +27,7 @@
             border-radius: 15px;
             overflow: hidden;
             background: #f0f8ff;
+            touch-action: manipulation; /* Prevent zoom gestures */
         }
         
         @media (max-width: 768px) {
@@ -960,6 +961,7 @@
             border-radius: 10px;
             font-size: 16px;
             text-align: center;
+            font-size: 16px !important; /* Prevent zoom on iOS */
         }
         
         #startBtn {
@@ -1520,6 +1522,11 @@
             // Show character selection (which now has the frozen game preview)
             introScreen.style.display = 'none';
             characterSelection.style.display = 'flex';
+            
+            // Reset viewport to prevent zoom issues
+            setTimeout(() => {
+                document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            }, 100);
         }
         
 
@@ -1806,6 +1813,16 @@
             document.getElementById('scoreDisplay').style.display = 'block';
             document.getElementById('arrowControls').style.display = 'flex';
             gameState = 'playing';
+            
+            // Reset viewport to prevent zoom issues when game starts
+            setTimeout(() => {
+                document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                // Force a repaint to ensure proper sizing
+                document.body.style.transform = 'scale(1)';
+                setTimeout(() => {
+                    document.body.style.transform = '';
+                }, 50);
+            }, 100);
             
             // Reset game
             currentScore = 100; // Reset to 100 points
