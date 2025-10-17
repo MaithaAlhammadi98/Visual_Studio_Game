@@ -1652,32 +1652,40 @@
                 .onSnapshot(snap => {
                     const list = document.getElementById('liveLeaderboardList');
                     const mini = document.getElementById('leaderboardList'); // game over screen
-                    list.innerHTML = ''; mini.innerHTML = '';
+                    const totalPlayers = document.getElementById('totalPlayers');
+                    
+                    if (list) list.innerHTML = '';
+                    if (mini) mini.innerHTML = '';
+                    
                     let rank = 1;
                     snap.forEach(doc => {
                         const {name, score, timeSec = '-', germsHit='-'} = doc.data();
 
                         // Live panel
-                        const row = document.createElement('div');
-                        row.className = `live-leaderboard-entry rank-${rank}`;
-                        row.innerHTML = `
-                            <div class="live-rank-number">${rank}</div>
-                            <div class="live-player-info">
-                                <div class="live-player-name">${name}</div>
-                                <div class="live-player-stats">⏱ ${timeSec}s • 🦠 ${germsHit}</div>
-                            </div>
-                            <div class="live-player-score">${score}</div>`;
-                        list.appendChild(row);
+                        if (list) {
+                            const row = document.createElement('div');
+                            row.className = `live-leaderboard-entry rank-${rank}`;
+                            row.innerHTML = `
+                                <div class="live-rank-number">${rank}</div>
+                                <div class="live-player-info">
+                                    <div class="live-player-name">${name}</div>
+                                    <div class="live-player-stats">⏱ ${timeSec}s • 🦠 ${germsHit}</div>
+                                </div>
+                                <div class="live-player-score">${score}</div>`;
+                            list.appendChild(row);
+                        }
 
                         // Game-over mini list
-                        const r2 = document.createElement('div');
-                        r2.className = 'leaderboard-entry';
-                        r2.innerHTML = `<span>${rank}. ${name}</span><span>${score} pts</span>`;
-                        mini.appendChild(r2);
+                        if (mini) {
+                            const r2 = document.createElement('div');
+                            r2.className = 'leaderboard-entry';
+                            r2.innerHTML = `<span>${rank}. ${name}</span><span>${score} pts</span>`;
+                            mini.appendChild(r2);
+                        }
 
                         rank++;
                     });
-                    document.getElementById('totalPlayers').textContent = `Players: ${snap.size}`;
+                    if (totalPlayers) totalPlayers.textContent = `Players: ${snap.size}`;
                 });
         }
 
@@ -2124,8 +2132,19 @@
             const completionTime = Math.floor((Date.now() - gameStartTime) / 1000);
             const germsHit = Math.floor((100 - currentScore) / 5);
             
+            // Get the actual player name value, not the input element
+            let actualPlayerName = 'Player';
+            try {
+                const nameInput = document.getElementById('playerName');
+                if (nameInput && nameInput.value && nameInput.value.trim() !== '') {
+                    actualPlayerName = nameInput.value.trim();
+                }
+            } catch (e) {
+                console.log('Could not get player name for Firebase:', e);
+            }
+            
             // Save the game attempt to Firebase
-            saveGameAttempt(playerName, currentScore, completionTime, germsHit);
+            saveGameAttempt(actualPlayerName, currentScore, completionTime, germsHit);
             
             let winner = 'Tie!';
             if (scores.player1 > scores.player2) {
@@ -2485,6 +2504,11 @@
         function showLeaderboardPopup() {
             const popup = document.getElementById('leaderboardPopup');
             const popupList = document.getElementById('popupLeaderboardList');
+            
+            if (!popup || !popupList) {
+                console.log('Leaderboard popup elements not found');
+                return;
+            }
             
             // Clear the popup
             popupList.innerHTML = '';
