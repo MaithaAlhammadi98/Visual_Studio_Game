@@ -1784,6 +1784,14 @@
             // Start the listener
             startLeaderboardListener();
             wireLeaderboardButtons();
+            
+            // Also try to fetch data immediately
+            console.log('Fetching leaderboard data immediately...');
+            fetchLeaderboardOnce().then(() => {
+                console.log('Initial data fetch completed');
+            }).catch((error) => {
+                console.error('Error fetching initial data:', error);
+            });
         }
 
         // Optional close
