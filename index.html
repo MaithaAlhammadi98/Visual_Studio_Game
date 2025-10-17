@@ -965,8 +965,43 @@
         function adminStartGame() {
             adminGameState = 'active';
             gameStatus.textContent = 'Active';
+            
+            // Force start the game immediately for testing
+            if (gameState === 'intro') {
+                // Start game directly
+                startGameDirectly();
+            }
+            
             alert('Game started! Players can now join and play.');
             updateAdminPanel();
+        }
+
+        function startGameDirectly() {
+            // Keep character names fixed (Maitha & Jamilah)
+            playerNames.player1 = 'Maitha';
+            playerNames.player2 = 'Jamilah';
+            players.player1.name = 'Maitha';
+            players.player2.name = 'Jamilah';
+            
+            player1Display.textContent = `Maitha: `;
+            player2Display.textContent = `Jamilah: `;
+            
+            introScreen.style.display = 'none';
+            gameUI.style.display = 'flex';
+            gameState = 'playing';
+            
+            // Reset game
+            scores = { player1: 0, player2: 0 };
+            gameComplete = { player1: false, player2: false };
+            players.player1.x = 50;
+            players.player1.y = canvas.height / 2;
+            players.player2.x = canvas.width - 50;
+            players.player2.y = canvas.height / 2;
+            targets.school.y = 50;
+            targets.hospital.y = 50;
+            initGerms();
+            initRain();
+            playRainSound();
         }
 
         function adminStopGame() {
