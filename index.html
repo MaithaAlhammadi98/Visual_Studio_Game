@@ -1783,6 +1783,335 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* Scene 4 - Controls Styles */
+        .controls-bg {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .controls-demo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .character-demo {
+            animation: characterNudge 1s ease-in-out infinite;
+        }
+
+        .demo-sprite {
+            width: 60px;
+            height: 60px;
+            background: #FF6B6B;
+            border: 3px solid white;
+            border-radius: 0;
+        }
+
+        .arrows-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 10px;
+            width: 120px;
+            height: 120px;
+        }
+
+        .arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 0;
+            animation: arrowBlink 0.8s ease-in-out infinite;
+        }
+
+        .arrow-up { grid-column: 2; grid-row: 1; }
+        .arrow-down { grid-column: 2; grid-row: 3; }
+        .arrow-left { grid-column: 1; grid-row: 2; }
+        .arrow-right { grid-column: 3; grid-row: 2; }
+
+        @keyframes characterNudge {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        @keyframes arrowBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        /* Scene 5 - Race Styles */
+        .race-bg {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .split-screen {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .race-path {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 20px;
+            position: relative;
+        }
+
+        .maitha-path {
+            background: rgba(255, 107, 107, 0.1);
+            border-right: 3px solid #FF6B6B;
+        }
+
+        .jamilah-path {
+            background: rgba(78, 205, 196, 0.1);
+            border-left: 3px solid #4ECDC4;
+        }
+
+        .path-character {
+            width: 50px;
+            height: 50px;
+            border: 3px solid white;
+            border-radius: 0;
+            animation: pathMove 3s ease-in-out infinite;
+        }
+
+        .maitha-race {
+            background: #FF6B6B;
+        }
+
+        .jamilah-race {
+            background: #4ECDC4;
+        }
+
+        .path-destination {
+            font-size: 40px;
+            animation: destinationPulse 2s ease-in-out infinite;
+        }
+
+        .path-line {
+            position: absolute;
+            width: 4px;
+            height: 60%;
+            background: linear-gradient(to bottom, transparent, white, transparent);
+            animation: lineGlow 2s ease-in-out infinite;
+        }
+
+        .maitha-path .path-line {
+            right: 20px;
+        }
+
+        .jamilah-path .path-line {
+            left: 20px;
+        }
+
+        @keyframes pathMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes destinationPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        @keyframes lineGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Scene 6 - Leaderboard Styles */
+        .leaderboard-bg {
+            background: linear-gradient(180deg, #87CEEB 0%, #FFB6C1 50%, #FFC0CB 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clouds-zoom {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.8) 8px, transparent 8px),
+                radial-gradient(circle at 80% 30%, rgba(255,255,255,0.7) 10px, transparent 10px),
+                radial-gradient(circle at 50% 60%, rgba(255,255,255,0.6) 6px, transparent 6px);
+            animation: cloudsZoom 6s ease-out forwards;
+        }
+
+        @keyframes cloudsZoom {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .leaderboard-float {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: floatUp 4s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translate(-50%, 100vh) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .scoreboard {
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #FFD700;
+            border-radius: 0;
+            padding: 20px;
+            min-width: 300px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .scoreboard-title {
+            color: #FFD700;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .score-entry {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0;
+            animation: scoreEntryAppear 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .score-entry:nth-child(2) { animation-delay: 0.2s; }
+        .score-entry:nth-child(3) { animation-delay: 0.4s; }
+        .score-entry:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes scoreEntryAppear {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .player-icon {
+            width: 24px;
+            height: 24px;
+            background: #4ECDC4;
+            border: 2px solid white;
+            border-radius: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .player-name {
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .player-score {
+            color: #FFD700;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            animation: scoreCountUp 2s ease-out;
+        }
+
+        @keyframes scoreCountUp {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .sunlight-ray {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 200px;
+            background: linear-gradient(to bottom, rgba(255, 255, 0, 0.8), transparent);
+            animation: sunlightRay 2s ease-out;
+            animation-delay: 3s;
+        }
+
+        @keyframes sunlightRay {
+            0% { height: 0; opacity: 0; }
+            100% { height: 200px; opacity: 1; }
+        }
+
+        /* Scene 7 - Title Styles */
+        .title-bg {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: cameraTiltBack 3s ease-out forwards;
+        }
+
+        .title-text {
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            animation: titleFadeIn 2s ease-out;
+            animation-delay: 1s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes cameraTiltBack {
+            0% { transform: perspective(1000px) rotateX(-30deg) translateY(50px); }
+            100% { transform: perspective(1000px) rotateX(0deg) translateY(0); }
+        }
+
+        @keyframes titleFadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Text styles for new scenes */
+        .controls-text {
+            animation: textFadeIn 0.5s ease-out;
+            animation-delay: 0.5s;
+            animation-fill-mode: both;
+            color: white;
+        }
+
+        .race-text {
+            animation: textFadeIn 0.5s ease-out;
+            animation-delay: 0.5s;
+            animation-fill-mode: both;
+            color: white;
+        }
+
+        .leaderboard-text {
+            animation: textFadeIn 0.5s ease-out;
+            animation-delay: 0.5s;
+            animation-fill-mode: both;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
         /* Minecraft Box for consistent styling */
         .minecraft-box {
             background: rgba(255, 182, 193, 0.3);
@@ -2222,6 +2551,85 @@
                 <div class="intro-text-container">
                     <div class="intro-text warning-text">Beware the Germs...</div>
                     <div class="intro-text warning-text">every hit costs 5 points!</div>
+                </div>
+            </div>
+            
+            <div class="intro-scene" id="scene4" style="display: none;">
+                <div class="intro-background controls-bg">
+                    <div class="controls-demo">
+                        <div class="character-demo maitha-demo">
+                            <div class="demo-sprite"></div>
+                        </div>
+                        <div class="arrows-demo">
+                            <div class="arrow arrow-up">↑</div>
+                            <div class="arrow arrow-down">↓</div>
+                            <div class="arrow arrow-left">←</div>
+                            <div class="arrow arrow-right">→</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-text-container">
+                    <div class="intro-text controls-text">Use the arrows to navigate.</div>
+                </div>
+            </div>
+            
+            <div class="intro-scene" id="scene5" style="display: none;">
+                <div class="intro-background race-bg">
+                    <div class="split-screen">
+                        <div class="race-path maitha-path">
+                            <div class="path-character maitha-race"></div>
+                            <div class="path-destination school-race">🏫</div>
+                            <div class="path-line"></div>
+                        </div>
+                        <div class="race-path jamilah-path">
+                            <div class="path-character jamilah-race"></div>
+                            <div class="path-destination hospital-race">🏥</div>
+                            <div class="path-line"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-text-container">
+                    <div class="intro-text race-text">Reach your destinations.</div>
+                    <div class="intro-text race-text">Avoid the germs.</div>
+                    <div class="intro-text race-text">Stack your score.</div>
+                </div>
+            </div>
+            
+            <div class="intro-scene" id="scene6" style="display: none;">
+                <div class="intro-background leaderboard-bg">
+                    <div class="clouds-zoom"></div>
+                    <div class="leaderboard-float">
+                        <div class="scoreboard">
+                            <div class="scoreboard-title">🏆 LEADERBOARD 🏆</div>
+                            <div class="score-entry">
+                                <div class="player-icon">👤</div>
+                                <div class="player-name">Maitha</div>
+                                <div class="player-score">95</div>
+                            </div>
+                            <div class="score-entry">
+                                <div class="player-icon">👤</div>
+                                <div class="player-name">Jamilah</div>
+                                <div class="player-score">87</div>
+                            </div>
+                            <div class="score-entry">
+                                <div class="player-icon">👤</div>
+                                <div class="player-name">You</div>
+                                <div class="player-score">?</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sunlight-ray"></div>
+                </div>
+                <div class="intro-text-container">
+                    <div class="intro-text leaderboard-text">The block heroes rise…</div>
+                    <div class="intro-text leaderboard-text">Who will top the leaderboard?</div>
+                    <div class="intro-text leaderboard-text">Play. Compete. Stay clean.</div>
+                </div>
+            </div>
+            
+            <div class="intro-scene" id="scene7" style="display: none;">
+                <div class="intro-background title-bg">
+                    <div class="title-text">Block City: The Minecraft Mission</div>
                 </div>
             </div>
         </div>
@@ -2817,7 +3225,47 @@
                 setTimeout(() => playSquishSound(), 500);
             }, 6000);
             
-            // End intro and show login screen (after 5s more)
+            // Scene 4: Controls (after 5s more)
+            setTimeout(() => {
+                console.log('Scene 4: Controls');
+                document.getElementById('scene3').style.display = 'none';
+                document.getElementById('scene4').style.display = 'flex';
+                
+                // Play button click sound
+                playButtonClickSound();
+            }, 11000);
+            
+            // Scene 5: The Race (after 5s more)
+            setTimeout(() => {
+                console.log('Scene 5: The Race');
+                document.getElementById('scene4').style.display = 'none';
+                document.getElementById('scene5').style.display = 'flex';
+                
+                // Play race start sound
+                playRaceStartSound();
+            }, 16000);
+            
+            // Scene 6: The Leaderboard (after 6s more)
+            setTimeout(() => {
+                console.log('Scene 6: The Leaderboard');
+                document.getElementById('scene5').style.display = 'none';
+                document.getElementById('scene6').style.display = 'flex';
+                
+                // Play triumphant melody
+                playTriumphantMelody();
+            }, 22000);
+            
+            // Scene 7: Title (after 6s more)
+            setTimeout(() => {
+                console.log('Scene 7: Title');
+                document.getElementById('scene6').style.display = 'none';
+                document.getElementById('scene7').style.display = 'flex';
+                
+                // Play title music
+                playTitleMusic();
+            }, 28000);
+            
+            // End intro and show login screen (after 3s more)
             setTimeout(() => {
                 console.log('Ending cinematic intro');
                 document.getElementById('cinematicIntro').style.display = 'none';
@@ -2839,7 +3287,7 @@
                         playBackgroundMusic();
                     }, 1000);
                 }
-            }, 11000); // Total intro time: 11 seconds
+            }, 31000); // Total intro time: 31 seconds
         }
 
         // Sound effects for intro
@@ -2910,6 +3358,115 @@
                 oscillator.stop(audioContext.currentTime + 0.3);
             } catch (e) {
                 console.log('Could not play squish sound');
+            }
+        }
+
+        // Additional sound effects for new scenes
+        function playButtonClickSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } catch (e) {
+                console.log('Could not play button click sound');
+            }
+        }
+
+        function playRaceStartSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Rising tone for race start
+                oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.5);
+                
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Could not play race start sound');
+            }
+        }
+
+        function playTriumphantMelody() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                // Triumphant 8-bit melody notes
+                const notes = [
+                    { freq: 523, time: 0 },    // C5
+                    { freq: 659, time: 0.2 },  // E5
+                    { freq: 784, time: 0.4 },  // G5
+                    { freq: 1047, time: 0.6 }, // C6
+                    { freq: 784, time: 0.8 },  // G5
+                    { freq: 1047, time: 1.0 }  // C6
+                ];
+                
+                const startTime = audioContext.currentTime;
+                
+                notes.forEach(note => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(note.freq, startTime + note.time);
+                    
+                    gainNode.gain.setValueAtTime(0.15, startTime + note.time);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + note.time + 0.3);
+                    
+                    oscillator.start(startTime + note.time);
+                    oscillator.stop(startTime + note.time + 0.3);
+                });
+            } catch (e) {
+                console.log('Could not play triumphant melody');
+            }
+        }
+
+        function playTitleMusic() {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                // Gentle title music
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
+                oscillator.frequency.setValueAtTime(554, audioContext.currentTime + 0.5); // C#5
+                oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 1.0); // E5
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 2);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 2);
+            } catch (e) {
+                console.log('Could not play title music');
             }
         }
 
