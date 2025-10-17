@@ -1751,6 +1751,21 @@
         // expose to buttons you already have
         window.showLiveLeaderboard = showLiveLeaderboard;
         window.hideLiveLeaderboard = hideLiveLeaderboard;
+        
+        // Add the missing refreshLeaderboard function for the HTML button
+        window.refreshLeaderboard = async function () {
+            const btn = document.querySelector('#liveLeaderboard .refresh-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Refreshing...'; }
+            try {
+                // Option A: just pull latest once (keeps live listener)
+                await fetchLeaderboardOnce();
+
+                // Option B: full re-subscribe instead (uncomment if you prefer)
+                // startLeaderboardListener();
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = '🔄 Refresh'; }
+            }
+        };
     </script>
 
     <script>
