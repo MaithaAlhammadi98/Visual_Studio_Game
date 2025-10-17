@@ -1636,12 +1636,9 @@
         const scoresRef = db.collection('scores');
 
         // Write a score when a run finishes
-        async function saveGameAttempt(name, score, timeSec, germsHit) {
-            await scoresRef.add({
-                name,
-                score,
-                timeSec,
-                germsHit,
+        function saveGameAttempt(name, score, timeSec, germsHit) {
+            return db.collection('scores').add({
+                name, score, timeSec, germsHit,
                 ts: firebase.firestore.FieldValue.serverTimestamp()
             });
         }
