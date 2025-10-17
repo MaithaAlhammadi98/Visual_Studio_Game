@@ -1383,6 +1383,7 @@
                 <button class="admin-btn danger" id="clearLeaderboardBtn">Clear Leaderboard</button>
                 <button class="admin-btn" id="downloadHistoryBtn">📊 Download History (CSV)</button>
                 <button class="admin-btn" id="todayWinnerBtn">🏆 Today's Winner</button>
+                <button class="admin-btn" id="debugBtn" onclick="debugLeaderboard()">🔍 Debug Leaderboard</button>
             </div>
             
             <div class="admin-control">
@@ -2263,8 +2264,8 @@
                 console.log('Could not get player name:', e);
             }
             
-            // Get all players sorted by best score
-            const allPlayers = getTopPlayers();
+            // Get all players sorted by best score, excluding current player
+            const allPlayers = getTopPlayers().filter(player => player.name !== currentPlayerName);
             
             // Create current player entry (always #1)
             const currentEntry = document.createElement('div');
@@ -2282,20 +2283,18 @@
             // Show top 5 other players (excluding current player)
             let rank = 2;
             allPlayers.slice(0, 5).forEach((player) => {
-                if (player.name !== currentPlayerName) {
-                    const entryDiv = document.createElement('div');
-                    entryDiv.className = `leaderboard-entry rank-${rank}`;
-                    entryDiv.innerHTML = `
-                        <div class="rank-number">#${rank}</div>
-                        <div class="player-info">
-                            <div class="player-name">${player.name}</div>
-                            <div class="player-stats">Best Score</div>
-                        </div>
-                        <div class="player-score">${player.bestScore}</div>
-                    `;
-                    popupList.appendChild(entryDiv);
-                    rank++;
-                }
+                const entryDiv = document.createElement('div');
+                entryDiv.className = `leaderboard-entry rank-${rank}`;
+                entryDiv.innerHTML = `
+                    <div class="rank-number">#${rank}</div>
+                    <div class="player-info">
+                        <div class="player-name">${player.name}</div>
+                        <div class="player-stats">Best Score</div>
+                    </div>
+                    <div class="player-score">${player.bestScore}</div>
+                `;
+                popupList.appendChild(entryDiv);
+                rank++;
             });
             
             // If no other players, show some sample data
@@ -2375,6 +2374,13 @@
 
         function getTopPlayers() {
             return playerScores.sort((a, b) => b.bestScore - a.bestScore).slice(0, 10);
+        }
+
+        // Debug function to see what's stored
+        function debugLeaderboard() {
+            console.log('Game History:', gameHistory);
+            console.log('Player Scores:', playerScores);
+            console.log('Top Players:', getTopPlayers());
         }
 
         function downloadGameHistory() {
