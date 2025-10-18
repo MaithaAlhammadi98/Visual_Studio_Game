@@ -322,6 +322,19 @@
             box-shadow:0 6px 0 #CC1493; 
         }
 
+        /* Admin Panel Button - Pink Theme */
+        #adminLoginBtn {
+            background: #FF69B4 !important;
+            color: #ffffff !important;
+            border-color: #FF1493 !important;
+            box-shadow: 0 6px 0 #CC1493 !important;
+        }
+
+        #adminLoginBtn:hover {
+            background: #FF1493 !important;
+            box-shadow: 0 6px 0 #B8860B !important;
+        }
+
         /* Dramatic Hall of Fame button */
         #viewLeaderboardBtn {
             background: linear-gradient(135deg, #1a1a1a, #2d2d2d, #1a1a1a);
@@ -366,6 +379,12 @@
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
         }
 
+        .point:has(.icon:contains("💀")) strong {
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-weight: 900;
+        }
+
         @keyframes redGermGlow {
             0%, 100% { 
                 box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
@@ -397,6 +416,12 @@
             margin: 8px 0;
             animation: greenGermGlow 2.5s ease-in-out infinite;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .point:has(.icon:contains("🦠")) strong {
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-weight: 900;
         }
 
         @keyframes greenGermGlow {
@@ -432,7 +457,8 @@
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
         }
 
-        .point:has(.icon:contains("🏆")) b {
+        .point:has(.icon:contains("🏆")) b,
+        .point:has(.icon:contains("🏆")) strong {
             background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700);
             background-size: 200% 200%;
             -webkit-background-clip: text;
