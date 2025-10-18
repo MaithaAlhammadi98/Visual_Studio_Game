@@ -1,0 +1,23 @@
+# Demo GIF Placeholder
+
+This file should contain a 6-12 second gameplay loop GIF.
+
+## Instructions:
+1. Convert your `demo.mp4` to a GIF
+2. Keep it under 10MB for fast loading
+3. Use 10-12 fps for smooth animation
+4. Scale to 720px width for optimal size
+
+## Recommended ffmpeg command:
+```bash
+# Create optimized GIF from MP4
+ffmpeg -ss 00:00 -t 00:10 -i demo.mp4 -vf "fps=12,scale=720:-1:flags=lanczos" -y demo_raw.gif
+gifsicle -O3 --colors 128 demo_raw.gif -o demo.gif
+```
+
+## File requirements:
+- Format: GIF
+- Duration: 6-12 seconds
+- Size: Under 10MB
+- Quality: 720px width, 12fps
+- Content: Show gameplay highlights
