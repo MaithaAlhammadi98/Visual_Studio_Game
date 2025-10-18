@@ -3662,6 +3662,74 @@
             font-style: italic;
         }
 
+        /* Enhanced Leaderboard Scene Styles */
+        .leaderboard-footer {
+            font-family: "VT323", monospace;
+            color: #b6ffb3;
+            text-shadow: 0 0 10px #00ff80;
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            text-align: center;
+            animation: fadeUp 1.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(-8px); }
+        }
+
+        /* Animate the top-rank glow */
+        .top-row {
+            background: linear-gradient(90deg, #241f00, #ffd900, #241f00);
+            animation: pulseGlow 2s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 10px #ffd90066; }
+            50% { box-shadow: 0 0 30px #ffd900; }
+        }
+
+        /* Slow scrolling background effect */
+        .leaderboard-intro-bg {
+            background: linear-gradient(to bottom, #96f7d2, #041f1a);
+            background-size: 100% 400%;
+            animation: bgShift 20s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 0% 100%; }
+        }
+
+        /* Arcade panel buttons */
+        .btn-neon {
+            border: 2px solid #00ffb7;
+            background: transparent;
+            color: #00ffb7;
+            font-weight: 800;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            transition: all .2s;
+        }
+
+        .btn-neon:hover {
+            background: #00ffb7;
+            color: #041f1a;
+            box-shadow: 0 0 20px #00ffb7;
+        }
+
+        /* Leaderboard row animations */
+        .leaderboard-row {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .leaderboard-row.animate-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
         /* Minecraft Box for consistent styling */
         .minecraft-box {
             background: rgba(255, 182, 193, 0.3);
@@ -4202,16 +4270,16 @@
                             </div>
                         </div>
                         <div class="leaderboard-divider"></div>
-                        <p class="current-top">👑 Current Top: <b>Kitten</b></p>
+                        <p class="current-top">👑 Current Top: <b id="dynamicTopPlayer">Loading...</b></p>
                         <div class="leaderboard-buttons">
-                            <button class="pixelBtn" onclick="refreshLeaderboard()">⟳ Refresh</button>
-                            <button class="pixelBtn" onclick="startMissionFromLeaderboard()">⛏️ Start Mission</button>
+                            <button class="btn-neon" onclick="refreshLeaderboard()">⟳ Refresh</button>
+                            <button class="btn-neon" onclick="startMissionFromLeaderboard()">⛏️ Start Mission</button>
                         </div>
                     </div>
                 </div>
                 <div class="intro-text-container">
-                    <div class="intro-text leaderboard-narration">Your scores will rise here, in the hall of pixel gods</div>
-                    <div class="intro-text leaderboard-narration">Will you reach the top… or get lost among the blocks?</div>
+                    <div class="intro-text leaderboard-narration" id="dynamicNarration1">Your scores will rise here, in the hall of pixel gods</div>
+                    <div class="intro-text leaderboard-narration" id="dynamicNarration2">Will you reach the top… or get lost among the blocks?</div>
                 </div>
             </div>
             
@@ -5312,10 +5380,17 @@
                         });
                         
                         // Update current top player
-                        const currentTop = document.querySelector('.current-top b');
+                        const currentTop = document.getElementById('dynamicTopPlayer');
                         if (currentTop && snapshot.docs[0]) {
-                            currentTop.textContent = snapshot.docs[0].data().name || 'Player';
+                            const topPlayerName = snapshot.docs[0].data().name || 'Player';
+                            currentTop.textContent = topPlayerName;
+                            
+                            // Update dynamic narration based on top player
+                            updateDynamicNarration(topPlayerName);
                         }
+                        
+                        // Animate leaderboard rows
+                        animateLeaderboardRows();
                     }
                 }).catch(e => {
                     console.log('Could not load Firebase leaderboard:', e);
@@ -5324,6 +5399,42 @@
             } else {
                 loadFallbackLeaderboard();
             }
+        }
+
+        // Dynamic narration based on top player
+        function updateDynamicNarration(topPlayerName) {
+            const narration1 = document.getElementById('dynamicNarration1');
+            const narration2 = document.getElementById('dynamicNarration2');
+            
+            if (narration1 && narration2) {
+                // Dynamic messages based on top player
+                const messages = [
+                    [`👑 All hail ${topPlayerName}, ruler of Block City.`, `The blocks remember your name.`],
+                    [`Your scores will rise here, in the hall of pixel gods`, `Will you reach the top… or get lost among the blocks?`],
+                    [`Legends are written in pixels, not ink.`, `Will you challenge ${topPlayerName} for the crown?`],
+                    [`The leaderboard awaits your name.`, `Can you dethrone ${topPlayerName}?`]
+                ];
+                
+                // Pick a random message set
+                const selectedMessages = messages[Math.floor(Math.random() * messages.length)];
+                narration1.textContent = selectedMessages[0];
+                narration2.textContent = selectedMessages[1];
+            }
+        }
+
+        // Animate leaderboard rows
+        function animateLeaderboardRows() {
+            const rows = document.querySelectorAll('.leaderRow');
+            rows.forEach((row, i) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    row.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, i * 150);
+            });
         }
 
         function loadFallbackLeaderboard() {
@@ -5350,6 +5461,16 @@
                         <span class="score-icon">🟩</span>
                     </div>
                 `;
+                
+                // Update current top player for fallback
+                const currentTop = document.getElementById('dynamicTopPlayer');
+                if (currentTop) {
+                    currentTop.textContent = 'Kitten';
+                    updateDynamicNarration('Kitten');
+                }
+                
+                // Animate leaderboard rows
+                animateLeaderboardRows();
             }
         }
 
