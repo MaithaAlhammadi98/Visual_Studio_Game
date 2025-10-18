@@ -7483,10 +7483,10 @@
 
         gameLoop();
         
-        // Show cinematic intro on first page load
+        // Show Hello Minecrafter button on first page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Show the cinematic on first load
-            startCinematicIntro();
+            // Show the Hello Minecrafter button first
+            document.getElementById('soundGateBtn').style.display = 'block';
         });
     </script>
 
@@ -7543,6 +7543,8 @@
                 if (isMuted) bgm.pause();
                 if (toggle) toggle.style.display = 'inline-flex';
                 updateToggleLabel();
+                // Start the cinematic intro after successful autoplay
+                startCinematicIntro();
                 return true;
             } catch (e) {
                 console.log('Autoplay blocked, showing sound gate');
@@ -7555,6 +7557,8 @@
                     if (!isMuted) bgm.play().catch(()=>{}); // safe retry
                     if (toggle) toggle.style.display = 'inline-flex';
                     updateToggleLabel();
+                    // Start the cinematic intro after unlocking sound
+                    startCinematicIntro();
                 };
                 // Only listen for button click, not document events
                 if (soundGateBtn) {
