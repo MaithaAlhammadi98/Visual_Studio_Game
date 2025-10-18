@@ -46,6 +46,21 @@ Avoid germs, race against time, and rise to the **Hall of Fame** 👑
 
 ---
 
+## 🎨 Custom Characters
+
+Meet our two heroes of Block City — built entirely in pixel art:
+
+<p align="center">
+  <img src="docs/media/characters.png" width="300" alt="Custom Minecraft characters">
+</p>
+
+| Character | Description |
+|:--|:--|
+| **Maitha** 🏫 | The brave student heading to the School — fast, focused, and fearless. |
+| **Jamilah** 🏥 | The caring nurse on her way to the Hospital — calm, kind, and quick-thinking. |
+
+-----------
+
 ## 🧠 Built With
 - **HTML**, **CSS**, **JavaScript**
 - **Firebase Firestore + Hosting**
