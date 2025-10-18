@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Banner - Block City</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323:wght@400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            font-family: 'VT323', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .banner {
+            width: 1200px;
+            height: 400px;
+            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 50%, #FF69B4 100%);
+            border: 4px solid #FF1493;
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(255, 20, 147, 0.3);
+        }
+        
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .title {
+            color: #FFFFFF;
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1.2;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .subtitle {
+            color: #FFE4E1;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: normal;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .minecraft-block {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border: 3px solid #2E7D32;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .block-1 {
+            top: 30px;
+            left: 30px;
+            transform: rotate(15deg);
+        }
+        
+        .block-2 {
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border-color: #FF8C00;
+            transform: rotate(-20deg);
+        }
+        
+        .block-3 {
+            bottom: 30px;
+            left: 50px;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+            border-color: #FF5252;
+            transform: rotate(30deg);
+        }
+        
+        .block-4 {
+            bottom: 30px;
+            right: 50px;
+            background: linear-gradient(45deg, #9C27B0, #BA68C8);
+            border-color: #7B1FA2;
+            transform: rotate(-15deg);
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #FFD700;
+        }
+        
+        .sparkle-1 { top: 20%; left: 15%; }
+        .sparkle-2 { top: 30%; right: 20%; }
+        .sparkle-3 { bottom: 25%; left: 25%; }
+        .sparkle-4 { bottom: 35%; right: 15%; }
+        .sparkle-5 { top: 60%; left: 50%; }
+        
+        .pickaxe {
+            font-size: 48px;
+            margin-right: 15px;
+            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="minecraft-block block-1"></div>
+        <div class="minecraft-block block-2"></div>
+        <div class="minecraft-block block-3"></div>
+        <div class="minecraft-block block-4"></div>
+        
+        <div class="sparkle sparkle-1"></div>
+        <div class="sparkle sparkle-2"></div>
+        <div class="sparkle sparkle-3"></div>
+        <div class="sparkle sparkle-4"></div>
+        <div class="sparkle sparkle-5"></div>
+        
+        <h1 class="title">
+            <span class="pickaxe">⛏️</span>
+            Block City: The Minecraft Mission
+        </h1>
+        
+        <p class="subtitle">
+            A Data-Driven Storytelling Studio project by Maitha Alhammadi (UTS)
+        </p>
+    </div>
+</body>
+</html>
