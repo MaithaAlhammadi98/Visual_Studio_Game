@@ -4682,7 +4682,7 @@
                 <div class="minecraft-divider"></div>
                 <div class="minecraft-leaderboard-actions">
                     <button onclick="hideLeaderboard()" class="minecraft-btn close-btn">🏠 Home Screen</button>
-                    <button onclick="restartGame()" class="minecraft-btn restart-btn" id="challengeBtn">⛏️ Challenge <span id="challengeTopPlayer">Loading...</span> for the crown</button>
+                    <button onclick="challengeForCrown()" class="minecraft-btn restart-btn" id="challengeBtn">⛏️ Challenge <span id="challengeTopPlayer">Loading...</span> for the crown</button>
                 </div>
             </div>
         </div>
@@ -7701,6 +7701,40 @@
         }
 
         // Restart game
+        // Challenge for the crown - go directly to Ready to Play screen
+        function challengeForCrown() {
+            gameState = 'intro';
+            scores = { player1: 0, player2: 0 };
+            gameComplete = { player1: false, player2: false };
+            gameEnded = false; // Reset the completion flag
+            selectedCharacter = null;
+            controlledPlayer = null;
+            gamePhase = 'maitha';
+            
+            // Reset player positions
+            players.player1.x = 50;
+            players.player1.y = canvas.height * 0.9; // Moved down 5cm (0.85 to 0.9)
+            players.player2.x = canvas.width - 50;
+            players.player2.y = canvas.height * 0.9; // Moved down 5cm (0.85 to 0.9)
+            
+            // Reset targets positions
+            targets.school.y = canvas.height * 0.15; // At green line - top area
+            targets.hospital.y = canvas.height * 0.15; // At green line - top area
+            
+            // Go directly to Ready to Play screen (game summary)
+            introScreen.style.display = 'none';
+            characterSelection.style.display = 'none';
+            gameUI.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            document.getElementById('leaderboardPopup').style.display = 'none';
+            document.getElementById('selectedCharacter').style.display = 'none';
+            document.getElementById('scoreDisplay').style.display = 'none';
+            document.getElementById('arrowControls').style.display = 'none';
+            
+            // Show the Ready to Play screen
+            document.getElementById('readyToPlayScreen').style.display = 'flex';
+        }
+
         function restartGame() {
             gameState = 'intro';
             scores = { player1: 0, player2: 0 };
