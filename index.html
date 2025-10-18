@@ -4107,7 +4107,7 @@
                     </div>
                 </div>
                 <div class="intro-text-container">
-                    <div class="intro-text controls-text">Use the arrows to navigate.</div>
+                    <div class="intro-text controls-text">Use the arrows to navigate both charachters.</div>
                 </div>
             </div>
             
@@ -4116,12 +4116,16 @@
                     <div class="split-screen">
                         <div class="race-path maitha-path">
                             <canvas id="scene5Maitha" width="40" height="60" style="image-rendering: pixelated;"></canvas>
-                            <div class="path-destination school-race">🏫</div>
+                            <div class="path-destination school-race">
+                                <canvas id="scene5School" width="48" height="48" style="image-rendering: pixelated;"></canvas>
+                            </div>
                             <div class="path-line"></div>
                         </div>
                         <div class="race-path jamilah-path">
                             <canvas id="scene5Jamilah" width="40" height="60" style="image-rendering: pixelated;"></canvas>
-                            <div class="path-destination hospital-race">🏥</div>
+                            <div class="path-destination hospital-race">
+                                <canvas id="scene5Hospital" width="48" height="48" style="image-rendering: pixelated;"></canvas>
+                            </div>
                             <div class="path-line"></div>
                         </div>
                     </div>
@@ -7367,6 +7371,21 @@
                 const ctx = scene5Jamilah.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
                 drawAnimatedCharacter(ctx, 20, 30, 'jamilah', false);
+            }
+
+            // Scene 5 - Buildings
+            const scene5School = document.getElementById('scene5School');
+            if (scene5School) {
+                const ctx = scene5School.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawMinecraftSchool(ctx, 24, 24);
+            }
+            
+            const scene5Hospital = document.getElementById('scene5Hospital');
+            if (scene5Hospital) {
+                const ctx = scene5Hospital.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawMinecraftHospital(ctx, 24, 24);
             }
         }
 
