@@ -4334,12 +4334,20 @@
                                 <span>Green Germs: <strong>-5 points</strong></span>
                             </div>
                             <div class="summary-item">
-                                <span class="mission-icon">⛏️</span>
-                                <span>Guide <strong>Maitha</strong> to the School 🏫</span>
+                                <span class="mission-icon">
+                                    <canvas id="readyMaitha" width="24" height="36" style="image-rendering: pixelated;"></canvas>
+                                </span>
+                                <span>Guide <strong>Maitha</strong> to the School 
+                                    <canvas id="readySchool" width="24" height="24" style="image-rendering: pixelated; display: inline-block; vertical-align: middle;"></canvas>
+                                </span>
                             </div>
                             <div class="summary-item">
-                                <span class="mission-icon">⛏️</span>
-                                <span>Then guide <strong>Jamilah</strong> to the Hospital 🏥</span>
+                                <span class="mission-icon">
+                                    <canvas id="readyJamilah" width="24" height="36" style="image-rendering: pixelated;"></canvas>
+                                </span>
+                                <span>Then guide <strong>Jamilah</strong> to the Hospital 
+                                    <canvas id="readyHospital" width="24" height="24" style="image-rendering: pixelated; display: inline-block; vertical-align: middle;"></canvas>
+                                </span>
                             </div>
                             <div class="summary-item goal">
                                 <span class="trophy-icon">🏆</span>
@@ -7406,6 +7414,35 @@
                 const ctx = scene7MiniTown.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
                 drawMiniTown(ctx, 200, 120);
+            }
+
+            // Ready to Play screen - Characters and buildings
+            const readyMaitha = document.getElementById('readyMaitha');
+            if (readyMaitha) {
+                const ctx = readyMaitha.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 12, 18, 'maitha', false);
+            }
+            
+            const readyJamilah = document.getElementById('readyJamilah');
+            if (readyJamilah) {
+                const ctx = readyJamilah.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 12, 18, 'jamilah', false);
+            }
+            
+            const readySchool = document.getElementById('readySchool');
+            if (readySchool) {
+                const ctx = readySchool.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawMinecraftSchool(ctx, 12, 12);
+            }
+            
+            const readyHospital = document.getElementById('readyHospital');
+            if (readyHospital) {
+                const ctx = readyHospital.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawMinecraftHospital(ctx, 12, 12);
             }
 
             // Scene 2 - Character portraits
