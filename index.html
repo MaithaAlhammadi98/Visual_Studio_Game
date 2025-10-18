@@ -127,7 +127,7 @@
         /* Beautiful pink cloud background layers */
         #introScreen::before,
         #introScreen::after {
-            z-index: 0;
+            z-index: -1;
             pointer-events: none;
         }
 
@@ -175,7 +175,7 @@
             padding: 0 16px 80px;
             backdrop-filter: blur(6px);
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
         /* Headings: pixel vibe */
@@ -4161,7 +4161,7 @@
 
         <!-- Admin Panel -->
         <button id="adminToggle">👑 Admin</button>
-        <div id="adminPanel">
+        <div id="adminPanel" style="display: none;">
             <h3>🎮 Game Admin Panel</h3>
             <button id="logoutBtn">Logout</button>
             
