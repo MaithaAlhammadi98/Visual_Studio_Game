@@ -7738,7 +7738,6 @@
             
             // Go directly to Ready to Play screen (game summary)
             introScreen.style.display = 'none';
-            characterSelection.style.display = 'none';
             gameUI.style.display = 'none';
             gameOverScreen.style.display = 'none';
             document.getElementById('leaderboardPopup').style.display = 'none';
@@ -7746,8 +7745,8 @@
             document.getElementById('scoreDisplay').style.display = 'none';
             document.getElementById('arrowControls').style.display = 'none';
             
-            // Show the Ready to Play screen (gamePreview)
-            document.getElementById('gamePreview').style.display = 'block';
+            // Show the character selection screen (which contains the Ready to Play screen)
+            characterSelection.style.display = 'flex';
         }
 
         function restartGame() {
