@@ -1,3 +1,14 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/⛏️_Block_City:_The_Minecraft_Mission_-FFC0CB?style=for-the-badge&logo=unity&logoColor=white"><br>
+  <img src="https://img.shields.io/badge/Made_with-💗_HTML,_CSS,_JS-ff91af?style=flat-square">
+  <img src="https://img.shields.io/badge/Powered_by-Firebase-ffb6c1?style=flat-square&logo=firebase">
+</p>
+<p align="center">
+  <i>🎀 A pastel pixel world of school, hospital, and germs 🎀</i>
+</p>
+
+
+
 # ⛏️ Block City: The Minecraft Mission
 > *A Data-Driven Storytelling Studio project by Maitha Alhammadi (UTS)*
 
