@@ -36,7 +36,7 @@ Avoid germs, race against time, and rise to the **Hall of Fame** 👑
 
 ## 📸 Screenshots
 
-| Welcome | Mission Brief | Leaderboard |
+| Welcome | Mission Brief | Welcome Screen |
 |:--:|:--:|:--:|
 | <img src="docs/media/scene_welcome.png" width="230"> | <img src="docs/media/home_page.png" width="230"> | <img src="docs/media/leaderboard.png" width="230"> |
 
