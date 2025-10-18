@@ -38,7 +38,7 @@ Avoid germs, race against time, and rise to the **Hall of Fame** 👑
 
 | Welcome | Mission Brief | Leaderboard |
 |:--:|:--:|:--:|
-| <img src="docs/media/scene_welcome.png" width="230"> | <img src="docs/media/mission_brief.png" width="230"> | <img src="docs/media/leaderboard.png" width="230"> |
+| <img src="docs/media/scene_welcome.png" width="230"> | <img src="docs/media/home_page.png" width="230"> | <img src="docs/media/leaderboard.png" width="230"> |
 
 | Hall of Fame | End Scene | Admin Access |
 |:--:|:--:|:--:|
