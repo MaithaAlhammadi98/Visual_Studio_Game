@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block City Banner Creator</title>
+    <title>Block City Banner - Dawn Sky</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323:wght@400&display=swap');
         
-        body {
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             background: #000;
             font-family: 'VT323', monospace;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            padding: 20px;
         }
         
         .banner {
             width: 1200px;
             height: 400px;
-            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 50%, #FF69B4 100%);
-            border: 4px solid #FF1493;
-            border-radius: 20px;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -31,103 +33,111 @@
             align-items: center;
             text-align: center;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(255, 20, 147, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
-        .banner::before {
-            content: '';
+        /* Dawn Sky Background - Exact match to Scene 1 */
+        .dawn-sky {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #87CEEB 0%, #FFB6C1 30%, #FFC0CB 60%, #FFE4E1 100%);
+            z-index: 1;
+        }
+        
+        /* Minecraft-style clouds - Exact match to Scene 1 */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 0;
+            animation: cloudFloat 3s ease-in-out infinite;
+            z-index: 2;
+        }
+        
+        .cloud1 {
+            width: 80px;
+            height: 40px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .cloud2 {
+            width: 100px;
+            height: 50px;
+            top: 10%;
+            left: 60%;
+            animation-delay: 1s;
+        }
+        
+        .cloud3 {
+            width: 70px;
+            height: 35px;
+            top: 20%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+        
+        .cloud4 {
+            width: 90px;
+            height: 45px;
+            top: 25%;
+            left: 30%;
+            animation-delay: 1.5s;
+        }
+        
+        .cloud5 {
+            width: 60px;
+            height: 30px;
+            top: 12%;
+            left: 45%;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes cloudFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .banner-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
         }
         
         .title {
             color: #FFFFFF;
             font-size: 48px;
             font-weight: bold;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 3px;
             line-height: 1.2;
-            position: relative;
-            z-index: 2;
         }
         
         .subtitle {
             color: #FFE4E1;
             font-size: 24px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
             font-weight: normal;
-            position: relative;
-            z-index: 2;
+            margin-bottom: 15px;
         }
         
-        .minecraft-block {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 3px solid;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        .project-details {
+            color: #FFFFFF;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            font-weight: bold;
         }
-        
-        .block-1 {
-            top: 30px;
-            left: 30px;
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            border-color: #2E7D32;
-            transform: rotate(15deg);
-        }
-        
-        .block-2 {
-            top: 30px;
-            right: 30px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            border-color: #FF8C00;
-            transform: rotate(-20deg);
-        }
-        
-        .block-3 {
-            bottom: 30px;
-            left: 50px;
-            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
-            border-color: #FF5252;
-            transform: rotate(30deg);
-        }
-        
-        .block-4 {
-            bottom: 30px;
-            right: 50px;
-            background: linear-gradient(45deg, #9C27B0, #BA68C8);
-            border-color: #7B1FA2;
-            transform: rotate(-15deg);
-        }
-        
-        .sparkle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #FFD700;
-        }
-        
-        .sparkle-1 { top: 20%; left: 15%; }
-        .sparkle-2 { top: 30%; right: 20%; }
-        .sparkle-3 { bottom: 25%; left: 25%; }
-        .sparkle-4 { bottom: 35%; right: 15%; }
-        .sparkle-5 { top: 60%; left: 50%; }
         
         .pickaxe {
             font-size: 48px;
             margin-right: 15px;
-            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.7));
         }
         
         .instructions {
@@ -138,7 +148,7 @@
         }
         
         .instructions h2 {
-            color: #FF69B4;
+            color: #FFB6C1;
             margin-bottom: 15px;
         }
         
@@ -150,45 +160,82 @@
             background: #333;
             padding: 2px 6px;
             border-radius: 4px;
-            color: #FFD700;
+            color: #FFB6C1;
+        }
+        
+        /* Add some Minecraft-style sparkles */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #FFD700;
+            animation: sparkle 2s ease-in-out infinite;
+            z-index: 5;
+        }
+        
+        .sparkle-1 { top: 20%; left: 15%; animation-delay: 0s; }
+        .sparkle-2 { top: 30%; right: 20%; animation-delay: 0.5s; }
+        .sparkle-3 { bottom: 25%; left: 25%; animation-delay: 1s; }
+        .sparkle-4 { bottom: 35%; right: 15%; animation-delay: 1.5s; }
+        .sparkle-5 { top: 60%; left: 50%; animation-delay: 0.8s; }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
     </style>
 </head>
 <body>
     <div class="instructions">
         <h2>🎮 Block City: The Minecraft Mission Banner</h2>
-        <p>This banner matches your pinky Minecraft aesthetic perfectly!</p>
+        <p>This banner matches your beautiful Scene 1 dawn sky perfectly!</p>
         <p>To save this as an image:</p>
         <p>1. Right-click on the banner below</p>
         <p>2. Select "Save image as..." or "Copy image"</p>
-        <p>3. Save as <code>block-city-banner.png</code></p>
+        <p>3. Save as <code>block-city-dawn-banner.png</code></p>
         <p>4. Upload to your GitHub repository</p>
     </div>
     
     <div class="banner" id="banner">
-        <div class="minecraft-block block-1"></div>
-        <div class="minecraft-block block-2"></div>
-        <div class="minecraft-block block-3"></div>
-        <div class="minecraft-block block-4"></div>
+        <!-- Dawn Sky Background -->
+        <div class="dawn-sky"></div>
         
+        <!-- Minecraft-style Clouds -->
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+        <div class="cloud cloud4"></div>
+        <div class="cloud cloud5"></div>
+        
+        <!-- Sparkles -->
         <div class="sparkle sparkle-1"></div>
         <div class="sparkle sparkle-2"></div>
         <div class="sparkle sparkle-3"></div>
         <div class="sparkle sparkle-4"></div>
         <div class="sparkle sparkle-5"></div>
         
-        <h1 class="title">
-            <span class="pickaxe">⛏️</span>
-            Block City: The Minecraft Mission
-        </h1>
-        
-        <p class="subtitle">
-            A Data-Driven Storytelling Studio project by Maitha Alhammadi (UTS)
-        </p>
+        <!-- Banner Content -->
+        <div class="banner-content">
+            <h1 class="title">
+                <span class="pickaxe">⛏️</span>
+                Block City: The Minecraft Mission
+            </h1>
+            
+            <p class="subtitle">
+                A Data-Driven Storytelling Studio project by Maitha Alhammadi (UTS)
+            </p>
+            
+            <p class="project-details">
+                🎮 Guide Maitha to School & Jamilah to Hospital 🏆 Challenge for the crown!
+            </p>
+        </div>
     </div>
     
     <div class="instructions">
-        <p><strong>Perfect for GitHub!</strong> This banner will look amazing at the top of your repository.</p>
+        <p><strong>Perfect Dawn Sky!</strong> This matches your Scene 1 background exactly!</p>
+        <p>Colors: Sky blue → Light pink → Pink → Light pink (just like Scene 1)</p>
         <p>Dimensions: 1200x400px (perfect GitHub banner size)</p>
     </div>
 </body>
