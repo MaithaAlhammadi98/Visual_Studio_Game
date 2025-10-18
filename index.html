@@ -7361,6 +7361,48 @@
             drawCinematicCharacters();
         }
 
+        // Draw simple character for Scene 5 (cleaner, less complex)
+        function drawSimpleCharacter(ctx, centerX, centerY, character) {
+            const blockSize = 2;
+            
+            // Character colors
+            let hairColor, skinColor, shirtColor;
+            if (character === 'maitha') {
+                hairColor = '#8B4513'; // Brown hair
+                skinColor = '#FDBCB4'; // Light skin
+                shirtColor = '#FF6B6B'; // Pink shirt
+            } else { // jamilah
+                hairColor = '#4A4A4A'; // Dark hair
+                skinColor = '#FDBCB4'; // Light skin
+                shirtColor = '#4ECDC4'; // Teal shirt
+            }
+            
+            // Clear and draw simple character
+            ctx.clearRect(0, 0, centerX * 2, centerY * 2);
+            
+            // Hair (top)
+            ctx.fillStyle = hairColor;
+            ctx.fillRect(centerX - 6, centerY - 12, 12, 8);
+            
+            // Face
+            ctx.fillStyle = skinColor;
+            ctx.fillRect(centerX - 6, centerY - 4, 12, 8);
+            
+            // Eyes
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(centerX - 4, centerY - 2, 2, 2);
+            ctx.fillRect(centerX + 2, centerY - 2, 2, 2);
+            
+            // Shirt
+            ctx.fillStyle = shirtColor;
+            ctx.fillRect(centerX - 6, centerY + 4, 12, 8);
+            
+            // Pants
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(centerX - 4, centerY + 12, 4, 6);
+            ctx.fillRect(centerX + 0, centerY + 12, 4, 6);
+        }
+
         // Draw mini town for Scene 1
         function drawMiniTown(ctx, width, height) {
             // Clear canvas
@@ -7480,14 +7522,20 @@
             if (scene5Maitha) {
                 const ctx = scene5Maitha.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
-                drawAnimatedCharacter(ctx, 20, 30, 'maitha', false);
+                // Clear canvas first
+                ctx.clearRect(0, 0, 40, 60);
+                // Draw a simpler, cleaner character for Scene 5
+                drawSimpleCharacter(ctx, 20, 30, 'maitha');
             }
             
             const scene5Jamilah = document.getElementById('scene5Jamilah');
             if (scene5Jamilah) {
                 const ctx = scene5Jamilah.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
-                drawAnimatedCharacter(ctx, 20, 30, 'jamilah', false);
+                // Clear canvas first
+                ctx.clearRect(0, 0, 40, 60);
+                // Draw a simpler, cleaner character for Scene 5
+                drawSimpleCharacter(ctx, 20, 30, 'jamilah');
             }
 
             // Scene 5 - Buildings
