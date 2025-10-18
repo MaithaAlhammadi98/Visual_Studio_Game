@@ -2836,6 +2836,14 @@
             align-items: center;
         }
 
+        .mini-town {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+
         .intro-background {
             position: absolute;
             width: 100%;
@@ -4050,6 +4058,9 @@
                     <div class="cloud cloud2"></div>
                     <div class="cloud cloud3"></div>
                 </div>
+                <div class="mini-town">
+                    <canvas id="scene1MiniTown" width="200" height="120" style="image-rendering: pixelated;"></canvas>
+                </div>
                 <div class="intro-text-container">
                     <div class="intro-text typewriter" id="introText1">A new day in Block City...</div>
                 </div>
@@ -4086,7 +4097,7 @@
                     </div>
                 </div>
                 <div class="intro-text-container">
-                    <div class="intro-text warning-text">Beware the Germs...</div>
+                    <div class="intro-text warning-text">Beware the Diseases and Germs.....</div>
                     <div class="intro-text warning-text">Red germs: -10 points!</div>
                     <div class="intro-text warning-text">Green germs: -5 points!</div>
                 </div>
@@ -4097,6 +4108,9 @@
                     <div class="controls-demo">
                         <div class="character-demo maitha-demo">
                             <canvas id="scene4Maitha" width="48" height="72" style="image-rendering: pixelated;"></canvas>
+                        </div>
+                        <div class="character-demo jamilah-demo">
+                            <canvas id="scene4Jamilah" width="48" height="72" style="image-rendering: pixelated;"></canvas>
                         </div>
                         <div class="arrows-demo">
                             <div class="arrow arrow-up">↑</div>
@@ -7333,8 +7347,53 @@
             drawCinematicCharacters();
         }
 
+        // Draw mini town for Scene 1
+        function drawMiniTown(ctx, width, height) {
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw ground
+            ctx.fillStyle = '#8B4513'; // Brown ground
+            ctx.fillRect(0, height - 20, width, 20);
+            
+            // Draw grass
+            ctx.fillStyle = '#90EE90'; // Light green
+            ctx.fillRect(0, height - 25, width, 5);
+            
+            // Draw School (left side)
+            drawMinecraftSchool(ctx, 20, height - 60);
+            
+            // Draw Hospital (right side)
+            drawMinecraftHospital(ctx, width - 60, height - 60);
+            
+            // Draw Maitha (left side, near school)
+            drawAnimatedCharacter(ctx, 30, height - 40, 'maitha', false);
+            
+            // Draw Jamilah (right side, near hospital)
+            drawAnimatedCharacter(ctx, width - 50, height - 40, 'jamilah', false);
+            
+            // Draw some trees
+            ctx.fillStyle = '#228B22'; // Green
+            ctx.fillRect(10, height - 45, 8, 20);
+            ctx.fillRect(15, height - 50, 8, 20);
+            ctx.fillRect(5, height - 50, 8, 20);
+            
+            ctx.fillStyle = '#8B4513'; // Brown trunk
+            ctx.fillRect(12, height - 25, 4, 20);
+            ctx.fillRect(17, height - 30, 4, 20);
+            ctx.fillRect(7, height - 30, 4, 20);
+        }
+
         // Draw characters for cinematic scenes
         function drawCinematicCharacters() {
+            // Scene 1 - Mini town
+            const scene1MiniTown = document.getElementById('scene1MiniTown');
+            if (scene1MiniTown) {
+                const ctx = scene1MiniTown.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawMiniTown(ctx, 200, 120);
+            }
+
             // Scene 2 - Character portraits
             const scene2Maitha = document.getElementById('scene2Maitha');
             if (scene2Maitha) {
@@ -7356,6 +7415,13 @@
                 const ctx = scene4Maitha.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
                 drawAnimatedCharacter(ctx, 24, 36, 'maitha', false);
+            }
+            
+            const scene4Jamilah = document.getElementById('scene4Jamilah');
+            if (scene4Jamilah) {
+                const ctx = scene4Jamilah.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 24, 36, 'jamilah', false);
             }
 
             // Scene 5 - Race paths
