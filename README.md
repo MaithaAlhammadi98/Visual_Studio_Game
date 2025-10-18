@@ -8,7 +8,7 @@ Avoid germs, stack your score, and rise in the **Hall of Fame**!
 🎞️ **Watch demo:** below 👇  
 
 <p align="center">
-  <img src="docs/media/demo.gif" width="700" alt="Gameplay demo">
+  <img src="docs/media/gif.gif" width="700" alt="Gameplay demo">
 </p>
 
 ---
