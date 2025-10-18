@@ -344,7 +344,18 @@
             }
         }
 
-        /* Dramatic Red Germ (-10 points) */
+        /* Dramatic Red Germ (-10 points) - Game Summary */
+        .red-germ {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 8px 0;
+            animation: redGermGlow 2s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        /* Dramatic Red Germ (-10 points) - Minecraft Scoring Card */
         .point:has(.icon:contains("💀")) {
             background: linear-gradient(135deg, #ff4444, #cc0000);
             border: 2px solid #ff0000;
@@ -366,7 +377,18 @@
             }
         }
 
-        /* Dramatic Green Germ (-5 points) */
+        /* Dramatic Green Germ (-5 points) - Game Summary */
+        .green-germ {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 8px 0;
+            animation: greenGermGlow 2.5s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Dramatic Green Germ (-5 points) - Minecraft Scoring Card */
         .point:has(.icon:contains("🦠")) {
             background: linear-gradient(135deg, #00ff88, #00cc66);
             border: 2px solid #00ff00;
@@ -388,7 +410,18 @@
             }
         }
 
-        /* Shiny Live Leaderboard Text */
+        /* Shiny Live Leaderboard Text - Game Summary */
+        .trophy-icon {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 8px 0;
+            animation: hallOfFameCardGlow 3s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Shiny Live Leaderboard Text - Minecraft Scoring Card */
         .point:has(.icon:contains("🏆")) {
             background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
             border: 2px solid #FFD700;
@@ -4136,7 +4169,7 @@
             <div class="container">
                 <div class="card center">
                     <h1>⛏️ The Minecraft Mission</h1>
-                    <p>Guide <b>Maitha</b> to School 🏫 and <b>Jamilah</b> to Hospital 🏥. Dodge germs 🦠. Beat the class! 🏆</p>
+                    <p>Guide <b>Maitha</b> to the School 🏫 and <b>Jamilah</b> to the Hospital 🏥. Dodge germs 🦠. Beat the hall of fame! 🏆</p>
                 </div>
 
                 <div class="card center">
