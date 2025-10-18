@@ -4897,6 +4897,21 @@
             window.cinematicTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
             window.cinematicTimeouts = [];
             
+            // Clear ALL timeouts to be safe
+            const highestTimeoutId = setTimeout(() => {}, 0);
+            for (let i = 0; i < highestTimeoutId; i++) {
+                clearTimeout(i);
+            }
+            
+            // Hide all scenes first to reset them
+            const scenes = ['scene1', 'scene2', 'scene3', 'scene4', 'scene5', 'scene6', 'scene7'];
+            scenes.forEach(sceneId => {
+                const scene = document.getElementById(sceneId);
+                if (scene) {
+                    scene.style.display = 'none';
+                }
+            });
+            
             document.getElementById('cinematicIntro').style.display = 'flex';
             document.getElementById('introScreen').style.display = 'none';
             
@@ -4971,8 +4986,18 @@
             }, 42000);
             
             // End intro and show login screen (after 6s more)
-            setTimeout(() => {
+            createCinematicTimeout(() => {
                 console.log('Ending cinematic intro');
+                
+                // Hide all scenes first
+                const scenes = ['scene1', 'scene2', 'scene3', 'scene4', 'scene5', 'scene6', 'scene7'];
+                scenes.forEach(sceneId => {
+                    const scene = document.getElementById(sceneId);
+                    if (scene) {
+                        scene.style.display = 'none';
+                    }
+                });
+                
                 document.getElementById('cinematicIntro').style.display = 'none';
                 document.getElementById('introScreen').style.display = 'flex';
                 
@@ -7002,6 +7027,27 @@
 
         // Show trailer (cinematic intro)
         function showTrailer() {
+            console.log('View Trailer clicked - starting fresh cinematic intro');
+            
+            // Clear any existing timeouts first
+            window.cinematicTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            window.cinematicTimeouts = [];
+            
+            // Clear ALL timeouts to be safe
+            const highestTimeoutId = setTimeout(() => {}, 0);
+            for (let i = 0; i < highestTimeoutId; i++) {
+                clearTimeout(i);
+            }
+            
+            // Hide all scenes first
+            const scenes = ['scene1', 'scene2', 'scene3', 'scene4', 'scene5', 'scene6', 'scene7'];
+            scenes.forEach(sceneId => {
+                const scene = document.getElementById(sceneId);
+                if (scene) {
+                    scene.style.display = 'none';
+                }
+            });
+            
             document.getElementById('introScreen').style.display = 'none';
             startCinematicIntro();
         }
