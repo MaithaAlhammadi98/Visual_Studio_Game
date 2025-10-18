@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/Powered_by-Firebase-ffb6c1?style=flat-square&logo=firebase">
 </p>
 <p align="center">
-  <i>🎀 A pastel pixel world of school, hospital, and germs 🎀</i>
+  <img src="docs/media/banner.gif" width="100%" alt="Block City: The Minecraft Mission Banner">
 </p>
 
 
