@@ -4059,11 +4059,11 @@
                 <div class="intro-background">
                     <div class="character-portraits">
                         <div class="portrait maitha-portrait">
-                            <div class="portrait-sprite"></div>
+                            <canvas id="scene2Maitha" width="64" height="96" style="image-rendering: pixelated;"></canvas>
                             <div class="portrait-text">Maitha</div>
                         </div>
                         <div class="portrait jamilah-portrait">
-                            <div class="portrait-sprite"></div>
+                            <canvas id="scene2Jamilah" width="64" height="96" style="image-rendering: pixelated;"></canvas>
                             <div class="portrait-text">Jamilah</div>
                         </div>
                     </div>
@@ -4096,7 +4096,7 @@
                 <div class="intro-background controls-bg">
                     <div class="controls-demo">
                         <div class="character-demo maitha-demo">
-                            <div class="demo-sprite"></div>
+                            <canvas id="scene4Maitha" width="48" height="72" style="image-rendering: pixelated;"></canvas>
                         </div>
                         <div class="arrows-demo">
                             <div class="arrow arrow-up">↑</div>
@@ -4115,12 +4115,12 @@
                 <div class="intro-background race-bg">
                     <div class="split-screen">
                         <div class="race-path maitha-path">
-                            <div class="path-character maitha-race"></div>
+                            <canvas id="scene5Maitha" width="40" height="60" style="image-rendering: pixelated;"></canvas>
                             <div class="path-destination school-race">🏫</div>
                             <div class="path-line"></div>
                         </div>
                         <div class="race-path jamilah-path">
-                            <div class="path-character jamilah-race"></div>
+                            <canvas id="scene5Jamilah" width="40" height="60" style="image-rendering: pixelated;"></canvas>
                             <div class="path-destination hospital-race">🏥</div>
                             <div class="path-line"></div>
                         </div>
@@ -7309,7 +7309,7 @@
 
         // Initialize character icons
         function initCharacterIcons() {
-            // Draw Maitha character
+            // Draw Maitha character for guideline
             const maithaCanvas = document.getElementById('maithaIcon');
             if (maithaCanvas) {
                 const ctx = maithaCanvas.getContext('2d');
@@ -7317,12 +7317,56 @@
                 drawAnimatedCharacter(ctx, 16, 24, 'maitha', false);
             }
             
-            // Draw Jamilah character
+            // Draw Jamilah character for guideline
             const jamilahCanvas = document.getElementById('jamilahIcon');
             if (jamilahCanvas) {
                 const ctx = jamilahCanvas.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
                 drawAnimatedCharacter(ctx, 16, 24, 'jamilah', false);
+            }
+
+            // Draw characters for cinematic scenes
+            drawCinematicCharacters();
+        }
+
+        // Draw characters for cinematic scenes
+        function drawCinematicCharacters() {
+            // Scene 2 - Character portraits
+            const scene2Maitha = document.getElementById('scene2Maitha');
+            if (scene2Maitha) {
+                const ctx = scene2Maitha.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 32, 48, 'maitha', false);
+            }
+            
+            const scene2Jamilah = document.getElementById('scene2Jamilah');
+            if (scene2Jamilah) {
+                const ctx = scene2Jamilah.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 32, 48, 'jamilah', false);
+            }
+
+            // Scene 4 - Controls demo
+            const scene4Maitha = document.getElementById('scene4Maitha');
+            if (scene4Maitha) {
+                const ctx = scene4Maitha.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 24, 36, 'maitha', false);
+            }
+
+            // Scene 5 - Race paths
+            const scene5Maitha = document.getElementById('scene5Maitha');
+            if (scene5Maitha) {
+                const ctx = scene5Maitha.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 20, 30, 'maitha', false);
+            }
+            
+            const scene5Jamilah = document.getElementById('scene5Jamilah');
+            if (scene5Jamilah) {
+                const ctx = scene5Jamilah.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 20, 30, 'jamilah', false);
             }
         }
 
