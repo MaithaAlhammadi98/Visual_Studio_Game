@@ -4469,7 +4469,7 @@
                     
                     <!-- Dynamic Challenge Text -->
                     <div class="challenge-text" id="challengeText" style="text-align: center; margin-bottom: 16px;">
-                        <p class="challenge-line1">The leaderboard awaits your name.</p>
+                        <p class="challenge-line1">The Hall of Fame awaits your name.</p>
                         <p class="challenge-line2">Can you dethrone <span id="mainPageTopPlayer">Loading...</span>?</p>
                     </div>
                     
@@ -4949,6 +4949,7 @@
         let currentScore = 100; // Start with 100 points
         let gameStartTime = Date.now();
         let isCountdownActive = false; // Track if countdown is running
+        let isTransitioning = false; // Flag to pause germs during character transitions
         
         // Leaderboard (stored in localStorage)
         let leaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
@@ -5961,6 +5962,9 @@
                 return;
             }
             
+            // Reset transition flag
+            isTransitioning = false;
+            
             // Add to leaderboard for later
             const playerId = Date.now() + Math.random();
             const newPlayer = {
@@ -6021,15 +6025,16 @@
                 }
             });
             
-            // Update germs
-            germs.forEach(germ => {
-                germ.x += germ.vx;
-                germ.y += germ.vy;
-                
-                // Bounce off walls
-                if (germ.x <= germ.size/2 || germ.x >= canvas.width - germ.size/2) {
-                    germ.vx *= -1;
-                }
+            // Update germs (pause during transitions)
+            if (!isTransitioning) {
+                germs.forEach(germ => {
+                    germ.x += germ.vx;
+                    germ.y += germ.vy;
+                    
+                    // Bounce off walls
+                    if (germ.x <= germ.size/2 || germ.x >= canvas.width - germ.size/2) {
+                        germ.vx *= -1;
+                    }
                 if (germ.y <= germ.size/2 || germ.y >= canvas.height - germ.size/2) {
                     germ.vy *= -1;
                 }
@@ -6037,7 +6042,8 @@
                 // Keep germs in bounds
                 germ.x = Math.max(germ.size/2, Math.min(canvas.width - germ.size/2, germ.x));
                 germ.y = Math.max(germ.size/2, Math.min(canvas.height - germ.size/2, germ.y));
-            });
+                });
+            }
             
             // Check collisions - only for the controlled player
             if (controlledPlayer && players[controlledPlayer]) {
@@ -6894,9 +6900,17 @@
                     controlledPlayer = 'player2';
                     updateCharacterDisplay();
                     
+                    // Pause germs during transition message
+                    isTransitioning = true;
+                    
                     // Show switch message
                     const message = `⛏️ Now guide Jamilah to the Hospital! 🏥`;
                     showCompletionEffect(canvas.width / 2, canvas.height / 2, message);
+                    
+                    // Resume germs after message disappears
+                    setTimeout(() => {
+                        isTransitioning = false;
+                    }, 2000); // Match the message display time
                 }, 2500); // Wait 2.5 seconds for Bravo celebration
             }
         }
@@ -7710,6 +7724,7 @@
             selectedCharacter = null;
             controlledPlayer = null;
             gamePhase = 'maitha';
+            isTransitioning = false; // Reset transition flag
             
             // Reset player positions
             players.player1.x = 50;
