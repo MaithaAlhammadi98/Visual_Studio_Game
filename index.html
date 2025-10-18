@@ -4196,6 +4196,9 @@
                     <div class="cloud cloud1"></div>
                     <div class="cloud cloud2"></div>
                     <div class="cloud cloud3"></div>
+                    <div class="mini-town">
+                        <canvas id="scene7MiniTown" width="200" height="120" style="image-rendering: pixelated;"></canvas>
+                    </div>
                     <div class="title-text">Welcome to... Block City: The Minecraft Mission</div>
                 </div>
             </div>
@@ -7390,6 +7393,14 @@
             const scene1MiniTown = document.getElementById('scene1MiniTown');
             if (scene1MiniTown) {
                 const ctx = scene1MiniTown.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawMiniTown(ctx, 200, 120);
+            }
+
+            // Scene 7 - Mini town
+            const scene7MiniTown = document.getElementById('scene7MiniTown');
+            if (scene7MiniTown) {
+                const ctx = scene7MiniTown.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
                 drawMiniTown(ctx, 200, 120);
             }
