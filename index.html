@@ -1043,6 +1043,8 @@
             color: #FF69B4 !important;
             text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
         }
+        
+        #adminPanel {
             display: none;
             border: 3px solid rgba(255, 182, 193, 0.8);
             box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
@@ -4679,6 +4681,8 @@
             <div class="admin-control">
                 <button class="admin-btn" id="showLiveLeaderboardBtn">📊 Live Leaderboard</button>
                 <button onclick="clearGameScores()" class="admin-btn danger">🧹 Clear Leaderboard</button>
+                <button onclick="clearInvalidEntries()" class="admin-btn danger">🗑️ Remove 0s Entries</button>
+                <button onclick="refreshTopPlayer()" class="admin-btn">🔄 Refresh Top Player</button>
                 <button class="admin-btn" id="downloadHistoryBtn">📊 Download History (CSV)</button>
                 <button class="admin-btn" id="todayWinnerBtn">🏆 Today's Winner</button>
                 <button class="admin-btn" id="debugBtn" onclick="debugLeaderboard()">🔍 Debug Leaderboard</button>
@@ -4841,8 +4845,21 @@
             if (list) list.innerHTML = '';
             if (mini) mini.innerHTML = '';
             let rank = 1;
+            
+            // Filter out entries with 0 seconds or invalid timeSec
+            const validEntries = [];
             snap.forEach(doc => {
-                const { name='Player', score=0, timeSec='-', germsHit='-' } = doc.data();
+                const data = doc.data();
+                const { name='Player', score=0, timeSec=0, germsHit='-' } = data;
+                
+                // Only include entries with valid completion time (more than 0 seconds)
+                if (timeSec && timeSec > 0) {
+                    validEntries.push({ name, score, timeSec, germsHit });
+                }
+            });
+            
+            validEntries.forEach(entry => {
+                const { name, score, timeSec, germsHit } = entry;
 
                 if (list) {
                     const row = document.createElement('div');
@@ -4867,7 +4884,7 @@
             });
 
             const total = document.getElementById('totalPlayers');
-            if (total) total.textContent = `Players: ${snap.size}`;
+            if (total) total.textContent = `Players: ${validEntries.length}`;
         }
 
         // --- Live subscription ---
@@ -4875,7 +4892,7 @@
             if (window._lbUnsub) window._lbUnsub();
             window._lbUnsub = window.scoresRef
                 .orderBy('score', 'desc')
-                .orderBy('ts', 'desc')
+                .orderBy('timeSec', 'asc')
                 .limit(20)
                 .onSnapshot(
                     snap => renderLeaderboardFromSnapshot(snap),
@@ -4890,12 +4907,12 @@
         // --- Manual refresh ---
         async function fetchLeaderboardOnce() {
             try {
-                const snap = await window.scoresRef
-                    .orderBy('score', 'desc')
-                    .orderBy('ts', 'desc')
-                    .limit(20)
-                    .get();
-                renderLeaderboardFromSnapshot(snap);
+            const snap = await window.scoresRef
+                .orderBy('score', 'desc')
+                    .orderBy('timeSec', 'asc')
+                .limit(20)
+                .get();
+            renderLeaderboardFromSnapshot(snap);
             } catch (err) {
                 console.error('Error fetching leaderboard:', err);
                 loadFallbackLeaderboard();
@@ -5026,6 +5043,7 @@
         let gameStartTime = Date.now();
         let isCountdownActive = false; // Track if countdown is running
         let isTransitioning = false; // Flag to pause germs during character transitions
+        let hasShownEndingMessages = false; // Flag to prevent duplicate ending messages
         
         // Leaderboard (stored in localStorage)
         let leaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
@@ -5568,7 +5586,7 @@
             // Load real data from Firebase or localStorage
             if (window.scoresRef) {
                 // Use Firebase data
-                window.scoresRef.orderBy('score', 'desc').orderBy('ts', 'desc').limit(3).get().then(snapshot => {
+                window.scoresRef.orderBy('score', 'desc').orderBy('timeSec', 'asc').limit(3).get().then(snapshot => {
                     const leaderboardList = document.getElementById('leaderboardList');
                     if (leaderboardList && snapshot.docs.length > 0) {
                         leaderboardList.innerHTML = '';
@@ -5652,35 +5670,71 @@
         }
 
         function loadFallbackLeaderboard() {
-            // Fallback to localStorage or demo data
+            // Fallback to localStorage data with proper sorting
             const leaderboardList = document.getElementById('leaderboardList');
             if (leaderboardList) {
-                leaderboardList.innerHTML = `
-                    <div class="leaderRow top">
-                        <span class="rank">1.</span>
-                        <span class="player-name">Kitten</span>
-                        <span class="score">125</span>
-                        <span class="score-icon">🟩</span>
-                    </div>
-                    <div class="leaderRow">
-                        <span class="rank">2.</span>
-                        <span class="player-name">Jich</span>
-                        <span class="score">110</span>
-                        <span class="score-icon">🟩</span>
-                    </div>
-                    <div class="leaderRow">
-                        <span class="rank">3.</span>
-                        <span class="player-name">Maitha</span>
-                        <span class="score">95</span>
-                        <span class="score-icon">🟩</span>
-                    </div>
-                `;
+                const localLeaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
                 
-                // Update current top player for fallback
+                // Filter out entries with 0 seconds or invalid timeSec, then sort
+                const validEntries = localLeaderboard.filter(entry => entry.timeSec && entry.timeSec > 0);
+                const sortedLeaderboard = validEntries.sort((a, b) => {
+                    if (a.score !== b.score) {
+                        return b.score - a.score;
+                    }
+                    return (a.timeSec || 0) - (b.timeSec || 0);
+                });
+                
+                if (sortedLeaderboard.length > 0) {
+                    let html = '';
+                    sortedLeaderboard.slice(0, 3).forEach((entry, index) => {
+                        const rank = index + 1;
+                        const isTop = rank === 1;
+                        html += `
+                            <div class="leaderRow ${isTop ? 'top' : ''}">
+                                <span class="rank">${rank}.</span>
+                                <span class="player-name">${entry.name}</span>
+                                <span class="score">${entry.score}</span>
+                                <span class="score-icon">🟩</span>
+                            </div>
+                        `;
+                    });
+                    leaderboardList.innerHTML = html;
+                    
+                    // Update current top player for fallback
+                    const currentTop = document.getElementById('dynamicTopPlayer');
+                    if (currentTop && sortedLeaderboard[0]) {
+                        currentTop.textContent = sortedLeaderboard[0].name;
+                        updateDynamicNarration(sortedLeaderboard[0].name);
+                    }
+                } else {
+                    // No local data, show demo data
+                    leaderboardList.innerHTML = `
+                        <div class="leaderRow top">
+                            <span class="rank">1.</span>
+                            <span class="player-name">Kitten</span>
+                            <span class="score">125</span>
+                            <span class="score-icon">🟩</span>
+                        </div>
+                        <div class="leaderRow">
+                            <span class="rank">2.</span>
+                            <span class="player-name">Jich</span>
+                            <span class="score">110</span>
+                            <span class="score-icon">🟩</span>
+                        </div>
+                        <div class="leaderRow">
+                            <span class="rank">3.</span>
+                            <span class="player-name">Maitha</span>
+                            <span class="score">95</span>
+                            <span class="score-icon">🟩</span>
+                        </div>
+                    `;
+                
+                    // Update current top player for fallback
                 const currentTop = document.getElementById('dynamicTopPlayer');
                 if (currentTop) {
-                    currentTop.textContent = 'Kitten';
-                    updateDynamicNarration('Kitten');
+                        currentTop.textContent = 'Kitten';
+                        updateDynamicNarration('Kitten');
+                    }
                 }
                 
                 // Animate leaderboard rows
@@ -6040,6 +6094,9 @@
             // Reset transition flag
             isTransitioning = false;
             
+            // Reset ending messages flag
+            hasShownEndingMessages = false;
+            
             // Add to leaderboard for later
             const playerId = Date.now() + Math.random();
             const newPlayer = {
@@ -6280,22 +6337,21 @@
             // Save the game attempt to Firebase
             saveGameAttemptToFirebase(actualPlayerName, currentScore, completionTime, germsHit);
             
-            // Also save to local leaderboard with timestamp
+            // Also save to local leaderboard with completion time
             const newEntry = {
                 name: actualPlayerName,
                 score: currentScore,
+                timeSec: completionTime,
                 timestamp: new Date().toISOString()
             };
             leaderboard.push(newEntry);
             
-            // Sort by score descending, then by timestamp descending (most recent first)
+            // Sort by score descending, then by completion time ascending (fastest first)
             leaderboard.sort((a, b) => {
                 if (a.score !== b.score) {
                     return b.score - a.score;
                 }
-                const timeA = new Date(a.timestamp).getTime();
-                const timeB = new Date(b.timestamp).getTime();
-                return timeB - timeA;
+                return (a.timeSec || 0) - (b.timeSec || 0);
             });
             
             // Keep only top 10
@@ -6324,11 +6380,14 @@
             
             // After 10 seconds, hide leaderboard and show Maitha credit
             setTimeout(() => {
-                console.log('Hiding leaderboard to show Maitha credit');
-                document.getElementById('leaderboardPopup').style.display = 'none';
-                showMinecraftHeart();
-                
-                // No automatic timeout - wait for player to click "Awesome Game! THANKS!"
+                if (!hasShownEndingMessages) {
+                    console.log('Hiding leaderboard to show Maitha credit');
+                    document.getElementById('leaderboardPopup').style.display = 'none';
+                    hasShownEndingMessages = true;
+                    showMinecraftHeart();
+                    
+                    // No automatic timeout - wait for player to click "Awesome Game! THANKS!"
+                }
             }, 10000); // Wait 10 seconds before showing Maitha credit
             }, 2500); // Wait 2.5 seconds for Jamilah's Bravo celebration
         }
@@ -7227,11 +7286,13 @@
                 console.log('Could not get player name:', e);
             }
             
+            // Add a small delay to ensure Firebase data is propagated
+            setTimeout(() => {
             // Fetch live Firebase data for the popup
             console.log('Fetching live Firebase data for player popup...');
             window.scoresRef
                 .orderBy('score', 'desc')
-                .orderBy('ts', 'desc')
+                .orderBy('timeSec', 'asc')
                 .limit(10)
                 .get()
                 .then((snap) => {
@@ -7243,8 +7304,20 @@
                     let rank = 1;
                     let currentPlayerFound = false;
                     
+                    // Filter out entries with 0 seconds or invalid timeSec
+                    const validEntries = [];
                     snap.forEach(doc => {
-                        const { name='Player', score=0, timeSec='-', germsHit='-' } = doc.data();
+                        const data = doc.data();
+                        const { name='Player', score=0, timeSec=0, germsHit='-' } = data;
+                        
+                        // Only include entries with valid completion time (more than 0 seconds)
+                        if (timeSec && timeSec > 0) {
+                            validEntries.push({ name, score, timeSec, germsHit });
+                        }
+                    });
+                    
+                    validEntries.forEach(entry => {
+                        const { name, score, timeSec, germsHit } = entry;
                         
                         // Check if this is the current player
                         const isCurrentPlayer = name === currentPlayerName;
@@ -7296,10 +7369,70 @@
                 })
                 .catch((error) => {
                     console.error('Error fetching Firebase data for popup:', error);
-                    // Fallback to local data if Firebase fails
-                    popupList.innerHTML = '<div class="leaderboard-entry">Error loading leaderboard</div>';
+                    // Fallback to local leaderboard data
+                    const localLeaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
+                    
+                    popupList.innerHTML = '';
+                    let rank = 1;
+                    let currentPlayerFound = false;
+                    
+                    // Filter out entries with 0 seconds or invalid timeSec, then sort
+                    const validEntries = localLeaderboard.filter(entry => entry.timeSec && entry.timeSec > 0);
+                    const sortedLocalData = validEntries.sort((a, b) => {
+                        if (a.score !== b.score) {
+                            return b.score - a.score;
+                        }
+                        return (a.timeSec || 0) - (b.timeSec || 0);
+                    });
+                    
+                    sortedLocalData.slice(0, 10).forEach(entry => {
+                        const isCurrentPlayer = entry.name === currentPlayerName;
+                        
+                        const entryDiv = document.createElement('div');
+                        entryDiv.className = `minecraft-leaderboard-entry rank-${rank}`;
+                        if (isCurrentPlayer) {
+                            entryDiv.classList.add('current-player');
+                            currentPlayerFound = true;
+                        }
+                        if (rank === 1) {
+                            entryDiv.classList.add('top-player');
+                        }
+                        
+                        entryDiv.innerHTML = `
+                            <div class="minecraft-player-info">
+                                <div class="minecraft-player-name">${entry.name}${isCurrentPlayer ? ' (You)' : ''}</div>
+                                <div class="minecraft-player-stats">⏱ ${entry.timeSec || 0}s • 🏆 High Score</div>
+                            </div>
+                            <div class="minecraft-player-score">${entry.score}</div>
+                        `;
+                        popupList.appendChild(entryDiv);
+                        rank++;
+                    });
+                    
+                    // If current player not found in top 10, add them at the end
+                    if (!currentPlayerFound) {
+                        const currentEntry = document.createElement('div');
+                        currentEntry.className = 'leaderboard-entry rank-current';
+                        currentEntry.style.background = 'rgba(255, 215, 0, 0.2)';
+                        currentEntry.style.border = '2px solid #FFD700';
+                        currentEntry.innerHTML = `
+                            <div class="rank-number">#?</div>
+                            <div class="player-info">
+                                <div class="player-name">${currentPlayerName} (You)</div>
+                                <div class="player-stats">Your Score</div>
+                            </div>
+                            <div class="player-score">${currentScore}</div>
+                        `;
+                        popupList.appendChild(currentEntry);
+                    }
+                    
+                    // Update challenge text before showing popup
+                    loadDynamicChallengeText();
+                    
+                    // Show the popup
                     popup.style.display = 'flex';
                 });
+            }, 1000); // 1 second delay to ensure Firebase data is propagated
         }
 
         function hideLeaderboard() {
@@ -7371,7 +7504,7 @@
                 console.log('Fetching Firebase data for player leaderboard...');
                 window.scoresRef
                     .orderBy('score', 'desc')
-                    .orderBy('ts', 'desc')
+                    .orderBy('timeSec', 'asc')
                     .limit(10)
                     .get()
                     .then((snapshot) => {
@@ -7379,12 +7512,23 @@
                         let html = '';
                         let rank = 1;
                         
+                        // Filter out entries with 0 seconds or invalid timeSec
+                        const validEntries = [];
                         snapshot.forEach((doc) => {
                             const data = doc.data();
                             const playerName = data.name || data.playerName || 'Anonymous';
                             const score = data.score || 0;
                             const timeSec = data.timeSec || 0;
                             const germsHit = data.germsHit || 0;
+                            
+                            // Only include entries with valid completion time (more than 0 seconds)
+                            if (timeSec && timeSec > 0) {
+                                validEntries.push({ playerName, score, timeSec, germsHit });
+                            }
+                        });
+                        
+                        validEntries.forEach(entry => {
+                            const { playerName, score, timeSec, germsHit } = entry;
                             
                             html += `
                                 <div class="leaderboard-entry">
@@ -7406,10 +7550,74 @@
                     })
                     .catch((error) => {
                         console.error('Error loading player leaderboard:', error);
-                        list.innerHTML = '<div class="leaderboard-entry">Error loading leaderboard: ' + error.message + '</div>';
+                        // Fallback to local leaderboard data
+                        const localLeaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
+                        
+                        let html = '';
+                        let rank = 1;
+                        
+                        // Filter out entries with 0 seconds or invalid timeSec, then sort
+                        const validEntries = localLeaderboard.filter(entry => entry.timeSec && entry.timeSec > 0);
+                        const sortedLocalData = validEntries.sort((a, b) => {
+                            if (a.score !== b.score) {
+                                return b.score - a.score;
+                            }
+                            return (a.timeSec || 0) - (b.timeSec || 0);
+                        });
+                        
+                        sortedLocalData.slice(0, 10).forEach(entry => {
+                            html += `
+                                <div class="leaderboard-entry">
+                                    <div class="rank">#${rank}</div>
+                                    <div class="player-info">
+                                        <div class="player-name">${entry.name}</div>
+                                        <div class="player-stats">Score: ${entry.score} | Time: ${entry.timeSec || 0}s</div>
+                                    </div>
+                                </div>
+                            `;
+                            rank++;
+                        });
+                        
+                        if (html === '') {
+                            html = '<div class="leaderboard-entry">No scores yet! Be the first to play!</div>';
+                        }
+                        
+                        list.innerHTML = html;
                     });
             } else {
-                list.innerHTML = '<div class="leaderboard-entry">Firebase not connected</div>';
+                // Fallback to local leaderboard data when Firebase not connected
+                const localLeaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
+                
+                let html = '';
+                let rank = 1;
+                
+                // Filter out entries with 0 seconds or invalid timeSec, then sort
+                const validEntries = localLeaderboard.filter(entry => entry.timeSec && entry.timeSec > 0);
+                const sortedLocalData = validEntries.sort((a, b) => {
+                    if (a.score !== b.score) {
+                        return b.score - a.score;
+                    }
+                    return (a.timeSec || 0) - (b.timeSec || 0);
+                });
+                
+                sortedLocalData.slice(0, 10).forEach(entry => {
+                    html += `
+                        <div class="leaderboard-entry">
+                            <div class="rank">#${rank}</div>
+                            <div class="player-info">
+                                <div class="player-name">${entry.name}</div>
+                                <div class="player-stats">Score: ${entry.score} | Time: ${entry.timeSec || 0}s</div>
+                            </div>
+                        </div>
+                    `;
+                    rank++;
+                });
+                
+                if (html === '') {
+                    html = '<div class="leaderboard-entry">No scores yet! Be the first to play!</div>';
+                }
+                
+                list.innerHTML = html;
             }
         }
 
@@ -7483,42 +7691,95 @@
             
             // Continue with the normal flow after leaderboard
             setTimeout(() => {
-                console.log('Hiding leaderboard to show Maitha credit');
-                document.getElementById('leaderboardPopup').style.display = 'none';
-                showMinecraftHeart();
+                if (!hasShownEndingMessages) {
+                    console.log('Hiding leaderboard to show Maitha credit');
+                    document.getElementById('leaderboardPopup').style.display = 'none';
+                    hasShownEndingMessages = true;
+                    showMinecraftHeart();
+                }
             }, 10000); // 10 seconds after leaderboard shows
         }
 
         // Get top player from Firebase
         async function getTopPlayerFromFirebase() {
+            console.log('getTopPlayerFromFirebase called');
+            
             if (window.scoresRef) {
                 try {
-                    const snapshot = await window.scoresRef.orderBy('score', 'desc').orderBy('ts', 'desc').limit(1).get();
-                    if (snapshot.docs.length > 0) {
-                        return snapshot.docs[0].data().name || 'the Champion';
+                    console.log('Fetching from Firebase...');
+                    const snapshot = await window.scoresRef.orderBy('score', 'desc').orderBy('timeSec', 'asc').limit(10).get();
+                    console.log('Firebase snapshot size:', snapshot.size);
+                    
+                    // Filter out entries with 0 seconds or invalid timeSec
+                    const validEntries = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const { name='Player', score=0, timeSec=0 } = data;
+                        console.log('Firebase entry:', { name, score, timeSec });
+                        
+                        // Only include entries with valid completion time (more than 0 seconds)
+                        if (timeSec && timeSec > 0) {
+                            validEntries.push({ name, score, timeSec });
+                        }
+                    });
+                    
+                    console.log('Valid Firebase entries:', validEntries.length);
+                    if (validEntries.length > 0) {
+                        console.log('Top Firebase player:', validEntries[0].name);
+                        return validEntries[0].name || 'the Champion';
                     }
                 } catch (e) {
                     console.log('Could not get top player from Firebase:', e);
                 }
             }
+            
+            // Fallback to local storage
+            try {
+                console.log('Trying local storage fallback...');
+                const localLeaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
+                console.log('Local leaderboard entries:', localLeaderboard.length);
+                
+                const validEntries = localLeaderboard.filter(entry => entry.timeSec && entry.timeSec > 0);
+                console.log('Valid local entries:', validEntries.length);
+                
+                const sortedEntries = validEntries.sort((a, b) => {
+                    if (a.score !== b.score) {
+                        return b.score - a.score;
+                    }
+                    return (a.timeSec || 0) - (b.timeSec || 0);
+                });
+                
+                if (sortedEntries.length > 0) {
+                    console.log('Top local player:', sortedEntries[0].name);
+                    return sortedEntries[0].name || 'the Champion';
+                }
+            } catch (e) {
+                console.log('Could not get top player from local storage:', e);
+            }
+            
+            console.log('No valid players found, returning fallback');
             return 'the Champion';
         }
 
         // Load dynamic challenge text on main page
         async function loadDynamicChallengeText() {
             try {
+                console.log('Loading dynamic challenge text...');
                 const topPlayerName = await getTopPlayerFromFirebase();
+                console.log('Top player name received:', topPlayerName);
                 
                 // Update main page challenge text
                 const mainPageTopPlayer = document.getElementById('mainPageTopPlayer');
                 if (mainPageTopPlayer) {
                     mainPageTopPlayer.textContent = topPlayerName;
+                    console.log('Updated mainPageTopPlayer with:', topPlayerName);
                 }
                 
                 // Update leaderboard challenge button
                 const challengeTopPlayer = document.getElementById('challengeTopPlayer');
                 if (challengeTopPlayer) {
                     challengeTopPlayer.textContent = topPlayerName;
+                    console.log('Updated challengeTopPlayer with:', topPlayerName);
                 }
                 
                 console.log('Dynamic challenge text loaded for top player:', topPlayerName);
@@ -7784,6 +8045,30 @@
                 updateAdminPanel();
                 alert('All leaderboard data cleared!');
             }
+        }
+
+        // Clear invalid entries (0 seconds completion time)
+        function clearInvalidEntries() {
+            if (confirm('Remove all entries with 0 seconds completion time?')) {
+                // Clear from local storage
+                const localLeaderboard = JSON.parse(localStorage.getItem('schoolHospitalLeaderboard') || '[]');
+                const validEntries = localLeaderboard.filter(entry => entry.timeSec && entry.timeSec > 0);
+                localStorage.setItem('schoolHospitalLeaderboard', JSON.stringify(validEntries));
+                
+                // Clear from Firebase (this will require admin to manually delete from Firebase console)
+                alert('Local invalid entries cleared! For Firebase, you may need to manually delete entries with 0 seconds from the Firebase console.');
+                
+                // Refresh leaderboard and top player
+                loadLeaderboardData();
+                loadDynamicChallengeText();
+                updateAdminPanel();
+            }
+        }
+
+        // Refresh top player name
+        function refreshTopPlayer() {
+            console.log('Manually refreshing top player...');
+            loadDynamicChallengeText();
         }
 
         // Admin login functions
