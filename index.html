@@ -4450,6 +4450,7 @@
         // Game state
         let gameState = 'intro'; // 'intro', 'playing', or 'gameOver'
         let adminGameState = 'active'; // Always active - no waiting needed
+        let gameEnded = false; // Prevent multiple endGame() calls
         let scores = { player1: 0, player2: 0 };
         let gameComplete = { player1: false, player2: false };
         let playerNames = { player1: 'Maitha', player2: 'Jamilah' };
@@ -5469,10 +5470,11 @@
                 }
             }
             
-            // Check win condition
-            if (gameComplete.player1 && gameComplete.player2) {
-                endGame();
-            }
+        // Check win condition - only once
+        if (gameComplete.player1 && gameComplete.player2 && !gameEnded) {
+            gameEnded = true; // Prevent multiple calls
+            endGame();
+        }
         }
 
         // Render game
@@ -6949,6 +6951,7 @@
             gameState = 'intro';
             scores = { player1: 0, player2: 0 };
             gameComplete = { player1: false, player2: false };
+            gameEnded = false; // Reset the completion flag
             selectedCharacter = null;
             controlledPlayer = null;
             gamePhase = 'maitha';
