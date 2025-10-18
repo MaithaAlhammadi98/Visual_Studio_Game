@@ -1,0 +1,20 @@
+# Demo Video Placeholder
+
+This file should contain your game demo video.
+
+## Instructions:
+1. Record a 15-30 second demo of your game
+2. Show the cinematic intro, gameplay, and leaderboard
+3. Save as `demo.mp4` in this directory
+4. The README will automatically link to it
+
+## Recommended content:
+- Cinematic intro (5-10 seconds)
+- Gameplay with both characters (10-15 seconds)
+- Leaderboard and celebration (5-10 seconds)
+
+## File requirements:
+- Format: MP4
+- Duration: 15-30 seconds
+- Size: Under 10MB for GitHub
+- Quality: 720p or 1080p
