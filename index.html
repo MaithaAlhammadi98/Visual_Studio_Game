@@ -4209,12 +4209,16 @@
                     <div class="rule"></div>
 
                     <div class="row">
-                        <div class="icon">🟥</div>
+                        <div class="icon">
+                            <canvas id="maithaIcon" width="32" height="48" style="image-rendering: pixelated;"></canvas>
+                        </div>
                         <div><b>Maitha</b> → <b>School</b></div>
                     </div>
 
                     <div class="row" style="margin-top:10px;">
-                        <div class="icon">🟦</div>
+                        <div class="icon">
+                            <canvas id="jamilahIcon" width="32" height="48" style="image-rendering: pixelated;"></canvas>
+                        </div>
                         <div><b>Jamilah</b> → <b>Hospital</b></div>
                     </div>
                 </div>
@@ -7303,10 +7307,30 @@
         document.getElementById('leftBtn').addEventListener('click', () => moveCharacter('left'));
         document.getElementById('rightBtn').addEventListener('click', () => moveCharacter('right'));
 
+        // Initialize character icons
+        function initCharacterIcons() {
+            // Draw Maitha character
+            const maithaCanvas = document.getElementById('maithaIcon');
+            if (maithaCanvas) {
+                const ctx = maithaCanvas.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 16, 24, 'maitha', false);
+            }
+            
+            // Draw Jamilah character
+            const jamilahCanvas = document.getElementById('jamilahIcon');
+            if (jamilahCanvas) {
+                const ctx = jamilahCanvas.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                drawAnimatedCharacter(ctx, 16, 24, 'jamilah', false);
+            }
+        }
+
         // Initialize displays
         updateAdminPanel();
         initSounds();
         initGamePreview();
+        initCharacterIcons();
 
         // Game loop
         function gameLoop() {
