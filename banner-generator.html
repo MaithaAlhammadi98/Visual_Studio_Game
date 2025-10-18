@@ -5,329 +5,293 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Block City Banner Generator</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323:wght@400&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            background: linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 50%, #FFE4E1 100%);
-            font-family: 'VT323', monospace;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: 'Courier New', monospace;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
         }
-        
-        .banner-container {
-            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 50%, #FF69B4 100%);
-            border: 4px solid #FF1493;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(255, 20, 147, 0.3);
-            text-align: center;
-            max-width: 1200px;
-            width: 100%;
+
+        .banner {
+            width: 800px;
+            height: 200px;
+            background: linear-gradient(to bottom, #87CEEB, #FFB6C1, #FFE4B5);
             position: relative;
+            border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        
-        .banner-container::before {
-            content: '';
+
+        .cloud {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none;
+            background: white;
+            border-radius: 2px;
         }
-        
-        .banner-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .main-title {
-            color: #FFFFFF;
-            font-size: 3.5rem;
-            font-weight: bold;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            line-height: 1.2;
-        }
-        
-        .pickaxe-icon {
-            display: inline-block;
-            font-size: 3.5rem;
-            margin-right: 15px;
-            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
-        }
-        
-        .subtitle {
-            color: #FFE4E1;
-            font-size: 1.8rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
-            font-weight: normal;
-            line-height: 1.3;
-        }
-        
-        .project-details {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .project-text {
-            color: #FFFFFF;
-            font-size: 1.4rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            font-weight: bold;
-        }
-        
-        .minecraft-blocks {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            border: 3px solid #2E7D32;
-            border-radius: 8px;
-            transform: rotate(15deg);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
-        
-        .minecraft-blocks::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
-            border: 3px solid #FF5252;
-            border-radius: 8px;
-            transform: rotate(-15deg);
-            z-index: -1;
-        }
-        
-        .minecraft-blocks::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 10px;
+
+        .cloud1 {
             width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, #4ECDC4, #26D0CE);
-            border: 2px solid #00BCD4;
-            border-radius: 6px;
-            transform: rotate(30deg);
-            z-index: 1;
-        }
-        
-        .minecraft-blocks-right {
-            position: absolute;
+            height: 20px;
             top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            border: 3px solid #FF8C00;
-            border-radius: 8px;
-            transform: rotate(-20deg);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            left: 50px;
         }
-        
-        .minecraft-blocks-right::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            width: 66px;
-            height: 66px;
-            background: linear-gradient(45deg, #9C27B0, #BA68C8);
-            border: 3px solid #7B1FA2;
-            border-radius: 8px;
-            transform: rotate(20deg);
-            z-index: -1;
+
+        .cloud2 {
+            width: 35px;
+            height: 18px;
+            top: 15px;
+            right: 80px;
         }
-        
-        .sparkles {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+
+        .cloud3 {
+            width: 30px;
+            height: 15px;
+            top: 25px;
+            left: 200px;
         }
-        
+
+        .cloud4 {
+            width: 25px;
+            height: 12px;
+            top: 18px;
+            right: 200px;
+        }
+
         .sparkle {
             position: absolute;
             width: 4px;
             height: 4px;
             background: #FFD700;
             border-radius: 50%;
-            animation: sparkle 2s infinite;
         }
-        
-        .sparkle:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
-        .sparkle:nth-child(2) { top: 30%; right: 20%; animation-delay: 0.5s; }
-        .sparkle:nth-child(3) { bottom: 25%; left: 25%; animation-delay: 1s; }
-        .sparkle:nth-child(4) { bottom: 35%; right: 15%; animation-delay: 1.5s; }
-        .sparkle:nth-child(5) { top: 60%; left: 50%; animation-delay: 0.8s; }
-        
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1.2); }
+
+        .sparkle1 { top: 30px; left: 100px; }
+        .sparkle2 { top: 40px; right: 120px; }
+        .sparkle3 { top: 60px; left: 300px; }
+        .sparkle4 { top: 80px; right: 150px; }
+        .sparkle5 { top: 100px; left: 150px; }
+
+        .pickaxe {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
         }
-        
+
+        .pickaxe-head {
+            width: 20px;
+            height: 15px;
+            background: #C0C0C0;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            border-radius: 2px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .pickaxe-handle {
+            width: 6px;
+            height: 25px;
+            background: #8B4513;
+            position: absolute;
+            top: 15px;
+            left: 12px;
+            border-radius: 1px;
+        }
+
+        .main-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            color: white;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .instruction {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        .controller-icon {
+            background: #8A2BE2;
+        }
+
+        .trophy-icon {
+            background: #FFD700;
+        }
+
         .download-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4CAF50;
             color: white;
             border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
+            font-size: 16px;
         }
-        
+
         .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-        }
-        
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 2.5rem;
-                letter-spacing: 2px;
-            }
-            
-            .subtitle {
-                font-size: 1.4rem;
-            }
-            
-            .project-text {
-                font-size: 1.2rem;
-            }
-            
-            .banner-container {
-                padding: 30px 20px;
-            }
+            background: #45a049;
         }
     </style>
 </head>
 <body>
-    <button class="download-btn" onclick="downloadBanner()">📥 Download Banner</button>
-    
-    <div class="banner-container" id="banner">
-        <div class="minecraft-blocks"></div>
-        <div class="minecraft-blocks-right"></div>
-        
-        <div class="sparkles">
-            <div class="sparkle"></div>
-            <div class="sparkle"></div>
-            <div class="sparkle"></div>
-            <div class="sparkle"></div>
-            <div class="sparkle"></div>
-        </div>
-        
-        <div class="banner-content">
-            <h1 class="main-title">
-                <span class="pickaxe-icon">⛏️</span>
-                Block City: The Minecraft Mission
-            </h1>
+    <div>
+        <div class="banner" id="banner">
+            <!-- Clouds -->
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            <div class="cloud cloud3"></div>
+            <div class="cloud cloud4"></div>
             
-            <p class="subtitle">
-                A Data-Driven Storytelling Studio project by Maitha Alhammadi (UTS)
-            </p>
+            <!-- Sparkles -->
+            <div class="sparkle sparkle1"></div>
+            <div class="sparkle sparkle2"></div>
+            <div class="sparkle sparkle3"></div>
+            <div class="sparkle sparkle4"></div>
+            <div class="sparkle sparkle5"></div>
             
-            <div class="project-details">
-                <p class="project-text">
-                    🎮 Guide Maitha to School & Jamilah to Hospital<br>
-                    🦠 Dodge germs, compete on the leaderboard<br>
-                    🏆 Challenge for the crown in Block City!
-                </p>
+            <!-- Pickaxe -->
+            <div class="pickaxe">
+                <div class="pickaxe-head"></div>
+                <div class="pickaxe-handle"></div>
+            </div>
+            
+            <!-- Main Title -->
+            <div class="main-title">BLOCK CITY: THE MINECRAFT MISSION</div>
+            
+            <!-- Subtitle -->
+            <div class="subtitle">A Data-Driven Storytelling Studio project</div>
+            
+            <!-- Instructions -->
+            <div class="instructions">
+                <div class="instruction">
+                    <div class="icon controller-icon"></div>
+                    <span>Guide Maitha to School & Jamilah to Hospital</span>
+                </div>
+                <div class="instruction">
+                    <div class="icon trophy-icon"></div>
+                    <span>Challenge for the crown!</span>
+                </div>
             </div>
         </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="download-btn" onclick="downloadBanner()">Download Banner</button>
+        </div>
     </div>
-    
+
     <script>
         function downloadBanner() {
-            // Create a canvas to capture the banner
             const banner = document.getElementById('banner');
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // Set canvas size
-            canvas.width = 1200;
-            canvas.height = 400;
+            canvas.width = 800;
+            canvas.height = 200;
             
-            // Use html2canvas to capture the banner
-            html2canvas(banner, {
-                width: 1200,
-                height: 400,
-                scale: 2,
-                backgroundColor: null
-            }).then(canvas => {
-                // Convert to blob and download
-                canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'block-city-minecraft-banner.png';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                });
-            });
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(0.5, '#FFB6C1');
+            gradient.addColorStop(1, '#FFE4B5');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 800, 200);
+            
+            // Draw clouds
+            ctx.fillStyle = 'white';
+            ctx.fillRect(50, 20, 40, 20);
+            ctx.fillRect(720, 15, 35, 18);
+            ctx.fillRect(200, 25, 30, 15);
+            ctx.fillRect(520, 18, 25, 12);
+            
+            // Draw sparkles
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(100, 30, 4, 4);
+            ctx.fillRect(680, 40, 4, 4);
+            ctx.fillRect(300, 60, 4, 4);
+            ctx.fillRect(650, 80, 4, 4);
+            ctx.fillRect(150, 100, 4, 4);
+            
+            // Draw pickaxe
+            ctx.fillStyle = '#C0C0C0';
+            ctx.fillRect(30, 95, 20, 15);
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(36, 110, 6, 25);
+            
+            // Draw text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 24px Courier New';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.fillText('BLOCK CITY: THE MINECRAFT MISSION', 400, 100);
+            
+            ctx.font = '14px Courier New';
+            ctx.fillText('A Data-Driven Storytelling Studio project', 400, 130);
+            
+            // Draw instructions
+            ctx.font = '12px Courier New';
+            ctx.fillStyle = '#8A2BE2';
+            ctx.fillRect(200, 160, 16, 16);
+            ctx.fillStyle = 'white';
+            ctx.fillText('Guide Maitha to School & Jamilah to Hospital', 300, 172);
+            
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(500, 160, 16, 16);
+            ctx.fillStyle = 'white';
+            ctx.fillText('Challenge for the crown!', 600, 172);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = 'block-city-banner.png';
+            link.href = canvas.toDataURL();
+            link.click();
         }
-        
-        // Add some interactive sparkles
-        document.addEventListener('mousemove', (e) => {
-            const sparkles = document.querySelectorAll('.sparkle');
-            sparkles.forEach((sparkle, index) => {
-                const rect = sparkle.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const distance = Math.sqrt(x * x + y * y);
-                
-                if (distance < 100) {
-                    sparkle.style.animationDuration = '0.5s';
-                    sparkle.style.background = '#FF69B4';
-                } else {
-                    sparkle.style.animationDuration = '2s';
-                    sparkle.style.background = '#FFD700';
-                }
-            });
-        });
     </script>
-    
-    <!-- Include html2canvas for downloading -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
-
