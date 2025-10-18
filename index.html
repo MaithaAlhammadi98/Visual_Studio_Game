@@ -5537,18 +5537,26 @@
             const narration2 = document.getElementById('dynamicNarration2');
             
             if (narration1 && narration2) {
-                // Dynamic messages based on top player
-                const messages = [
-                    [`👑 All hail ${topPlayerName}, ruler of Block City.`, `The blocks remember your name.`],
-                    [`Your scores will rise here, in the hall of pixel gods`, `Will you reach the top… or get lost among the blocks?`],
-                    [`Legends are written in pixels, not ink.`, `Will you challenge ${topPlayerName} for the crown?`],
-                    [`The leaderboard awaits your name.`, `Can you dethrone ${topPlayerName}?`]
-                ];
-                
-                // Pick a random message set
-                const selectedMessages = messages[Math.floor(Math.random() * messages.length)];
-                narration1.textContent = selectedMessages[0];
-                narration2.textContent = selectedMessages[1];
+                // For cinematic leaderboard scene (first introduction), use original text
+                // Check if we're in the cinematic intro (scene6)
+                const scene6 = document.getElementById('scene6');
+                if (scene6 && scene6.style.display !== 'none') {
+                    // This is the first time introducing the leaderboard concept
+                    narration1.textContent = 'Your scores will rise here, in the hall of pixel gods';
+                    narration2.textContent = 'Will you reach the top… or get lost among the blocks?';
+                } else {
+                    // For other leaderboard views, use dynamic messages
+                    const messages = [
+                        [`👑 All hail ${topPlayerName}, ruler of Block City.`, `The blocks remember your name.`],
+                        [`Legends are written in pixels, not ink.`, `Will you challenge ${topPlayerName} for the crown?`],
+                        [`The leaderboard awaits your name.`, `Can you dethrone ${topPlayerName}?`]
+                    ];
+                    
+                    // Pick a random message set
+                    const selectedMessages = messages[Math.floor(Math.random() * messages.length)];
+                    narration1.textContent = selectedMessages[0];
+                    narration2.textContent = selectedMessages[1];
+                }
             }
         }
 
