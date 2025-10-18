@@ -1782,7 +1782,7 @@
 
         /* Cute Minecraft Sound Gate Button */
         .minecraft-sound-gate-btn {
-            background: linear-gradient(135deg, #FFB6C1, #FFC0CB, #FFB6C1);
+            background: linear-gradient(180deg, #87CEEB 0%, #FFB6C1 30%, #FFC0CB 60%, #FFE4E1 100%);
             border: 4px solid #FF69B4;
             border-radius: 20px;
             padding: 25px 35px;
@@ -7498,16 +7498,23 @@
 
 
     <!-- One-time prompt if autoplay is blocked -->
-    <div id="soundGate" style="display:none; position:fixed; bottom:30px; left:50%; transform:translateX(-50%); z-index:3000;">
-        <button id="soundGateBtn" class="minecraft-sound-gate-btn">
-            <div class="sound-gate-header">
-                <div class="sound-gate-icon">⛏️</div>
-                <div class="sound-gate-sparkles">✨</div>
-            </div>
-            <div class="sound-gate-text">Hello Minecrafter!</div>
-            <div class="sound-gate-subtitle">🌸 Ready to play? 🌸</div>
-            <div class="sound-gate-click">👆 Click me to start the adventure!</div>
-        </button>
+    <div id="soundGate" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:3000;">
+        <div class="dawn-sky" style="position:absolute; width:100%; height:100%; top:0; left:0;">
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            <div class="cloud cloud3"></div>
+        </div>
+        <div style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%);">
+            <button id="soundGateBtn" class="minecraft-sound-gate-btn">
+                <div class="sound-gate-header">
+                    <div class="sound-gate-icon">⛏️</div>
+                    <div class="sound-gate-sparkles">✨</div>
+                </div>
+                <div class="sound-gate-text">Hello Minecrafter!</div>
+                <div class="sound-gate-subtitle">🌸 Ready to play? 🌸</div>
+                <div class="sound-gate-click">👆 Click me to start the adventure!</div>
+            </button>
+        </div>
     </div>
 
     <script>
