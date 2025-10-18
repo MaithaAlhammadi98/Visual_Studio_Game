@@ -9,8 +9,7 @@
 
 
 
-# ⛏️ Block City: The Minecraft Mission
-> *A Data-Driven Storytelling Studio project by Maitha Alhammadi (UTS)*
+# ⛏️ Welcome to the Block City!
 
 Guide **Maitha** 🏫 and **Jamilah** 🏥 through Block City.  
 Avoid germs, race against time, and rise to the **Hall of Fame** 👑
