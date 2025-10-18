@@ -84,7 +84,7 @@ Meet our two heroes of Block City — built entirely in pixel art:
 **Course:** Data-Driven Storytelling Studio — University of Technology Sydney (UTS)  
 💖 *“One Apply a Day, Keeps the Doctor Away!”*
 
-<p align="center"><img src="docs/media/thankyou.png" width="500"></p>
+
 <p align="center">
   <a href="https://school-hospital-game.web.app"><img src="https://img.shields.io/badge/Play_Game-ffb6c1?style=for-the-badge"></a>
   <a href="https://github.com/MaithaAlhammadi98/Visual_Studio_Game"><img src="https://img.shields.io/badge/Contribute_on_GitHub-212121?style=for-the-badge&logo=github"></a>
