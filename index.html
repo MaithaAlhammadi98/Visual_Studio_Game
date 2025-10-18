@@ -4858,20 +4858,35 @@
             }
         }
 
+        // Global variable to track cinematic timeouts
+        window.cinematicTimeouts = [];
+        
+        // Helper function to create tracked timeouts
+        function createCinematicTimeout(callback, delay) {
+            const timeoutId = setTimeout(callback, delay);
+            window.cinematicTimeouts.push(timeoutId);
+            return timeoutId;
+        }
+
         // Cinematic Intro Functions
         function startCinematicIntro() {
             console.log('Starting cinematic intro...');
+            
+            // Clear any existing timeouts first
+            window.cinematicTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            window.cinematicTimeouts = [];
+            
             document.getElementById('cinematicIntro').style.display = 'flex';
             document.getElementById('introScreen').style.display = 'none';
             
             // Scene 1: Dawn over Block City (4s - extended)
-            setTimeout(() => {
+            createCinematicTimeout(() => {
                 console.log('Scene 1: Dawn over Block City');
                 document.getElementById('scene1').style.display = 'flex';
             }, 100);
             
             // Scene 2: The Call (after 6s)
-            setTimeout(() => {
+            createCinematicTimeout(() => {
                 console.log('Scene 2: The Call');
                 document.getElementById('scene1').style.display = 'none';
                 document.getElementById('scene2').style.display = 'flex';
@@ -4963,8 +4978,44 @@
         function skipCinematicIntro() {
             console.log('Skipping cinematic intro...');
             
+            // Clear all cinematic timeouts
+            window.cinematicTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            window.cinematicTimeouts = [];
+            
+            // Clear ALL timeouts (aggressive approach)
+            const highestTimeoutId = setTimeout(() => {}, 0);
+            for (let i = 0; i < highestTimeoutId; i++) {
+                clearTimeout(i);
+            }
+            
+            // Stop all cinematic sounds
+            if (window.cinematicSounds) {
+                window.cinematicSounds.forEach(sound => {
+                    if (sound && sound.pause) {
+                        sound.pause();
+                        sound.currentTime = 0;
+                    }
+                });
+            }
+            
+            // Stop all audio elements
+            const audioElements = document.querySelectorAll('audio');
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+            
             // Hide cinematic intro
             document.getElementById('cinematicIntro').style.display = 'none';
+            
+            // Hide all scenes
+            const scenes = ['scene1', 'scene2', 'scene3', 'scene4', 'scene5', 'scene6', 'scene7'];
+            scenes.forEach(sceneId => {
+                const scene = document.getElementById(sceneId);
+                if (scene) {
+                    scene.style.display = 'none';
+                }
+            });
             
             // Show intro screen immediately
             document.getElementById('introScreen').style.display = 'flex';
