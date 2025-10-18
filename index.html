@@ -321,6 +321,66 @@
             border-color:#FF1493; 
             box-shadow:0 6px 0 #CC1493; 
         }
+        
+        /* More Button Dropdown Styles */
+        .more-dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .more-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #FF69B4;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            border: 2px solid #FF1493;
+            z-index: 1000;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+        }
+        
+        .more-dropdown-content.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            color: #ffffff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 6px;
+            margin: 2px;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #FF1493;
+            color: #ffffff;
+        }
+        
+        .dropdown-item:active {
+            background-color: #CC1493;
+        }
+        
+        /* Mobile responsive dropdown */
+        @media (max-width: 768px) {
+            .more-dropdown-content {
+                right: 0;
+                left: auto;
+                min-width: 140px;
+            }
+        }
 
         /* Admin Panel Button - Pink Theme */
         #adminLoginBtn {
@@ -4479,6 +4539,16 @@
                         <button class="btn btn--secondary" id="musicBtn" style="display:none;">🎵 Play Music</button>
                         <button class="btn btn--secondary" id="viewLeaderboardBtn">🏆 Hall of Fame</button>
                         <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
+                        
+                        <!-- More Button with Dropdown -->
+                        <div class="more-dropdown-container">
+                            <button class="btn btn--secondary" id="moreBtn">📋 More</button>
+                            <div class="more-dropdown-content" id="moreDropdown">
+                                <button class="dropdown-item" onclick="openGitHubRepo()">🐙 GitHub</button>
+                                <button class="dropdown-item" onclick="openIllnessGuardApp()">🏥 App</button>
+                                <button class="dropdown-item" onclick="openProjectDetails()">📹 Project Details</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -7240,6 +7310,19 @@
             // Open the GitHub repository in a new tab
             window.open('https://github.com/MaithaAlhammadi98/Visual_Studio_Game', '_blank');
         }
+        
+        // Toggle More dropdown
+        function toggleMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+        
+        // Open Project Details (placeholder for now)
+        function openProjectDetails() {
+            alert('Project Details coming soon! 🎬\n\nVideo link will be added once available from the team.');
+        }
 
         // Show player leaderboard modal
         function showPlayerLeaderboard() {
@@ -8099,6 +8182,21 @@
             
             // Load dynamic challenge text
             loadDynamicChallengeText();
+            
+            // Add More button event listener
+            const moreBtn = document.getElementById('moreBtn');
+            if (moreBtn) {
+                moreBtn.addEventListener('click', toggleMoreDropdown);
+            }
+            
+            // Close dropdown when clicking outside
+            window.addEventListener('click', (event) => {
+                const dropdown = document.getElementById('moreDropdown');
+                const moreBtn = document.getElementById('moreBtn');
+                if (dropdown && moreBtn && !moreBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
         });
     </script>
 
