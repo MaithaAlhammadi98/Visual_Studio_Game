@@ -1529,6 +1529,10 @@
 
         .cute-ending-footer {
             margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .cute-ending-btn {
@@ -1549,6 +1553,18 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(255, 182, 193, 0.5);
             background: linear-gradient(135deg, #FFC0CB, #FFB6C1);
+        }
+
+        /* Illness Guard app button styling */
+        .illness-guard-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: 2px solid rgba(76, 175, 80, 0.8);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .illness-guard-btn:hover {
+            background: linear-gradient(135deg, #45a049, #4CAF50);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
         }
 
         /* Cute Minecraft Sound Gate Button */
@@ -4044,12 +4060,13 @@
                 <div class="cute-ending-body">
                     <p class="cute-main-message">Thank you for playing! 🌸</p>
                     <div class="cute-divider"></div>
-                    <p class="cute-sub-message">- This game was made by Maitha - 🤓</p>
+                    <p class="cute-sub-message">- This game was made as part of the Data Driven Storytelling Studio course- 🤓</p>
                     <p class="cute-creator"> 💖 </p>
                 </div>
                 
                 <div class="cute-ending-footer">
                     <button onclick="closeCuteEnding()" class="cute-ending-btn">🌸 Close</button>
+                    <button onclick="openIllnessGuardApp()" class="cute-ending-btn illness-guard-btn">🏥 Check out our amazing health app!</button>
                 </div>
             </div>
         </div>
@@ -6587,6 +6604,12 @@
                 // Go back to intro screen
                 document.getElementById('introScreen').style.display = 'flex';
             }
+        }
+
+        // Open Illness Guard app
+        function openIllnessGuardApp() {
+            // Open the Illness Guard app in a new tab
+            window.open('https://level-trees-4166.glide.page/dl/bc045f', '_blank');
         }
 
         // Show player leaderboard modal
