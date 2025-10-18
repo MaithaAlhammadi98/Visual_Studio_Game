@@ -1,76 +1,92 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/⛏️_Block_City:_The_Minecraft_Mission_-FFC0CB?style=for-the-badge&logo=unity&logoColor=white"><br>
+  <img src="https://img.shields.io/badge/Made_with-💗_HTML,_CSS,_JS-ff91af?style=flat-square">
+  <img src="https://img.shields.io/badge/Powered_by-Firebase-ffb6c1?style=flat-square&logo=firebase">
+</p>
+<p align="center">
+  <i>🎀 A pastel pixel world of school, hospital, and germs 🎀</i>
+</p>
+
+
+
 # ⛏️ Block City: The Minecraft Mission
+> *A Data-Driven Storytelling Studio project by Maitha Alhammadi (UTS)*
 
-Guide **Maitha** to 🏫 School and **Jamilah** to 🏥 Hospital.  
-Dodge germs, beat the class, and claim the **Hall of Fame**!
+Guide **Maitha** 🏫 and **Jamilah** 🏥 through Block City.  
+Avoid germs, race against time, and rise to the **Hall of Fame** 👑
 
-**▶️ Play:** https://school-hospital-game.web.app  
-**🎞️ Quick trailer:** ![Gameplay trailer](docs/media/demo.gif)
-
----
-
-## Features
-- 🎮 Two characters, two destinations
-- 🦠 Germs cost points (🟥 –10, 🟩 –5)
-- 🏆 Live leaderboard (Firestore)
-- 🎬 Short cinematic intro + welcome card
-- 🔊 Chiptune music with Mute/Unmute
-- 📱 Mobile-first, responsive UI
-
-## How to Play
-- **Move:** Arrow keys / onscreen controls  
-- **Goal:** Maitha → School; Jamilah → Hospital  
-- **Avoid:** germs  
-- **Finish:** Both reach targets → score auto-saves
+🎮 **Play now:** [school-hospital-game.web.app](https://school-hospital-game.web.app)  
+🎞️ **Watch the demo:**  
+<p align="center"><img src="docs/media/gif.gif" width="720" alt="Gameplay demo"></p>
 
 ---
 
-## Screenshots
+## ✨ Game Features
+
+| Category | Highlights |
+|:--|:--|
+| 🎮 **Gameplay** | Two main missions – guide Maitha to the School and Jamilah to the Hospital. Dodge germs and finish fast to claim your crown! |
+| 🏆 **Competitive Leaderboard** | Real-time scoring powered by Firebase. Compete for the top spot in the Hall of Fame — only the fastest survive. |
+| 🧱 **Minecraft Characters** | Custom pixel avatars and themed buildings created from scratch for a cozy, retro aesthetic. |
+| 🔐 **Admin Access** | Hidden admin panel for managing leaderboard data and verifying top players. |
+| 🔊 **Sound & Controls** | Chiptune background music with toggle button (mute/unmute). Works with keyboard or mobile tap controls. |
+| 💻 **Responsive UI** | Fully optimized for desktop, tablet, and mobile. |
+| 🍎 **Credits Screen** | Includes a heartfelt message: *“One Apply a Day, Keeps the Doctor Away!”* and links to GitHub & health app. |
+
+---
+
+## 🕹️ How to Play
+1. **Move** using Arrow keys or tap on mobile.  
+2. **Reach destinations** — Maitha → School, Jamilah → Hospital.  
+3. **Avoid germs:**  
+   - 🟥 Red Germs = –10 points  
+   - 🟩 Green Germs = –5 points  
+4. **Win fast** for bonus points and a leaderboard crown 👑  
+
+---
+
+## 📸 Screenshots
+
+| Welcome | Mission Brief | Cinematic Introduction |
+|:--:|:--:|:--:|
+| <img src="docs/media/scene_welcome.png" width="230"> | <img src="docs/media/home_page.png" width="230"> | <img src="docs/media/LastScene.png" width="230"> |
+
+| Hall of Fame | End Scene | Admin Access |
+|:--:|:--:|:--:|
+| <img src="docs/media/hall_of_fame.png" width="230"> | <img src="docs/media/end_trophy.png" width="230"> | <img src="docs/media/admin_access.png" width="230"> |
+
+---
+
+## 🎨 Custom Characters
+
+Meet our two heroes of Block City — built entirely in pixel art:
+
 <p align="center">
-  <img src="docs/media/scene_welcome.png" width="560"><br>
-  <em>Welcome Scene</em>
+  <img src="docs/media/characters.png" width="300" alt="Custom Minecraft characters">
 </p>
-<p align="center">
-  <img src="docs/media/mission_brief.png" width="560"><br>
-  <em>Mission Brief</em>
-</p>
-<p align="center">
-  <img src="docs/media/leaderboard.png" width="560"><br>
-  <em>Class Leaderboard</em>
-</p>
-<p align="center">
-  <img src="docs/media/hall_of_fame.png" width="420">
-  <img src="docs/media/end_trophy.png" width="420"><br>
-  <em>Hall of Fame & Victory</em>
-</p>
+
+| Character | Description |
+|:--|:--|
+| **Maitha** 🏫 | The brave student heading to the School — fast, focused, and fearless. |
+| **Jamilah** 🏥 | The caring nurse on her way to the Hospital — calm, kind, and quick-thinking. |
+
+-----------
+
+## 🧠 Built With
+- **HTML**, **CSS**, **JavaScript**
+- **Firebase Firestore + Hosting**
+- **Canvas 2D** for visuals
+- **VanillaJS Animation** for transitions
 
 ---
 
-## Run / Deploy
-**Local:** open `index.html`  
-*(or serve)*:
-```bash
-python3 -m http.server 8080
-# or
-npx http-server -p 8080
-```
+## 🪄 Credits
+**Developer:** Maitha Alhammadi  
+**Course:** Data-Driven Storytelling Studio — University of Technology Sydney (UTS)  
+💖 *“One Apply a Day, Keeps the Doctor Away!”*
 
-**Firebase Hosting (already set up)**
-
-```bash
-npm i -g firebase-tools
-firebase login
-firebase init hosting     # choose existing project
-firebase deploy
-```
-
----
-
-## Tech
-
-HTML/CSS/JS (vanilla) • Firebase Firestore & Hosting • Canvas 2D • Web Audio
-
----
-
-### Credits
-
-By **Maitha Alhammadi** — Data-Driven Storytelling Studio (UTS)
+<p align="center"><img src="docs/media/thankyou.png" width="500"></p>
+<p align="center">
+  <a href="https://school-hospital-game.web.app"><img src="https://img.shields.io/badge/Play_Game-ffb6c1?style=for-the-badge"></a>
+  <a href="https://github.com/MaithaAlhammadi98/Visual_Studio_Game"><img src="https://img.shields.io/badge/Contribute_on_GitHub-212121?style=for-the-badge&logo=github"></a>
+</p>
