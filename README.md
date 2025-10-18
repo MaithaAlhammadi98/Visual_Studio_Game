@@ -5,7 +5,7 @@ Dodge the germs, beat the class, and claim your spot on the **Hall of Fame**!
 
 **🔗 Play now:** https://school-hospital-game.web.app
 
-> **🎮 Live Demo:** [Watch the game in action!](https://github.com/MaithaAlhammadi98/Visual_Studio_Game/blob/main/docs/media/demo.mp4)
+> **🎮 Live Demo:** [Watch the game in action!](https://github.com/MaithaAlhammadi98/Visual_Studio_Game/blob/main/docs/media/gif.gif)
 
 ---
 
