@@ -1594,6 +1594,80 @@
             z-index: 1000;
         }
 
+        /* Completion Celebration Modal */
+        #completionCelebrationModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+        }
+
+        .celebration-content {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+            border: 3px solid #FFD700;
+            animation: celebrationGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes celebrationGlow {
+            0%, 100% { box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 20px 40px rgba(255, 215, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.4); }
+        }
+
+        .celebration-message h2 {
+            color: #8B4513;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: 'VT323', monospace;
+        }
+
+        .celebration-message p {
+            color: #8B4513;
+            font-size: 20px;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            font-family: 'VT323', monospace;
+        }
+
+        .celebration-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 0 #2E7D32;
+            transition: all 0.1s ease;
+            font-family: 'VT323', monospace;
+        }
+
+        .celebration-btn:hover {
+            background: linear-gradient(135deg, #45a049, #4CAF50);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #2E7D32;
+        }
+
+        .celebration-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #2E7D32;
+        }
+
         /* Minecraft Heart Modal */
         #minecraftHeartModal {
             position: fixed;
@@ -4568,6 +4642,17 @@
             </div>
         </div>
 
+        <!-- Completion Celebration Modal -->
+        <div id="completionCelebrationModal" style="display: none;">
+            <div class="celebration-content">
+                <div class="celebration-message">
+                    <h2>👑 All hail <span id="celebrationTopPlayer">Loading...</span>, ruler of Block City.</h2>
+                    <p>Maitha, Jamilah and the Blocks..will remember you.</p>
+                </div>
+                <button onclick="hideCompletionCelebration()" class="celebration-btn" id="celebrationBtn">Good job <span id="celebrationBtnPlayer">Loading...</span>!!</button>
+            </div>
+        </div>
+
         <!-- Minecraft Heart Modal -->
         <div id="minecraftHeartModal" style="display: none;">
             <div class="minecraft-heart-content">
@@ -4576,7 +4661,7 @@
                 </div>
                 <div class="heart-message">
                     <h2>Thank you for playing!</h2>
-                    <p>This game was hand crafted to YOU by Maitha𑣲 >⩊< </p>
+                    <p>This gamification was hand crafted to YOU by Maitha𑣲 >⩊< </p>
                     <p style="font-family: monospace; white-space: pre; text-align: center; line-height: 1.2; margin: 0; padding: 0;">
 :¨ ·.· ¨:
 `· . 𐙚
@@ -6075,9 +6160,9 @@
                 <div style="margin-top: 20px; font-size: 28px;">${winner}</div>
             `;
             
-            // Show leaderboard popup (FIRST TIME) - Firebase leaderboard only
-            console.log('endGame timeout - calling showLeaderboardPopup() - FIRST TIME');
-            showLeaderboardPopup();
+            // Show completion celebration first (FIRST TIME)
+            console.log('endGame timeout - calling showCompletionCelebration() - FIRST TIME');
+            showCompletionCelebration();
             
             // After 10 seconds, hide leaderboard and show Maitha credit
             setTimeout(() => {
@@ -7179,6 +7264,62 @@
             if (modal) {
                 modal.style.display = 'none';
             }
+        }
+
+        // Show completion celebration with top player recognition
+        function showCompletionCelebration() {
+            const celebrationModal = document.getElementById('completionCelebrationModal');
+            if (celebrationModal) {
+                celebrationModal.style.display = 'flex';
+                
+                // Get top player from Firebase leaderboard
+                getTopPlayerFromFirebase().then(topPlayerName => {
+                    const topPlayerSpan = document.getElementById('celebrationTopPlayer');
+                    const btnPlayerSpan = document.getElementById('celebrationBtnPlayer');
+                    
+                    if (topPlayerSpan) topPlayerSpan.textContent = topPlayerName;
+                    if (btnPlayerSpan) btnPlayerSpan.textContent = topPlayerName;
+                }).catch(() => {
+                    // Fallback to default name
+                    const topPlayerSpan = document.getElementById('celebrationTopPlayer');
+                    const btnPlayerSpan = document.getElementById('celebrationBtnPlayer');
+                    
+                    if (topPlayerSpan) topPlayerSpan.textContent = 'the Champion';
+                    if (btnPlayerSpan) btnPlayerSpan.textContent = 'Champion';
+                });
+            }
+        }
+
+        function hideCompletionCelebration() {
+            const celebrationModal = document.getElementById('completionCelebrationModal');
+            if (celebrationModal) {
+                celebrationModal.style.display = 'none';
+            }
+            // Continue to normal flow - show leaderboard
+            console.log('Player clicked celebration button - showing leaderboard');
+            showLeaderboardPopup();
+            
+            // Continue with the normal flow after leaderboard
+            setTimeout(() => {
+                console.log('Hiding leaderboard to show Maitha credit');
+                document.getElementById('leaderboardPopup').style.display = 'none';
+                showMinecraftHeart();
+            }, 10000); // 10 seconds after leaderboard shows
+        }
+
+        // Get top player from Firebase
+        async function getTopPlayerFromFirebase() {
+            if (window.scoresRef) {
+                try {
+                    const snapshot = await window.scoresRef.orderBy('score', 'desc').limit(1).get();
+                    if (snapshot.docs.length > 0) {
+                        return snapshot.docs[0].data().name || 'the Champion';
+                    }
+                } catch (e) {
+                    console.log('Could not get top player from Firebase:', e);
+                }
+            }
+            return 'the Champion';
         }
 
         // Show Minecraft heart with thank you message
