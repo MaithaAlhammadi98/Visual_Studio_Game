@@ -5626,12 +5626,7 @@
                 document.getElementById('leaderboardPopup').style.display = 'none';
                 showMinecraftHeart();
                 
-                // After 3 seconds, hide Maitha credit and show leaderboard again (SECOND TIME)
-                setTimeout(() => {
-                    console.log('Hiding Maitha credit, showing leaderboard SECOND TIME');
-                    document.getElementById('minecraftHeartModal').style.display = 'none';
-                    showLeaderboardPopup();
-                }, 3000); // Wait 3 seconds for Maitha credit
+                // No automatic timeout - wait for player to click "Awesome Game! THANKS!"
             }, 10000); // Wait 10 seconds before showing Maitha credit
             }, 2500); // Wait 2.5 seconds for Jamilah's Bravo celebration
         }
@@ -6721,6 +6716,9 @@
             if (heartModal) {
                 heartModal.style.display = 'none';
             }
+            // Show leaderboard again (SECOND TIME) after player clicks "Awesome Game! THANKS!"
+            console.log('Player clicked Awesome Game! THANKS! - showing leaderboard SECOND TIME');
+            showLeaderboardPopup();
         }
 
         // Draw Minecraft heart with canvas
