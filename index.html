@@ -4052,7 +4052,7 @@
             
             <!-- Skip Button -->
             <button id="skipIntroBtn" class="skip-btn" onclick="skipCinematicIntro()">
-                🌸 Skip Scene
+                🌸 Homepage
             </button>
             
             <div class="intro-scene" id="scene1">
@@ -4270,6 +4270,7 @@
                         <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
                         <button class="btn btn--secondary" id="musicBtn" style="display:none;">🎵 Play Music</button>
                         <button class="btn btn--secondary" id="viewLeaderboardBtn">🏆 Hall of Fame</button>
+                        <button class="btn btn--secondary" id="viewTrailerBtn">🎬 View Trailer</button>
                     </div>
                 </div>
             </div>
@@ -6927,6 +6928,12 @@
             }
         }
 
+        // Show trailer (cinematic intro)
+        function showTrailer() {
+            document.getElementById('introScreen').style.display = 'none';
+            startCinematicIntro();
+        }
+
         // Close player leaderboard modal
         function closePlayerLeaderboard() {
             const modal = document.getElementById('playerLeaderboardModal');
@@ -7304,6 +7311,7 @@
         cancelLoginBtn.addEventListener('click', hideLoginModal);
         adminLoginBtn.addEventListener('click', showLoginModal);
         document.getElementById('viewLeaderboardBtn').addEventListener('click', showPlayerLeaderboard);
+        document.getElementById('viewTrailerBtn').addEventListener('click', showTrailer);
         
         // Allow Enter key to login
         adminPassword.addEventListener('keypress', (e) => {
