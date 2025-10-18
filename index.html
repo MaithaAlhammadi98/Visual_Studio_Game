@@ -283,18 +283,43 @@
             box-shadow:0 6px 0 var(--accent-dark);
             transition:transform .05s ease, box-shadow .05s ease, filter .2s;
             cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Cool animated start button */
+        #startBtn {
+            animation: startButtonPulse 2s ease-in-out infinite;
+            background: linear-gradient(45deg, #4CAF50, #45a049, #4CAF50);
+            background-size: 200% 200%;
+            animation: startButtonPulse 2s ease-in-out infinite, gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes startButtonPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 6px 0 var(--accent-dark), 0 0 20px rgba(76, 175, 80, 0.5);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 6px 0 var(--accent-dark), 0 0 30px rgba(76, 175, 80, 0.8);
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .btn:active{ 
             transform:translateY(4px); 
             box-shadow:0 2px 0 var(--accent-dark); 
         }
         .btn--secondary{ 
-            background:#30475e; 
-            color:#e6f8ff; 
-            border-color:#152635; 
-            box-shadow:0 6px 0 #223447; 
+            background:#FF69B4; 
+            color:#ffffff; 
+            border-color:#FF1493; 
+            box-shadow:0 6px 0 #CC1493; 
         }
 
         /* Footer buttons wrap */
@@ -4053,7 +4078,7 @@
                     <div class="actions" style="margin-top:12px;">
                         <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
                         <button class="btn btn--secondary" id="musicBtn" style="display:none;">🎵 Play Music</button>
-                        <button class="btn btn--secondary" id="viewLeaderboardBtn">🏆 View Leaderboard</button>
+                        <button class="btn btn--secondary" id="viewLeaderboardBtn">🏆 Hall of Fame</button>
                     </div>
                 </div>
             </div>
