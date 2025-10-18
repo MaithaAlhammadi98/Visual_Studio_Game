@@ -797,7 +797,6 @@
                 width: 26px;
             }
         }
-        
         .preview-buttons {
             display: flex;
             gap: 15px;
@@ -1598,7 +1597,6 @@
             animation-delay: 0.5s;
             animation-fill-mode: both;
         }
-
         @keyframes scoreCountUp {
             0% { transform: scale(0); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -2383,7 +2381,6 @@
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
-        
         /* Minecraft Achievement messages */
         .achievement-message {
             position: absolute;
@@ -3183,7 +3180,6 @@
             background-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px, 80px 80px, 80px 80px;
             background-position: 0 0, 0 0, 24px 0, 56px 0, 0 0, 0 0;
         }
-
         .portrait-text {
             color: white;
             font-family: 'Courier New', monospace;
@@ -3984,7 +3980,6 @@
             font-size: 13px;
             font-weight: 500;
         }
-        
         .maitha-card {
             background: linear-gradient(45deg, #8B5CF6, #7C3AED);
         }
@@ -4880,20 +4875,31 @@
             if (window._lbUnsub) window._lbUnsub();
             window._lbUnsub = window.scoresRef
                 .orderBy('score', 'desc')
+                .orderBy('ts', 'desc')
                 .limit(20)
                 .onSnapshot(
                     snap => renderLeaderboardFromSnapshot(snap),
-                    err => console.error('Leaderboard listen error:', err)
+                    err => {
+                        console.error('Leaderboard listen error:', err);
+                        // Fallback to local data if Firebase fails
+                        loadFallbackLeaderboard();
+                    }
                 );
         }
 
         // --- Manual refresh ---
         async function fetchLeaderboardOnce() {
-            const snap = await window.scoresRef
-                .orderBy('score', 'desc')
-                .limit(20)
-                .get();
-            renderLeaderboardFromSnapshot(snap);
+            try {
+                const snap = await window.scoresRef
+                    .orderBy('score', 'desc')
+                    .orderBy('ts', 'desc')
+                    .limit(20)
+                    .get();
+                renderLeaderboardFromSnapshot(snap);
+            } catch (err) {
+                console.error('Error fetching leaderboard:', err);
+                loadFallbackLeaderboard();
+            }
         }
 
         // --- Button helpers ---
@@ -5557,13 +5563,12 @@
                 console.log('Could not play leaderboard sound');
             }
         }
-
         // Leaderboard functions
         function loadLeaderboardData() {
             // Load real data from Firebase or localStorage
             if (window.scoresRef) {
                 // Use Firebase data
-                window.scoresRef.orderBy('score', 'desc').limit(3).get().then(snapshot => {
+                window.scoresRef.orderBy('score', 'desc').orderBy('ts', 'desc').limit(3).get().then(snapshot => {
                     const leaderboardList = document.getElementById('leaderboardList');
                     if (leaderboardList && snapshot.docs.length > 0) {
                         leaderboardList.innerHTML = '';
@@ -6275,6 +6280,30 @@
             // Save the game attempt to Firebase
             saveGameAttemptToFirebase(actualPlayerName, currentScore, completionTime, germsHit);
             
+            // Also save to local leaderboard with timestamp
+            const newEntry = {
+                name: actualPlayerName,
+                score: currentScore,
+                timestamp: new Date().toISOString()
+            };
+            leaderboard.push(newEntry);
+            
+            // Sort by score descending, then by timestamp descending (most recent first)
+            leaderboard.sort((a, b) => {
+                if (a.score !== b.score) {
+                    return b.score - a.score;
+                }
+                const timeA = new Date(a.timestamp).getTime();
+                const timeB = new Date(b.timestamp).getTime();
+                return timeB - timeA;
+            });
+            
+            // Keep only top 10
+            leaderboard = leaderboard.slice(0, 10);
+            
+            // Save to localStorage
+            localStorage.setItem('schoolHospitalLeaderboard', JSON.stringify(leaderboard));
+            
             let winner = 'Tie!';
             if (scores.player1 > scores.player2) {
                 winner = `${playerNames.player1} wins! 🎉`;
@@ -6355,7 +6384,6 @@
             // Show confirm button
             document.getElementById('confirmCharacter').style.display = 'block';
         }
-        
         function confirmCharacterSelection() {
             // Always start with Maitha first
             gamePhase = 'maitha';
@@ -7154,7 +7182,6 @@
                 scoreDisplay.classList.add('score-positive');
             }
         }
-
         function adminStopGame() {
             adminGameState = 'stopped';
             gameStatus.textContent = 'Stopped';
@@ -7204,6 +7231,7 @@
             console.log('Fetching live Firebase data for player popup...');
             window.scoresRef
                 .orderBy('score', 'desc')
+                .orderBy('ts', 'desc')
                 .limit(10)
                 .get()
                 .then((snap) => {
@@ -7343,6 +7371,7 @@
                 console.log('Fetching Firebase data for player leaderboard...');
                 window.scoresRef
                     .orderBy('score', 'desc')
+                    .orderBy('ts', 'desc')
                     .limit(10)
                     .get()
                     .then((snapshot) => {
@@ -7464,7 +7493,7 @@
         async function getTopPlayerFromFirebase() {
             if (window.scoresRef) {
                 try {
-                    const snapshot = await window.scoresRef.orderBy('score', 'desc').limit(1).get();
+                    const snapshot = await window.scoresRef.orderBy('score', 'desc').orderBy('ts', 'desc').limit(1).get();
                     if (snapshot.docs.length > 0) {
                         return snapshot.docs[0].data().name || 'the Champion';
                     }
@@ -7924,25 +7953,20 @@
             const name = e.target.value || 'Player';
             document.getElementById('playerNamePreview').textContent = name;
         });
-        
         // Start game button event listener
         document.getElementById('startGameBtn').addEventListener('click', startGame);
-        
         // Character selection event listeners - no longer needed since we auto-select both
         // document.querySelectorAll('.character-option').forEach(option => {
         //     option.addEventListener('click', () => {
         //         selectCharacter(option.dataset.character);
         //     });
         // });
-        
         document.getElementById('confirmCharacter').addEventListener('click', confirmCharacterSelection);
-        
         // Arrow control event listeners
         document.getElementById('upBtn').addEventListener('click', () => moveCharacter('up'));
         document.getElementById('downBtn').addEventListener('click', () => moveCharacter('down'));
         document.getElementById('leftBtn').addEventListener('click', () => moveCharacter('left'));
         document.getElementById('rightBtn').addEventListener('click', () => moveCharacter('right'));
-
         // Initialize character icons
         function initCharacterIcons() {
             // Draw Maitha character for guideline
