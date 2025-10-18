@@ -1567,6 +1567,18 @@
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
         }
 
+        /* GitHub repository button styling */
+        .github-btn {
+            background: linear-gradient(135deg, #24292e, #2d3748);
+            border: 2px solid rgba(36, 41, 46, 0.8);
+            box-shadow: 0 4px 15px rgba(36, 41, 46, 0.4);
+        }
+
+        .github-btn:hover {
+            background: linear-gradient(135deg, #2d3748, #24292e);
+            box-shadow: 0 6px 20px rgba(36, 41, 46, 0.5);
+        }
+
         /* Cute Minecraft Sound Gate Button */
         .minecraft-sound-gate-btn {
             background: linear-gradient(135deg, #FFB6C1, #FFC0CB, #FFB6C1);
@@ -4009,7 +4021,7 @@
                 <div class="card">
                     <h2>⚠️ Avoid the Minecraft Germs!</h2>
                     <div class="rule"></div>
-                    <div class="strip">Navigate carefully! <span class="muted">Hitting a germ costs <b> points</b>.</span></div>
+                    <div class="strip">Navigate carefully! <span class="muted">Hitting a germ is painful! <b> points</b>.</span></div>
                 </div>
 
                 <div class="card">
@@ -4018,7 +4030,7 @@
                     <div class="point"><div class="icon">✅</div><div><b>Reach destination</b>: Complete the mission!</div></div>
                     <div class="point"><div class="icon">💀</div><div><b>Red Germ hit</b>: –10 points</div></div>
                     <div class="point"><div class="icon">🦠</div><div><b>Green Germ hit</b>: –5 points</div></div>
-                    <div class="point"><div class="icon">📡</div><div><b>Auto-save</b>: Your score posts to the live leaderboard.</div></div>
+                    <div class="point"><div class="icon">🏆</div><div><b>Auto-save</b>: Your score posts to the live leaderboard.</div></div>
                 </div>
 
                 <div class="card center">
@@ -4067,6 +4079,7 @@
                 <div class="cute-ending-footer">
                     <button onclick="closeCuteEnding()" class="cute-ending-btn">🌸 Close</button>
                     <button onclick="openIllnessGuardApp()" class="cute-ending-btn illness-guard-btn">🏥 Check out our amazing health app!</button>
+                    <button onclick="openGitHubRepo()" class="cute-ending-btn github-btn">🐙 Contribute on GitHub</button>
                 </div>
             </div>
         </div>
@@ -6610,6 +6623,12 @@
         function openIllnessGuardApp() {
             // Open the Illness Guard app in a new tab
             window.open('https://level-trees-4166.glide.page/dl/bc045f', '_blank');
+        }
+
+        // Open GitHub repository
+        function openGitHubRepo() {
+            // Open the GitHub repository in a new tab
+            window.open('https://github.com/MaithaAlhammadi98/Visual_Studio_Game', '_blank');
         }
 
         // Show player leaderboard modal
