@@ -322,6 +322,28 @@
             box-shadow:0 6px 0 #CC1493; 
         }
 
+        /* Dramatic Hall of Fame button */
+        #viewLeaderboardBtn {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d, #1a1a1a);
+            color: #FFD700;
+            border: 3px solid #FFD700;
+            box-shadow: 0 6px 0 #B8860B, 0 0 20px rgba(255, 215, 0, 0.3);
+            animation: hallOfFameGlow 3s ease-in-out infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-weight: 900;
+        }
+
+        @keyframes hallOfFameGlow {
+            0%, 100% { 
+                box-shadow: 0 6px 0 #B8860B, 0 0 20px rgba(255, 215, 0, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 6px 0 #B8860B, 0 0 30px rgba(255, 215, 0, 0.6);
+                transform: scale(1.02);
+            }
+        }
+
         /* Footer buttons wrap */
         .actions{ 
             display:grid; 
