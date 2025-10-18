@@ -346,6 +346,27 @@
             font-weight: 900;
         }
 
+        /* Minecraft-themed View Trailer button */
+        #viewTrailerBtn {
+            background: linear-gradient(135deg, #8B4513, #A0522D, #8B4513);
+            color: #ffffff;
+            border: 3px solid #654321;
+            box-shadow: 0 6px 0 #5D4037, 0 0 15px rgba(139, 69, 19, 0.4);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-weight: 900;
+        }
+
+        #viewTrailerBtn:hover {
+            background: linear-gradient(135deg, #A0522D, #8B4513, #A0522D);
+            box-shadow: 0 8px 0 #5D4037, 0 0 20px rgba(139, 69, 19, 0.6);
+            transform: translateY(-2px);
+        }
+
+        #viewTrailerBtn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #5D4037;
+        }
+
         @keyframes hallOfFameGlow {
             0%, 100% { 
                 box-shadow: 0 6px 0 #B8860B, 0 0 20px rgba(255, 215, 0, 0.3);
@@ -4267,10 +4288,10 @@
                     <div style="height:12px"></div>
                     <button class="btn" id="startBtn">⛏️ Start Minecraft Adventure!</button>
                     <div class="actions" style="margin-top:12px;">
-                        <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
+                        <button class="btn btn--secondary" id="viewTrailerBtn">🎬 View Trailer</button>
                         <button class="btn btn--secondary" id="musicBtn" style="display:none;">🎵 Play Music</button>
                         <button class="btn btn--secondary" id="viewLeaderboardBtn">🏆 Hall of Fame</button>
-                        <button class="btn btn--secondary" id="viewTrailerBtn">🎬 View Trailer</button>
+                        <button class="btn btn--secondary" id="adminLoginBtn">👑 Admin Panel</button>
                     </div>
                 </div>
             </div>
