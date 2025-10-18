@@ -5583,10 +5583,7 @@
                 <div style="margin-top: 20px; font-size: 28px;">${winner}</div>
             `;
             
-            // Update leaderboard display
-            updateLeaderboard();
-            
-            // Show leaderboard popup (FIRST TIME)
+            // Show leaderboard popup (FIRST TIME) - Firebase leaderboard only
             console.log('endGame timeout - calling showLeaderboardPopup() - FIRST TIME');
             showLeaderboardPopup();
             
@@ -6902,7 +6899,6 @@
                 localStorage.removeItem('schoolHospitalPlayerLog');
                 localStorage.removeItem('gameHistory');
                 localStorage.removeItem('playerScores');
-                updateLeaderboard();
                 updateAdminPanel();
                 alert('All leaderboard data cleared!');
             }
@@ -7059,7 +7055,6 @@
         document.getElementById('rightBtn').addEventListener('click', () => moveCharacter('right'));
 
         // Initialize displays
-        updateLeaderboard();
         updateAdminPanel();
         initSounds();
         initGamePreview();
