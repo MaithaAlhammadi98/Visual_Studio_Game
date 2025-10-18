@@ -2778,16 +2778,16 @@
 
         /* Skip Button - Aesthetic Pink Design */
         .skip-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
             z-index: 1001;
             background: rgba(255, 182, 193, 0.3);
             color: white;
             border: 2px solid rgba(255, 182, 193, 0.8);
             border-radius: 15px;
-            padding: 12px 18px;
-            font-size: 16px;
+            padding: 8px 12px;
+            font-size: 14px;
             font-family: 'VT323', monospace;
             font-weight: bold;
             cursor: pointer;
@@ -2795,10 +2795,11 @@
             backdrop-filter: blur(10px);
             text-transform: uppercase;
             letter-spacing: 1px;
-            min-width: 100px;
-            display: flex;
+            width: auto;
+            height: auto;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
         }
 
@@ -2817,12 +2818,14 @@
         /* Mobile specific adjustments */
         @media (max-width: 768px) {
             .skip-btn {
-                bottom: 20px;
-                right: 15px;
-                padding: 10px 14px;
-                font-size: 14px;
-                min-width: 90px;
-                gap: 6px;
+                top: 20px !important;
+                right: 15px !important;
+                padding: 6px 10px;
+                font-size: 12px;
+                width: auto;
+                height: auto;
+                min-width: auto;
+                gap: 4px;
             }
         }
 
