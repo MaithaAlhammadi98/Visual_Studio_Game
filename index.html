@@ -4241,7 +4241,7 @@
                 </div>
                 <div class="minecraft-divider"></div>
                 <div class="minecraft-leaderboard-actions">
-                    <button onclick="hideLeaderboard()" class="minecraft-btn close-btn">🔙 Close</button>
+                    <button onclick="hideLeaderboard()" class="minecraft-btn close-btn">🏠 Home Screen</button>
                     <button onclick="restartGame()" class="minecraft-btn restart-btn">⛏️ Play Again</button>
                 </div>
             </div>
@@ -6601,8 +6601,8 @@
 
         function hideLeaderboard() {
             document.getElementById('leaderboardPopup').style.display = 'none';
-            // Show final "apple a day" message
-            showCuteEnding();
+            // Go back to guideline screen
+            document.getElementById('introScreen').style.display = 'flex';
         }
 
         // Show cute ending message
@@ -6618,8 +6618,9 @@
             const endingModal = document.getElementById('cuteEndingModal');
             if (endingModal) {
                 endingModal.style.display = 'none';
-                // Go back to intro screen
-                document.getElementById('introScreen').style.display = 'flex';
+                // Show leaderboard after end message
+                console.log('Player clicked Close on end message - showing leaderboard');
+                showLeaderboardPopup();
             }
         }
 
@@ -6725,9 +6726,9 @@
             if (heartModal) {
                 heartModal.style.display = 'none';
             }
-            // Show leaderboard again (SECOND TIME) after player clicks "Awesome Game! THANKS!"
-            console.log('Player clicked Awesome Game! THANKS! - showing leaderboard SECOND TIME');
-            showLeaderboardPopup();
+            // Show end message after player clicks "Awesome Game! THANKS!"
+            console.log('Player clicked Awesome Game! THANKS! - showing end message');
+            showCuteEnding();
         }
 
         // Draw Minecraft heart with canvas
