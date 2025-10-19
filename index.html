@@ -2152,6 +2152,58 @@
             background: linear-gradient(180deg, rgba(255, 230, 120, .12), rgba(20, 24, 20, .78));
         }
 
+        /* Admin leaderboard enhanced styling */
+        .admin-leaderboard .lb-row {
+            background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(10,10,30,0.9));
+            color: #f5f5f5;                    /* brighter text */
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.25s ease;
+        }
+
+        .admin-leaderboard .lb-row:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-2px);
+        }
+
+        .admin-leaderboard .lb-name {
+            color: #fff;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(255,255,255,0.3);
+        }
+
+        .admin-leaderboard .lb-meta {
+            color: #a8b2ff; /* bluish accent for time + germs */
+            font-size: 0.9em;
+        }
+
+        .admin-leaderboard .lb-score {
+            color: #00ffae; /* neon green for score */
+            font-weight: 800;
+            font-size: 1.1em;
+        }
+
+        .admin-leaderboard .lb-rank {
+            color: #ffd54a; /* gold numbers */
+            font-weight: 700;
+            text-shadow: 0 0 6px rgba(255,215,0,0.3);
+        }
+
+        /* Optional glow around the top 3 players */
+        .admin-leaderboard .lb-row:nth-child(1) .lb-name { color: #ffec8b; }
+        .admin-leaderboard .lb-row:nth-child(2) .lb-name { color: #e6e6e6; }
+        .admin-leaderboard .lb-row:nth-child(3) .lb-name { color: #cd7f32; }
+
+        /* Scrollbar for long lists */
+        .admin-leaderboard {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .admin-leaderboard::-webkit-scrollbar { width: 8px; }
+        .admin-leaderboard::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 6px;
+        }
+
         .leaderboard-entry {
             background: rgba(255, 255, 255, 0.1);
             margin: 10px 0;
@@ -4829,7 +4881,7 @@
                         <span id="activeGames">Active: 0</span>
                     </div>
                 </div>
-                <div class="live-leaderboard-list" id="liveLeaderboardList">
+                <div class="live-leaderboard-list admin-leaderboard" id="liveLeaderboardList">
                     <!-- Live entries will be populated here -->
                 </div>
                 <div class="live-leaderboard-actions">
