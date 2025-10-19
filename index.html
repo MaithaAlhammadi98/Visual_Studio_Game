@@ -5041,8 +5041,21 @@
 
                 if (mini) {
                     const miniRow = document.createElement('div');
-                    miniRow.className = 'leaderboard-entry';
-                    miniRow.innerHTML = `<span>${rank}. ${name}</span><span>${score} pts</span>`;
+                    miniRow.className = `minecraft-leaderboard-entry rank-${rank}`;
+                    if (isYou) {
+                        miniRow.classList.add('current-player');
+                    }
+                    if (rank === 1) {
+                        miniRow.classList.add('top-player');
+                    }
+                    miniRow.innerHTML = `
+                        <div class="rank-number">#${rank}</div>
+                        <div class="shiny-score">${score}</div>
+                        <div class="player-info">
+                            <div class="player-name">${escapeHtml(name)}${isYou ? ' (You)' : ''}</div>
+                            <div class="player-stats">⏱ ${timeSec}s • 🦠 ${germsHit}</div>
+                        </div>
+                    `;
                     mini.appendChild(miniRow);
                 }
                 rank++;
@@ -5764,13 +5777,21 @@
                         leaderboardList.innerHTML = '';
                         snapshot.docs.forEach((doc, index) => {
                             const data = doc.data();
+                            const { name='Player', score=0, timeSec=0, germsHit='-' } = data;
+                            const rank = index + 1;
+                            
                             const row = document.createElement('div');
-                            row.className = `leaderRow ${index === 0 ? 'top' : ''}`;
+                            row.className = `minecraft-leaderboard-entry rank-${rank}`;
+                            if (rank === 1) {
+                                row.classList.add('top-player');
+                            }
                             row.innerHTML = `
-                                <span class="rank">${index + 1}.</span>
-                                <span class="player-name">${data.name || 'Player'}</span>
-                                <span class="score">${data.score || 0}</span>
-                                <span class="score-icon">🟩</span>
+                                <div class="rank-number">#${rank}</div>
+                                <div class="shiny-score">${score}</div>
+                                <div class="player-info">
+                                    <div class="player-name">${escapeHtml(name)}</div>
+                                    <div class="player-stats">⏱ ${timeSec}s • 🦠 ${germsHit}</div>
+                                </div>
                             `;
                             leaderboardList.appendChild(row);
                         });
