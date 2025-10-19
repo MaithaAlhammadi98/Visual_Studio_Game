@@ -1516,6 +1516,62 @@
             animation-fill-mode: both;
         }
 
+        /* Dramatic rank number styling */
+        .rank-number {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 
+                0 0 10px rgba(255, 215, 0, 0.8),
+                0 0 20px rgba(255, 215, 0, 0.6),
+                0 0 30px rgba(255, 215, 0, 0.4);
+            margin-right: 15px;
+            min-width: 50px;
+            text-align: center;
+            animation: rankGlow 2s ease-in-out infinite alternate;
+        }
+
+        /* Special styling for top 3 ranks */
+        .minecraft-leaderboard-entry.rank-1 .rank-number {
+            color: #ffd700;
+            font-size: 28px;
+            text-shadow: 
+                0 0 15px rgba(255, 215, 0, 1),
+                0 0 25px rgba(255, 215, 0, 0.8),
+                0 0 35px rgba(255, 215, 0, 0.6);
+        }
+
+        .minecraft-leaderboard-entry.rank-2 .rank-number {
+            color: #c0c0c0;
+            font-size: 26px;
+            text-shadow: 
+                0 0 12px rgba(192, 192, 192, 0.8),
+                0 0 20px rgba(192, 192, 192, 0.6);
+        }
+
+        .minecraft-leaderboard-entry.rank-3 .rank-number {
+            color: #cd7f32;
+            font-size: 24px;
+            text-shadow: 
+                0 0 10px rgba(205, 127, 50, 0.8),
+                0 0 18px rgba(205, 127, 50, 0.6);
+        }
+
+        @keyframes rankGlow {
+            0% { 
+                text-shadow: 
+                    0 0 10px rgba(255, 215, 0, 0.8),
+                    0 0 20px rgba(255, 215, 0, 0.6),
+                    0 0 30px rgba(255, 215, 0, 0.4);
+            }
+            100% { 
+                text-shadow: 
+                    0 0 15px rgba(255, 215, 0, 1),
+                    0 0 25px rgba(255, 215, 0, 0.8),
+                    0 0 35px rgba(255, 215, 0, 0.6);
+            }
+        }
+
         .minecraft-leaderboard-entry:nth-child(1) { animation-delay: 0.1s; }
         .minecraft-leaderboard-entry:nth-child(2) { animation-delay: 0.2s; }
         .minecraft-leaderboard-entry:nth-child(3) { animation-delay: 0.3s; }
@@ -4921,6 +4977,7 @@
                         row.classList.add('top-player');
                     }
                     row.innerHTML = `
+                        <div class="rank-number">#${rank}</div>
                         <div class="player-info">
                             <div class="player-name">${escapeHtml(name)}${isYou ? ' (You)' : ''}</div>
                             <div class="player-stats">⏱ ${timeSec}s • 🦠 ${germsHit}</div>
