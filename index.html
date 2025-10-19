@@ -189,6 +189,122 @@
         h2{ font-size:30px; }
         h3{ font-size:24px; }
 
+        /* Game Banner */
+        .game-banner {
+            width: 100%;
+            height: 140px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin: 18px 0;
+            background: linear-gradient(180deg, #87CEEB 0%, #FFB6C1 30%, #FFC0CB 60%, #FFE4E1 100%);
+        }
+        
+        /* Mobile responsive banner */
+        @media (max-width: 768px) {
+            .game-banner {
+                height: 160px;
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+        }
+        
+        .banner-cloud {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 0;
+            animation: cloudFloat 3s ease-in-out infinite;
+            z-index: 2;
+        }
+        
+        .banner-sparkle {
+            position: absolute;
+            top: 20%;
+            right: 15%;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #FFD700;
+            animation: sparkle 2s ease-in-out infinite;
+            z-index: 5;
+        }
+        
+        .banner-pickaxe {
+            font-size: 48px;
+            margin-right: 15px;
+            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.7));
+            z-index: 10;
+            position: relative;
+        }
+        
+        .banner-title {
+            color: #FFFFFF;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .banner-subtitle {
+            color: #FFE4E1;
+            font-size: 16px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            font-weight: normal;
+            z-index: 10;
+            position: relative;
+        }
+        
+        /* Mobile responsive text */
+        @media (max-width: 768px) {
+            .banner-title {
+                font-size: 20px;
+                letter-spacing: 1px;
+                margin-bottom: 6px;
+            }
+            
+            .banner-subtitle {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .banner-title {
+                font-size: 18px;
+                letter-spacing: 0.5px;
+                margin-bottom: 4px;
+            }
+            
+            .banner-subtitle {
+                font-size: 12px;
+            }
+        }
+        
+        @keyframes cloudFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
         /* Section card */
         .card{
             background: var(--panel);
@@ -4731,6 +4847,7 @@
                 
                 <div class="cute-ending-footer">
                     <button onclick="closeCuteEnding()" class="cute-ending-btn">🌸 Close</button>
+                    <button onclick="openProjectDetails()" class="cute-ending-btn project-video-btn">📹 Check out our project video</button>
                     <button onclick="openIllnessGuardApp()" class="cute-ending-btn illness-guard-btn">🏥 Check out our amazing health app!</button>
                     <button onclick="openGitHubRepo()" class="cute-ending-btn github-btn">🐙 Contribute on GitHub</button>
                 </div>
@@ -7673,9 +7790,10 @@
             }
         }
         
-        // Open Project Details (placeholder for now)
+        // Open Project Details (YouTube video)
         function openProjectDetails() {
-            alert('Project Details coming soon! 🎬\n\nVideo link will be added once available from the team.');
+            // Open the project video in a new tab
+            window.open('https://www.youtube.com/watch?v=WCgcUTZ6xZQ', '_blank');
         }
 
         // Show player leaderboard modal
@@ -8716,6 +8834,15 @@
             <div class="cloud cloud2"></div>
             <div class="cloud cloud3"></div>
         </div>
+        <!-- Game Banner for Hello Minecrafter screen -->
+        <div class="game-banner" style="position:absolute; top:50px; left:50%; transform:translateX(-50%); width:80%; max-width:600px;">
+            <div class="banner-cloud"></div>
+            <div class="banner-sparkle"></div>
+            <div class="banner-pickaxe">⛏️</div>
+            <div class="banner-title">Block City: The Minecraft Mission</div>
+            <div class="banner-subtitle">A Data-Driven Storytelling Project</div>
+        </div>
+        
         <div style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%);">
             <button id="soundGateBtn" class="minecraft-sound-gate-btn">
                 <div class="sound-gate-header">
